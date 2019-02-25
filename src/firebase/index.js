@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 // Initialize Firebase
 const config = {
@@ -9,6 +9,17 @@ const config = {
     storageBucket: "immigration-portal.appspot.com",
     messagingSenderId: "893894800074"
 };
+
 firebase.initializeApp(config);
 
-export default firebase;
+const auth = firebase.auth();
+
+const db = firebase.database();
+
+const storage = firebase.storage();
+
+export { 
+    auth, 
+    db, 
+    storage 
+};

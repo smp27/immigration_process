@@ -1,43 +1,13 @@
 import React, {Component} from 'react';
 import  Validator from 'validator';
-import { Upload, Icon, Modal, Collapse, Form, Tabs, Layout, Menu, Input, Row, Col, Button, DatePicker, Radio, Card} from 'antd';
+import { Upload, Icon, Modal, Form, Layout, Menu, Input, Row, Col, Button, Card} from 'antd';
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { visaForm } from '../../actions';
-import moment from 'moment';
+// import moment from 'moment';
 
-const Panel = Collapse.Panel;
-
-const { Header, Sider, Content } = Layout;
-const TabPane = Tabs.TabPane;
-const SubMenu = Menu.SubMenu;
-
-const options = [
-    { label: 'yes', value: 'true' },
-    { label: 'no', value: 'false' },
-  ];
-
-const h1applicationType = [
-    { label: 'H1b', value: 'H1b' },
-    { label: 'OPT', value: 'OPT' },
-    { label: 'H1bExt', value: 'H1bExt' }
-  ];
-
-const letterStatus = [
-    { label: 'approved', value: 'approved' },
-    { label: 'waiting', value: 'waiting' },
-    { label: 'notApplied', value: 'notApplied' },
-  ];
-
-const taskPrioity = [
-    { label: 'very high', value: '1' },
-    { label: 'high', value: '2' },
-    { label: 'medium', value: '3' },
-    { label: 'low', value: '4' },
-];
-const RadioGroup = Radio.Group;
-const { TextArea } = Input;
+const { Header, Content } = Layout;
 
 class H1bForm extends Component {
     constructor(props) {
@@ -925,8 +895,8 @@ H1bForm.protoTypes = {
 
 };
 
-const mapStateToProps = ({
-
+const mapStateToProps = state => ({
+    loggedInUser: state.loggedInUser
 });
 
-export default connect(null)(H1bForm);
+export default connect(mapStateToProps)(H1bForm);

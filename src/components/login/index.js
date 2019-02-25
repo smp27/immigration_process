@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import  Validator from 'validator';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../actions';
 import { Form, Input, Button, Card } from 'antd';
@@ -76,7 +75,6 @@ Login.protoTypes = {
 };
 
 const mapStateToProps = state => ({
-    // console.log(state);
     loginStatus: state.loginStatus
 });
 
