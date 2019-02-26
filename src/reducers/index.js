@@ -12,12 +12,15 @@ export default function(state = initialState, action) {
             console.log('Login async reducer');
             return {
                 ...state,
+                loggedInUser: action.payload,
                 loginStatus: true
             }
         case 'VISA_FORM_ASYNC' : 
             console.log('Visa form async reducer');
-            console.log(action.payload);
-            return state;
+            return {
+                ...state,
+                visaFormData: action.payload
+            }
         case 'LOGOUT_ASYNC' : 
             console.log('logout async reducer');
             return {

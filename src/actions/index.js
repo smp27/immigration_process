@@ -13,3 +13,8 @@ export const visaForm = (formData) => ({
 export const logout = () => ({
     type: Types.LOGOUT
 });
+
+export const fileUpload = (fileData) => ({
+    type: Types.FILE_UPLOAD,
+    payload: fileData
+});

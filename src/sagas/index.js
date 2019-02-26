@@ -1,6 +1,6 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import * as Types from '../actions/types';
-import { auth } from '../firebase';
+import { auth, storage } from '../firebase';
 import { doSignOut } from '../firebase/auth';
 
 const loginUserServiceCall = (email, password) => {
@@ -11,12 +11,29 @@ const LogoutUserServiceCall = () => {
     return doSignOut();
 }
 
+const fileUploadServiceCall = (firstName, lastName, file) => {
+    // console.log(firstName);
+    // console.log(lastName);
+    // console.log(file);
+    // console.log(firstName + lastName + '/' + firstName + '/' + file.name);
+    storage.ref(firstName + ' ' + lastName + '/' + firstName + '/' + file.name)
+        .put(file)
+            .then(function(snapshot) {
+                console.log(snapshot);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+
+}
+
 function* loginAsync(action) {
     console.log('login async saga');
     const response = yield call(loginUserServiceCall, action.payload.email, action.payload.password);
+    console.log(response);
     yield put({
         type: 'LOGIN_ASYNC',
-        payload: response
+        payload: action.payload
     });
 }
 
@@ -37,10 +54,17 @@ function* logoutAsync() {
     });
 }
 
+function* fileUploadAsync(action) {
+    console.log('File upload async saga');
+    const response = yield call(fileUploadServiceCall, action.payload.firstName, action.payload.lastName, action.payload.file);
+    console.log(response);
+}
+
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
     yield takeLatest(Types.VISA_FORM, visaFormAsync);
     yield takeLatest(Types.LOGOUT, logoutAsync);
+    yield takeLatest(Types.FILE_UPLOAD, fileUploadAsync);
 }
 
 
