@@ -2,3 +2,6 @@ export const VISA_FORM = 'VISA_FORM';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const FILE_UPLOAD = 'FILE_UPLOAD';
+export const GET_EMPLOYEE_LIST = 'GET_EMPLOYEE_LIST';
+export const GET_EMPLOYEE_LIST_SUCCESS = 'GET_EMPLOYEE_LIST_SUCCESS';
+export const GET_EMPLOYEE_LIST_ERROR = 'GET_EMPLOYEE_LIST_ERROR';

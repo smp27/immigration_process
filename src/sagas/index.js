@@ -1,7 +1,9 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
+import { takeLatest, put, call, take, fork } from 'redux-saga/effects';
 import * as Types from '../actions/types';
-import { auth, storage } from '../firebase';
+import { auth, storage, db } from '../firebase';
 import { doSignOut } from '../firebase/auth';
+
+const database = db;
 
 const loginUserServiceCall = (email, password) => {
     return auth.signInWithEmailAndPassword(email, password);
@@ -12,11 +14,8 @@ const LogoutUserServiceCall = () => {
 }
 
 const fileUploadServiceCall = (firstName, lastName, file) => {
-    // console.log(firstName);
-    // console.log(lastName);
-    // console.log(file);
-    // console.log(firstName + lastName + '/' + firstName + '/' + file.name);
-    storage.ref(firstName + ' ' + lastName + '/' + firstName + '/' + file.name)
+    // Uploading Files to Employee Folder
+    storage.ref(firstName + ' ' + lastName + '/' + 'Employee' + '/' + file.name)
         .put(file)
             .then(function(snapshot) {
                 console.log(snapshot);
@@ -60,11 +59,35 @@ function* fileUploadAsync(action) {
     console.log(response);
 }
 
+
+function insertNewEmployee(item) {
+    const newItemRef = database.ref('employeesList').push();
+    return newItemRef.set(item);
+}
+
+function* createEmpItemSaga() {
+    const action = yield take(Types.VISA_FORM);
+    try {
+        const response = yield call(insertNewEmployee, action.payload);
+        yield put({
+            type: 'VISA_FORM_ASYNC',
+            payload: response
+        });
+       // yield put(createTaskServerSuccess(response));
+        //yield put({ type: Types.CREATE_TASK_SERVER_RESPONSE_SUCCESS, response });
+    } catch (error) {
+        console.log(error);
+      //yield put(createTaskServerFailure(error));
+        // do something with the error, such as dispatching an error action with yield put
+    }
+}
+
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
-    yield takeLatest(Types.VISA_FORM, visaFormAsync);
+    //yield takeLatest(Types.VISA_FORM, visaFormAsync);
     yield takeLatest(Types.LOGOUT, logoutAsync);
     yield takeLatest(Types.FILE_UPLOAD, fileUploadAsync);
+    yield fork(createEmpItemSaga);
 }
 
 

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { visaForm, fileUpload } from '../../actions';
 import moment from 'moment';
+import { storage } from '../../firebase';
 
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
@@ -25,6 +26,14 @@ class H1bForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            progress:0,
+            passportPageProgress :0,
+            i94Progress:0,
+            evidenceProgress:0,
+            payStubsProgress:0,
+            mastersTranscriptsProgress:0,
+            bachelorDegreeProgress:0,
+            resumeProgress:0,
             employeeDetails:{
                 typeOfApplication: '',
                 premiumProcessInfo: '',
@@ -32,12 +41,19 @@ class H1bForm extends Component {
                 middleName: '',
                 lastName: '',
                 resume: '',
+                resumeURL: '',
                 bachelorDegree: '',
+                bachelorDegreeURL: '',
                 mastersTranscripts: '',
+                mastersTranscriptsURL: '',
                 payStubs: '',
+                payStubsURL: '',
                 passportPage: '',
+                passportPageURL: '',
                 i94: '',
+                i94URL: '',
                 evidence: '',
+                evidenceURL: '',
                 addressDetails:{
                   address1:'',
                   address2:'',
@@ -227,13 +243,13 @@ class H1bForm extends Component {
         return this.setState({empDetails});
     };
 
-    onTravelHistoryDepartureDateChange = (e, date) => {
+    onTravelHistoryDepartureDateChange= (e, date) => {
         let empDetails = Object.assign({}, this.state.employeeDetails);
         empDetails.travelHistory["departureDate"] = moment(date).valueOf();
         return this.setState({empDetails});
     };
 
-    onTravelHistoryArrivalDateChange = (e, date) => {
+     onTravelHistoryArrivalDateChange = (e, date) => {
         let empDetails = Object.assign({}, this.state.employeeDetails);
         empDetails.travelHistory["arrivalDate"] = moment(date).valueOf();
         return this.setState({empDetails});
@@ -381,32 +397,63 @@ class H1bForm extends Component {
     }
 
     uploadFile = e => {
-        console.log(e.target.name);
-        console.log(e.target.files[0]);
+        if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
+            const {firstName, lastName} =  this.state.employeeDetails;
+        
         if(e.target.files[0].type === "application/pdf") {
             let fileData = {
-                firstName: this.state.employeeDetails.firstName,
-                lastName: this.state.employeeDetails.lastName,
+                firstName: firstName,
+                lastName: lastName,
+                folderFileName: firstName+ ' '+lastName + "/Employee/"+e.target.name+"/",
+                inputFileName:e.target.name,
                 file: e.target.files[0]
             };
-            this.props.dispatch(fileUpload(fileData));
+            this.handleUpload(fileData);
+            //this.props.dispatch(fileUpload(fileData));
         } else {
             let errorDetails = Object.assign({}, this.state.errors);
-            errorDetails.passportPage = 'Please upload PDF files';
+            errorDetails.passportPage = 'Please upload Only PDF files';
             this.setState({errors: errorDetails});
-        }
+        } 
+    } else{
+        let errorDetails = Object.assign({}, this.state.errors);
+            errorDetails.passportPage = 'Enter the Name of the Employee';
+            this.setState({errors: errorDetails});
+    }
     };
+
+    // Upload Document to Employee folder
+    handleUpload = (fileData) => {        
+        const uploadTask = storage.ref(fileData.folderFileName + fileData.file.name).put(fileData.file);
+        uploadTask.on('state_changed',
+        (snapshot) => {
+          // progrss function ....
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          this.setState({[fileData.inputFileName+"Progress"] :progress});
+        },
+        (error) => {
+             // error function ....
+          console.log("file upload "+error);
+        },
+      () => {
+          // complete function ....
+          storage.ref(fileData.folderFileName).child(fileData.file.name).getDownloadURL().then(url => {
+              console.log("file download url " + url);
+              this.setState({[fileData.inputFileName+"URL"]:url});
+          })
+      });
+    }
 
     //Submit Function
 
     onSubmit = (e) => {
         e.preventDefault();
         console.log(this.state.employeeDetails);
-        const errors = this.validate(this.state.employeeDetails);
-        this.setState({errors: errors});
-        if(Object.keys(errors).length === 0) {
+        //const errors = this.validate(this.state.employeeDetails);
+        //this.setState({errors: errors});
+        //if(Object.keys(errors).length === 0) {
             this.props.dispatch(visaForm(this.state.employeeDetails));
-        }
+        //}
     };
 
     //Validation Function
@@ -1079,25 +1126,30 @@ class H1bForm extends Component {
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card>
                                                 <Form.Item error={!!errors.resume} style={{ color: 'red' }} label="Resume">
-                                                    <Input id="resume" type="text" name="resume"  value= {employeeDetails.resume} onChange={this.onChange} placeholder="Resume" />
+                                                    <Input id="resume" type="file" name="resume" onChange={this.uploadFile} placeholder="Resume" />
                                                     {errors.resume}
+                                                    <progress value={this.state.resumeProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.bachelorDegree} style={{ color: 'red' }} label="Bachelor Degree">
-                                                    <Input id="bachelorDegree" type="text" name="bachelorDegree"  value= {employeeDetails.bachelorDegree} onChange={this.onChange} placeholder="Bachelor Degree" />
-                                                    {errors.bachelorDegree}
+                                                    <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={this.uploadFile} placeholder="Bachelor Degree" />
+                                                    {errors.bachelorDegree}                                                    
+                                                    <progress value={this.state.bachelorDegreeProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.mastersTranscripts} style={{ color: 'red' }} label="Masters Transcripts">
-                                                    <Input id="mastersTranscripts" type="text" name="mastersTranscripts"  value= {employeeDetails.mastersTranscripts} onChange={this.onChange} placeholder="Masters Transcripts" />
-                                                    {errors.mastersTranscripts}
+                                                    <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={this.uploadFile} placeholder="Masters Transcripts" />
+                                                    {errors.mastersTranscripts}                                                    
+                                                    <progress value={this.state.mastersTranscriptsProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.payStubs} style={{ color: 'red' }} label="Pay Stubs">
-                                                    <Input id="payStubs" type="text" name="payStubs"  value= {employeeDetails.payStubs} onChange={this.onChange} placeholder="Pay Stubs" />
+                                                    <Input id="payStubs" type="file" name="payStubs" onChange={this.uploadFile} placeholder="Pay Stubs" />
                                                     {errors.payStubs}
+                                                    <progress value={this.state.payStubsProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.passportPage} style={{ color: 'red' }} label="Passport Page">
                                                     {/* <Input id="passportPage" type="file" name="passportPage"  value= {employeeDetails.passportPage} onChange={this.onChange} placeholder="Passport Page" /> */}
                                                     {errors.passportPage}
-                                                    <input id="passportPage" type="file" name="passportPage" onChange={this.uploadFile} />
+                                                    <Input id="passportPage" type="file" name="passportPage" onChange={this.uploadFile} />
+                                                    <progress value={this.state.passportPageProgress} max="100"/>
                                                     {/* <div className="clearfix">
                                                         <Upload
                                                             listType="picture-card"
@@ -1110,16 +1162,20 @@ class H1bForm extends Component {
                                                         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                                                             <img alt="example" style={{ width: '100%' }} src={previewImage} />
                                                         </Modal>
-                                                    </div> */}
+                                                    </div>
+                                               
+                                                */}
 
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.i94} style={{ color: 'red' }} label="I-94">
-                                                    <Input id="i94" type="text" name="i94"  value= {employeeDetails.i94} onChange={this.onChange} placeholder="I-94" />
+                                                    <Input id="i94" type="file" name="i94"  onChange={this.uploadFile} placeholder="I-94" />
                                                     {errors.i94}
+                                                    <progress value={this.state.i94Progress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.evidence} style={{ color: 'red' }} label="Evidence">
-                                                    <Input id="evidence" type="text" name="evidence"  value= {employeeDetails.evidence} onChange={this.onChange} placeholder="Evidence" />
+                                                    <Input id="evidence" type="file" name="evidence" onChange={this.uploadFile} placeholder="Evidence" />
                                                     {errors.evidence}
+                                                    <progress value={this.state.evidenceProgress} max="100"/>
                                                 </Form.Item>
                                             </Card>
                                         </Col>
