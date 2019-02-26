@@ -10,6 +10,11 @@ export const visaForm = (formData) => ({
     payload: formData
 });
 
+
+export const getListOfEmployees = () => ({
+    type: Types.GET_EMPLOYEE_LIST
+});
+
 export const logout = () => ({
     type: Types.LOGOUT
 });

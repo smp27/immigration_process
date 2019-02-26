@@ -2,12 +2,20 @@ const initialState = {
     loggedInUser: {},
     visaFormData: {},
     loginStatus : false,
-    image: []
+    image: [],
+    getEmployeesList:[]
 };
 
 export default function(state = initialState, action) {
     // console.log(action);
     switch(action.type) {
+        case 'GET_EMPLOYEE_LIST' :
+        return {...state};
+        // Below gets the list of Employees
+        case 'GET_EMPLOYEE_LIST_SUCCESS':
+        return {...state,
+            getEmployeesList:Object.assign([], Object.values(action.response))
+        };
         case 'VISA_FORM':
             return {...state};
         case 'LOGIN_ASYNC' : 

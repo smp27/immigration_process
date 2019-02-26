@@ -4,7 +4,7 @@ import { Upload, Icon, Modal, Form, Radio, DatePicker, Layout, Menu, Input, Row,
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { visaForm, fileUpload } from '../../actions';
+import { visaForm, fileUpload, getListOfEmployees } from '../../actions';
 import moment from 'moment';
 import { storage } from '../../firebase';
 
@@ -177,7 +177,7 @@ class H1bForm extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.loggedInUser);
+        this.props.dispatch(getListOfEmployees());   
     }
 
     //--------------------------------------------------------------------------------------------------------
@@ -1200,7 +1200,8 @@ H1bForm.protoTypes = {
 };
 
 const mapStateToProps = state => ({
-    loggedInUser: state.loggedInUser
+    loggedInUser: state.loggedInUser,
+    getEmployeesList:state.getEmployeesList
 });
 
 export default connect(mapStateToProps)(H1bForm);

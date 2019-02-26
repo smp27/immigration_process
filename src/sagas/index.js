@@ -1,5 +1,6 @@
-import { takeLatest, put, call, take, fork } from 'redux-saga/effects';
+import { takeLatest, put, call, take, fork, all } from 'redux-saga/effects';
 import * as Types from '../actions/types';
+import { eventChannel } from 'redux-saga';
 import { auth, storage, db } from '../firebase';
 import { doSignOut } from '../firebase/auth';
 
@@ -82,12 +83,37 @@ function* createEmpItemSaga() {
     }
 }
 
+
+function createEventChannelToGetData(){
+    const listener = eventChannel(
+        emit => {
+            database.ref('employeesList')
+            .on('value', data => emit(data.val()));
+                return () => database.ref('employeesList').off(listener);
+        }
+    );
+    return listener;
+  }
+  
+  // Get Incentive Transaction List
+  function* getEmployeesList(){
+    const getDataChannel = createEventChannelToGetData();
+    while(true) {
+        const response = yield take(getDataChannel); 
+        if(response){
+            yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, response});    
+        }
+        
+    }
+  }
+
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
     //yield takeLatest(Types.VISA_FORM, visaFormAsync);
     yield takeLatest(Types.LOGOUT, logoutAsync);
     yield takeLatest(Types.FILE_UPLOAD, fileUploadAsync);
     yield fork(createEmpItemSaga);
+    yield all([takeLatest(Types.GET_EMPLOYEE_LIST, getEmployeesList)]);
 }
 
 
