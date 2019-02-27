@@ -27,6 +27,14 @@ const fileUploadServiceCall = (firstName, lastName, file) => {
 
 }
 
+const signUpServiceCall = (email, password) => {
+    return auth.createUserWithEmailAndPassword(email, password);
+};
+
+const forgotPasswordServiceCall = (email) => {
+    return auth.sendPasswordResetEmail(email);
+};
+
 function* loginAsync(action) {
     console.log('login async saga');
     const response = yield call(loginUserServiceCall, action.payload.email, action.payload.password);
@@ -60,7 +68,6 @@ function* fileUploadAsync(action) {
     console.log(response);
 }
 
-
 function insertNewEmployee(item) {
     const newItemRef = database.ref('employeesList').push();
     return newItemRef.set(item);
@@ -83,35 +90,58 @@ function* createEmpItemSaga() {
     }
 }
 
-
 function createEventChannelToGetData(){
     const listener = eventChannel(
         emit => {
-            database.ref('employeesList')
+            database.ref('users')
             .on('value', data => emit(data.val()));
-                return () => database.ref('employeesList').off(listener);
+                return () => database.ref('users').off(listener);
         }
     );
     return listener;
-  }
+}
   
-  // Get Incentive Transaction List
-  function* getEmployeesList(){
-    const getDataChannel = createEventChannelToGetData();
+// Get Incentive Transaction List
+function* getEmployeesList(){
+    console.log('Get employee list');
+
+    const getDataChannel = yield call(createEventChannelToGetData());
     while(true) {
         const response = yield take(getDataChannel); 
+        console.log(response);
         if(response){
             yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, response});    
-        }
-        
+        }   
     }
-  }
+}
+
+function* signUpAsync(action) {
+    try{
+        console.log('Sign up async saga');
+        const response = yield call(signUpServiceCall, action.payload.email, action.payload.password);
+        console.log(response);
+        yield put({type: 'SIGN_UP_ASYNC', payload: action.payload});
+    }
+    catch(e) {
+        console.log(e);
+        yield put({type: 'SIGN_UP_ERROR', payload: e});
+    }
+}
+
+function* forgotPasswordAsync(action) {
+    console.log('Forgot password async saga');
+    const response = yield call(forgotPasswordServiceCall, action.payload);
+    console.log(response);
+    // yield put({type: 'FORGOT_PASSWORD_ASYNC', payload: action.payload});
+}
 
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
-    //yield takeLatest(Types.VISA_FORM, visaFormAsync);
+    // yield takeLatest(Types.VISA_FORM, visaFormAsync);
     yield takeLatest(Types.LOGOUT, logoutAsync);
     yield takeLatest(Types.FILE_UPLOAD, fileUploadAsync);
+    yield takeLatest(Types.SIGN_UP, signUpAsync);
+    yield takeLatest(Types.FORGOT_PASSWORD, forgotPasswordAsync);
     yield fork(createEmpItemSaga);
     yield all([takeLatest(Types.GET_EMPLOYEE_LIST, getEmployeesList)]);
 }

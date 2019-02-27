@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import  Validator from 'validator';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login } from '../../actions';
+import { connect } from 'react-redux';
+import { signUp, getEmployeeList } from '../../actions';
 import { Form, Input, Button, Card } from 'antd';
 import "antd/dist/antd.css";
 
-class Login extends Component {
+class Signup extends Component {
 
     constructor(props) {
         super(props);
@@ -24,9 +24,14 @@ class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
-        if(nextProps.loginStatus) {
-            this.props.history.push("/h1bform");
+        const errors = this.validate(this.state.data);
+        if(nextProps.error) {
+            errors.email = nextProps.error;
+        } else {
+          errors.email = '';
+          this.props.history.push("/h1bform");
         }
+        this.setState({errors});
     }
 
     onChange = e => this.setState({
@@ -38,7 +43,7 @@ class Login extends Component {
         const errors = this.validate(this.state.data);
         this.setState({errors});
         if(Object.keys(errors).length===0){
-            this.props.dispatch(login(this.state.data));
+            this.props.dispatch(signUp(this.state.data));
         }
     };
 
@@ -53,20 +58,19 @@ class Login extends Component {
         const { data, errors } = this.state;
         return (
             <div>
-                <Card title="Login">
+                <Card title="Sign Up">
                     <Form>
-                        <Form.Item error={!!errors.email}>
+                        <Form.Item style={{color: 'red'}} error={!!errors.email}>
                             <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
                             {errors.email}
                         </Form.Item>
-                        <Form.Item error={!!errors.password}>
+                        <Form.Item style={{color: 'red'}} error={!!errors.password}>
                                 <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
                             {errors.password}
                         </Form.Item>
                         <Button type="primary" onClick={this.onSubmit}>Submit</Button>
                         <Form.Item>
-                            <Link style={{float: 'left'}} to="/signup">Sign Up!</Link>
-                            <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
+                            <Link style={{float: 'right'}} to="/">Login</Link>
                         </Form.Item>
                     </Form>
                 </Card>
@@ -75,12 +79,12 @@ class Login extends Component {
     }
 }
 
-Login.protoTypes = {
+Signup.protoTypes = {
 
 };
 
 const mapStateToProps = state => ({
-    loginStatus: state.loginStatus
+    error: state.error
 });
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(Signup);

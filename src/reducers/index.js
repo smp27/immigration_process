@@ -3,21 +3,46 @@ const initialState = {
     visaFormData: {},
     loginStatus : false,
     image: [],
-    getEmployeesList:[]
+    getEmployeesList:[],
+    error: {}
 };
 
 export default function(state = initialState, action) {
     // console.log(action);
     switch(action.type) {
         case 'GET_EMPLOYEE_LIST' :
-        return {...state};
+            return {...state};
+
         // Below gets the list of Employees
         case 'GET_EMPLOYEE_LIST_SUCCESS':
-        return {...state,
-            getEmployeesList:Object.assign([], Object.values(action.response))
-        };
+            return {...state,
+                getEmployeesList:Object.assign([], Object.values(action.response))
+            };
+
         case 'VISA_FORM':
             return {...state};
+
+        case 'SIGN_UP_ASYNC':
+            console.log('sign up reducer');
+            return {
+                ...state,
+                loggedInUser: action.payload,
+                loginStatus: true,
+                error: ''
+            };
+
+        case 'SIGN_UP_ERROR':
+            return {
+                ...state,
+                error: action.payload.message
+            }
+
+        case 'FORGOT_PASSWORD_ASYNC':
+            console.log('forgot password reducer');
+            return {
+                ...state
+            };
+            
         case 'LOGIN_ASYNC' : 
             console.log('Login async reducer');
             return {
@@ -25,18 +50,21 @@ export default function(state = initialState, action) {
                 loggedInUser: action.payload,
                 loginStatus: true
             }
+
         case 'VISA_FORM_ASYNC' : 
             console.log('Visa form async reducer');
             return {
                 ...state,
                 visaFormData: action.payload
             }
+
         case 'LOGOUT_ASYNC' : 
             console.log('logout async reducer');
             return {
                 ...state,
                 loginStatus: false
             }
+
         default: 
             console.log('default reducer');
             return state;

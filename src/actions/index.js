@@ -10,11 +10,6 @@ export const visaForm = (formData) => ({
     payload: formData
 });
 
-
-export const getListOfEmployees = () => ({
-    type: Types.GET_EMPLOYEE_LIST
-});
-
 export const logout = () => ({
     type: Types.LOGOUT
 });
@@ -22,4 +17,18 @@ export const logout = () => ({
 export const fileUpload = (fileData) => ({
     type: Types.FILE_UPLOAD,
     payload: fileData
+});
+
+export const signUp = (signUpData) => ({
+    type: Types.SIGN_UP,
+    payload: signUpData
+});
+
+export const forgotPassword = (email) => ({
+    type: Types.FORGOT_PASSWORD,
+    payload: email
+}); 
+
+export const getEmployeeList = () => ({
+    type: Types.GET_EMPLOYEE_LIST
 });
