@@ -3,7 +3,7 @@ import  Validator from 'validator';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signUp, getEmployeeList } from '../../actions';
-import { Form, Input, Button, Card } from 'antd';
+import { Form, Input, Button, Card, Row, Col } from 'antd';
 import "antd/dist/antd.css";
 
 class Signup extends Component {
@@ -57,7 +57,9 @@ class Signup extends Component {
     render() {
         const { data, errors } = this.state;
         return (
-            <div>
+            <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
+    <Row gutter={16}>
+      <Col offset={8} span={8}>
                 <Card title="Sign Up">
                     <Form>
                         <Form.Item style={{color: 'red'}} error={!!errors.email}>
@@ -74,6 +76,8 @@ class Signup extends Component {
                         </Form.Item>
                     </Form>
                 </Card>
+                </Col>
+                </Row>
             </div>
         );
     }
