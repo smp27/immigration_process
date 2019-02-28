@@ -441,13 +441,13 @@ class H1bForm extends Component {
     }
     
     handleChange = ({ fileList }) => {
-        console.log(fileList);
+        
         this.setState({ fileList });
         this.props.dispatch(fileUpload(fileList));
     }
 
-    uploadFile = e => {
-        console.log(e.target.name);
+    uploadFile = (e, fN) => {
+        
         if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
             const {firstName, lastName} =  this.state.employeeDetails;
         
@@ -455,7 +455,7 @@ class H1bForm extends Component {
                 let fileData = {
                     firstName: firstName,
                     lastName: lastName,
-                    folderFileName: firstName+ ' '+lastName + "/Employee/"+e.target.name+"/",
+                    folderFileName: firstName+ ' '+lastName + "/"+fN+"/"+e.target.name+"/",
                     inputFileName:e.target.name,
                     file: e.target.files[0]
                 };
@@ -489,8 +489,7 @@ class H1bForm extends Component {
         },
       () => {
           // complete function ....
-          storage.ref(fileData.folderFileName).child(fileData.file.name).getDownloadURL().then(url => {
-              console.log("file download url " + url);
+          storage.ref(fileData.folderFileName).child(fileData.file.name).getDownloadURL().then(url => {              
               this.setState({[fileData.inputFileName+"URL"]:url});
           })
       });
@@ -500,10 +499,10 @@ class H1bForm extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.employeeDetails);
-        const errors = this.validate(this.state.employeeDetails);
-        this.setState({errors: errors});
-        if(Object.keys(errors).length === 0) {
+        
+       const errors = this.validate(this.state.employeeDetails);
+       this.setState({errors: errors});
+       if(Object.keys(errors).length === 0) {
             this.props.dispatch(visaForm(this.state.employeeDetails));
         }
     };
@@ -571,7 +570,7 @@ class H1bForm extends Component {
         if(!employeeDetails.immigirationDetails.consulateCountry) errors.consulateCountry = "Cant't be empty";
         if(!employeeDetails.immigirationDetails.otherName2) errors.otherName2 = "Cant't be empty";
         if(!employeeDetails.immigirationDetails.i94Number) errors.i94Number = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.entryValidTill) errors.entryValidTill = "Cant't be empty";
+       // if(!employeeDetails.immigirationDetails.entryValidTill) errors.entryValidTill = "Cant't be empty";
         if(!employeeDetails.immigirationDetails.lastEntryUS) errors.lastEntryUS = "Cant't be empty";
         if(!employeeDetails.immigirationDetails.portOfEntry) errors.portOfEntry = "Cant't be empty";
         if(!employeeDetails.immigirationDetails.visaStamping) errors.visaStamping = "Cant't be empty";
@@ -662,17 +661,17 @@ class H1bForm extends Component {
         return ( 
             <div>
                 <Layout>
-                    <Header className="card" style={{ background: '#525252', padding: 0 }} >
+                    <Header className="card" style={{ background: '#fff', padding: 0 }} >
                         <Row>
-                            <Col span={8} style={{ alignContent: 'center', paddingLeft: 20 }}>
+                            <Col span={4} style={{ alignContent: 'left', paddingLeft: 20 }}>
                                 <img src="https://rsrit.com/wp-content/uploads/2017/12/logo_dark.png" alt="reliable" width="150px" height="50px"></img>
                             </Col>
-                            <Col span={8} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingLeft: 65 }}>
+                            <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
                                 <h1 style={{ fontWeight: 'bold', color: '#0066c' }}>Reliable Immigration Form</h1>
                             </Col>
-                            {/* <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingLeft: 65 }}> */}
+                             <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
                                 <Link style={{ float: 'right'}} to="/logout">Logout</Link>
-                            {/* </Col> */}
+                             </Col> 
                         </Row>
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}> 
@@ -705,7 +704,7 @@ class H1bForm extends Component {
                                 </Col> */}
                                 </Row>
                             </Form>                     
-                        <Panel header="Personal Information" key="1">
+                        <Panel className="boldClass"  header="Personal Information"  key="1">
                             {/* Employee Registration */}
                                 <Form layout="inline">
                                     
@@ -760,12 +759,12 @@ class H1bForm extends Component {
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Present Address Information(U.S)">
                                                 
-                                                <Form.Item error={!!errors.address1} style={{ color: 'red' }} label="Current Address 1">
+                                                <Form.Item error={!!errors.address1} style={{ color: 'red' }} label="Present Address 1">
                                                         <Input id="address1" type="address1" name="address1"value= {employeeDetails.addressDetails.address1} onChange={this.onAddressChange} placeholder="Present Address 1" />
                                                         {errors.address1}
                                                 </Form.Item>
 
-                                                <Form.Item error={!!errors.address2} style={{ color: 'red' }} label="Current Address 2">
+                                                <Form.Item error={!!errors.address2} style={{ color: 'red' }} label="Present Address 2">
                                                     <Input id="address2" type="address2" name="address2"value= {employeeDetails.addressDetails.address2} onChange={this.onAddressChange} placeholder="Present Address 2" />
                                                     {errors.address2}
                                                 </Form.Item>
@@ -830,7 +829,7 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    <Panel header="Immigration Information" key="2">
+                                    <Panel className="boldClass" header="Immigration Information" key="2">
                                     <Form layout="inline">
                                     <Row>
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -930,18 +929,18 @@ class H1bForm extends Component {
                                                         <Input id="i94Number" type="text" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
                                                         {errors.i94Number}
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
-                                                        {/* <Input id="entryValidTill" type="text" name="entryValidTill"  value= {employeeDetails.immigirationDetails.entryValidTill} onChange={this.onChange} placeholder="Entry Valid Till" /> */}
+                                                {/* <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
+                                                        <Input id="entryValidTill" type="text" name="entryValidTill"  value= {employeeDetails.immigirationDetails.entryValidTill} onChange={this.onChange} placeholder="Entry Valid Till" /> 
                                                         <DatePicker onChange={this.onImmigrationEntryValidTillDateChange} dateFormat="yyyy/MM/dd" placeholder= "Entry Valid Till" defaultValue= {moment()} />
                                                         {errors.entryValidTill}
-                                                </Form.Item>
+                                                </Form.Item>*/}
                                                 <Form.Item error={!!errors.lastEntryUS} style={{ color: 'red' }} label="Last Entry US">
                                                         {/* <Input id="lastEntryUS" type="text" name="lastEntryUS"  value= {employeeDetails.immigirationDetails.lastEntryUS} onChange={this.onChange} placeholder="Last Entry US" /> */}
                                                         <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} dateFormat="yyyy/MM/dd" placeholder= "Last Entry US" defaultValue= {moment()} />
                                                         {errors.lastEntryUS}
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry">
-                                                        <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Port Of Entry" />
+                                                <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry (City, State)">
+                                                        <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
                                                         {/* <DatePicker onChange={this.onPortOfEntryDateChange} dateFormat="yyyy/MM/dd" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
                                                         {errors.portOfEntry}
                                                 </Form.Item>
@@ -963,7 +962,7 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    <Panel header="Travel Information" key="3">
+                                    <Panel className="boldClass" header="Travel Information" key="3">
                                     <Form layout="inline">
                                     <Row>
                                         {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -984,7 +983,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                             </Card>
                                         </Col> */}
-                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        <Col >
                                             <Card title="Overseas Travel History (If Applicable)">
                                                 <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
                                                         {/* <Input id="departureDate" type="text" name="departureDate"  value= {employeeDetails.travelHistory.departureDate} onChange={this.onChange} placeholder="Departure Date" /> */}
@@ -1005,8 +1004,8 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    {/* <Row> */}
-                                        {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        {/* <Row> 
+                                       <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Check List Information for H4B">
                                                 <Form.Item error={!!errors.H4Passport} style={{ color: 'red' }} label="H4 Passport">
                                                         <Input id="H4Passport" type="text" name="H4Passport"  value= {employeeDetails.H4CheckListDetails.H4Passport} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Passport" />
@@ -1029,10 +1028,10 @@ class H1bForm extends Component {
                                                         {errors.H4ChildrenCertificate}
                                                 </Form.Item>
                                             </Card>
-                                        </Col> */}
-                                        {/* <Col>
-                                            <Row> */}
-                                                {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        </Col> 
+                                        <Col>
+                                            <Row> 
+                                                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                                     <Card title="I-140 Approval">
                                                         <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval Start Date">
                                                                 <Input id="I140Approval" type="text" name="I140Approval"  value= {employeeDetails.I140Detials.I140Approval} onChange={this.onI140DetailsChange} placeholder="I-140 Approval start date" />
@@ -1049,13 +1048,13 @@ class H1bForm extends Component {
                                                                 {errors.I140Receipt}
                                                         </Form.Item>
                                                         <Form.Item error={!!errors.I140Documents} style={{ color: 'red' }} label="I-140 Documents">
-                                                            <Input id="I140Documents" type="file" name="I140Documents" onChange={this.uploadFile} placeholder="I-140 Documents" />
+                                                            <Input id="I140Documents" type="file" name="I140Documents" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-140 Documents" />
                                                             {errors.I140Documents}
                                                             <progress value={this.state.I140DocumentsProgress} max="100"/>
                                                         </Form.Item>
                                                     </Card>
-                                                </Col> */}
-                                                {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                                </Col> 
+                                                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                                     <Card title="Spouse Information">
                                                         <Form.Item error={!!errors.maritalStatus} style={{ color: 'red' }} label="Marital Status">
                                                                 <Input id="maritalStatus" type="text" name="maritalStatus"  value= {employeeDetails.spouseDetails.maritalStatus} onChange={this.onSpouseDetailsChange} placeholder="Marital Status" />
@@ -1070,12 +1069,12 @@ class H1bForm extends Component {
                                                                 {errors.dependenceRelationship}
                                                         </Form.Item>
                                                     </Card>
-                                                </Col> */}
-                                            {/* </Row>
+                                                </Col> 
+                                             </Row>
                                         </Col>
                                     </Row>
-                                    <Row> */}
-                                        {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                    <Row> 
+                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Kids Information">
                                                 <Form.Item error={!!errors.kidFullName} style={{ color: 'red' }} label="Full Name">
                                                     <Input id="kidFullName" type="text" name="kidFullName"  value= {employeeDetails.kidsDetails.kidFullName} onChange={this.onKidsDetailsChange} placeholder="kid Full Name" />
@@ -1115,8 +1114,8 @@ class H1bForm extends Component {
                                                     {errors.kidCurrentAddress}
                                                 </Form.Item>
                                             </Card>
-                                        </Col> */}
-                                        {/* <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        </Col>
+                                     <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="H4 Information">
                                                 <Form.Item error={!!errors.spouseFullName} style={{ color: 'red' }} label="Spouse Full Name">
                                                     <Input id="spouseFullName" type="text" name="spouseFullName"  value= {employeeDetails.H4Details.spouseFullName} onChange={this.onH4DetailsChange} placeholder="Spouse Full Name" />
@@ -1173,13 +1172,13 @@ class H1bForm extends Component {
                                                     {errors.spouseZipcode}
                                                 </Form.Item>
                                             </Card>
-                                        </Col> */}
-                                    {/* </Row> */}
-                                    <Panel header="Work Information" key="4">
+                                        </Col> 
+                                    </Row> */}
+                                    <Panel className="boldClass" header="Work Information" key="4">
                                     <Form layout="inline">
                                     <Row>
-                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                            <Card title="Work Information(Client name and Address must be accurate)">
+                                        <Col >
+                                            <Card title="Work Information(Client Name and Address must be accurate)">
                                                 <Form.Item error={!!errors.clientName} style={{ color: 'red' }} label="Client Name">
                                                     <Input id="clientName" type="text" name="clientName"  value= {employeeDetails.workDetails.clientName} onChange={this.onWorkDetailsChange} placeholder="Client Name" />
                                                     {errors.clientName}
@@ -1226,53 +1225,53 @@ class H1bForm extends Component {
                                         </Row>
                                         </Form>
                                         </Panel>
-                                        <Panel header="Employee Information" key="5">
+                                        <Panel className="boldClass" header="Documents From Employee" key="5">
                                         <Form layout="inline">
                                         <Row>
-                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                            <Card title="Employee Information">
+                                        <Col >
+                                            <Card title="Documents From Employee">
                                                 <Form.Item error={!!errors.passportPage} style={{ color: 'red' }} label="Passport Page">
-                                                    <Input id="passportPage" type="file" name="passportPage" onChange={this.uploadFile} placeholder="Passport Page" />
+                                                    <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
                                                     {errors.passportPage}
                                                     <progress value={this.state.passportPageProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.i94} style={{ color: 'red' }} label="I-94">
-                                                    <Input id="i94" type="file" name="i94"  onChange={this.uploadFile} placeholder="I-94" />
+                                                    <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
                                                     {errors.i94}
                                                     <progress value={this.state.i94Progress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.bachelorDegree} style={{ color: 'red' }} label="Bachelor Degree">
-                                                    <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={this.uploadFile} placeholder="Bachelor Degree" />
+                                                    <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
                                                     {errors.bachelorDegree}                                                    
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.mastersTranscripts} style={{ color: 'red' }} label="Masters Transcripts">
-                                                    <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={this.uploadFile} placeholder="Masters Transcripts" />
+                                                    <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
                                                     {errors.mastersTranscripts}                                                    
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.universityDocs} style={{ color: 'red' }} label="University Documents">
-                                                    <Input id="universityDocs" type="file" name="universityDocs" onChange={this.uploadFile} placeholder="University Documents" />
+                                                    <Input id="universityDocs" type="file" name="universityDocs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="University Documents" />
                                                     {errors.universityDocs}
                                                     <progress value={this.state.universityDocsProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.resume} style={{ color: 'red' }} label="Resume">
-                                                    <Input id="resume" type="file" name="resume" onChange={this.uploadFile} placeholder="Resume" />
+                                                    <Input id="resume" type="file" name="resume" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Resume" />
                                                     {errors.resume}
                                                     <progress value={this.state.resumeProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.ssnCopy} style={{ color: 'red' }} label="SSN">
-                                                    <Input id="ssnCopy" type="file" name="ssnCopy" onChange={this.uploadFile} placeholder="SSN" />
+                                                    <Input id="ssnCopy" type="file" name="ssnCopy" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="SSN" />
                                                     {errors.ssnCopy}
                                                     <progress value={this.state.ssnCopyProgress} max="100"/>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.payStubs} style={{ color: 'red' }} label="Pay Stubs">
-                                                    <Input id="payStubs" type="file" name="payStubs" onChange={this.uploadFile} placeholder="Pay Stubs" />
+                                                    <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
                                                     {errors.payStubs}
                                                     <progress value={this.state.payStubsProgress} max="100"/>
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.evidence} style={{ color: 'red' }} label="Evidence">
-                                                    <Input id="evidence" type="file" name="evidence" onChange={this.uploadFile} placeholder="Evidence" />
+                                                    <Input id="evidence" type="file" name="evidence" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Evidence" />
                                                     {errors.evidence}
                                                     <progress value={this.state.evidenceProgress} max="100"/>
                                                 </Form.Item> */}
@@ -1281,18 +1280,18 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    <Panel header="Reliable Information" key="6">
+                                    <Panel className="boldClass" header="Documents From Reliable HR" key="6">
                                     <Form  layout="inline">
                                         <Row>
-                                            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                                <Card title="Reliable Documents">
+                                            <Col>
+                                                <Card title="Documents From HR">
                                                     <Form.Item error={!!errors.employmentDocs} style={{ color: 'red' }} label="Employee Agreements">
-                                                        <Input id="employmentDocs" type="file" name="employmentDocs" onChange={this.uploadFile} placeholder="Employee Agreements" />
+                                                        <Input id="employmentDocs" type="file" name="employmentDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee Agreements" />
                                                         {errors.employmentDocs}
                                                         <progress value={this.state.employmentDocsProgress} max="100"/>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.vendorDocs} style={{ color: 'red' }} label="Employee and Employer Relation">
-                                                        <Input id="vendorDocs" type="file" name="vendorDocs" onChange={this.uploadFile} placeholder="Employee and Employer relation" />
+                                                        <Input id="vendorDocs" type="file" name="vendorDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee and Employer relation" />
                                                         {errors.vendorDocs}
                                                         <progress value={this.state.vendorDocsProgress} max="100"/>
                                                     </Form.Item>
@@ -1301,7 +1300,7 @@ class H1bForm extends Component {
                                                         {errors.layer1}
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer1Documents} style={{ color: 'red' }} label="Layer 1 Documents">
-                                                        <Input id="layer1Documents" type="file" name="layer1Documents" onChange={this.uploadFile} placeholder="Layer 1 Documents" />
+                                                        <Input id="layer1Documents" type="file" name="layer1Documents" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Layer 1 Documents" />
                                                         {errors.layer1Documents}
                                                         <progress value={this.state.layer1DocumentsProgress} max="100"/>
                                                     </Form.Item>
@@ -1310,7 +1309,7 @@ class H1bForm extends Component {
                                                         {errors.layer2}
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer2Documents} style={{ color: 'red' }} label="Layer 2 Documents">
-                                                        <Input id="layer2Documents" type="file" name="layer2Documents" onChange={this.uploadFile} placeholder="Layer 2 Documents" />
+                                                        <Input id="layer2Documents" type="file" name="layer2Documents" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="Layer 2 Documents" />
                                                         {errors.layer2Documents}
                                                         <progress value={this.state.layer2DocumentsProgress} max="100"/>
                                                     </Form.Item>
@@ -1319,28 +1318,28 @@ class H1bForm extends Component {
                                             </Row>
                                             </Form>
                                             </Panel>
-                                            <Panel header="Attorney Information" key="7">
+                                            <Panel className="boldClass" header="Documents From Attorney" key="7">
                                             <Form layout="inline">
                                             <Row>
-                                            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                                <Card title="Attorney Documents">
+                                            <Col >
+                                                <Card title="Documents From Attorney">
                                                     <Form.Item error={!!errors.attorneyDocument1} style={{ color: 'red' }} label="Attorney Document 1">
-                                                        <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={this.uploadFile} placeholder="Attorney Document 1" />
+                                                        <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 1" />
                                                         {errors.attorneyDocument1}
                                                         <progress value={this.state.attorneyDocument1Progress} max="100"/>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument2} style={{ color: 'red' }} label="Attorney Document 2">
-                                                        <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={this.uploadFile} placeholder="Attorney Document 2" />
+                                                        <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 2" />
                                                         {errors.attorneyDocument2}
                                                         <progress value={this.state.attorneyDocument1Progress} max="100"/>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument3} style={{ color: 'red' }} label="Attorney Document 3">
-                                                        <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={this.uploadFile} placeholder="Attorney Document 3" />
+                                                        <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 3" />
                                                         {errors.attorneyDocument3}
                                                         <progress value={this.state.attorneyDocument3Progress} max="100"/>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument4} style={{ color: 'red' }} label="Attorney Document 4">
-                                                        <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={this.uploadFile} placeholder="Attorney Document 4" />
+                                                        <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 4" />
                                                         {errors.attorneyDocument4}
                                                         <progress value={this.state.attorneyDocument4Progress} max="100"/>
                                                     </Form.Item>

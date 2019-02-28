@@ -29,6 +29,11 @@ class Login extends Component {
         }
     }
 
+    static getDerivedStateFromProps(nextProps, state){
+        if(nextProps.loginStatus) {
+            nextProps.history.push("/h1bform");
+        }
+    }
     // static getDerivedStateFromProps(nextProps, prevState) {
     //     console.log(nextProps);
     //     if(nextProps.error !== "") {
@@ -72,7 +77,7 @@ class Login extends Component {
                         <Card title="Login">
                             <Form>
                                 <Form.Item error={!!errors.email} style={{color: 'red'}}>
-                                    <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
+                                    <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@rsrit.com" />
                                     {errors.email}
                                 </Form.Item>
                                 <Form.Item error={!!errors.password} style={{color: 'red'}}>
@@ -81,7 +86,7 @@ class Login extends Component {
                                 </Form.Item>
                                 <Button type="primary" onClick={this.onSubmit}>Submit</Button>
                                 <Form.Item>
-                                    <Link style={{float: 'left'}} to="/signup"><a>First time user? Sign in</a></Link>
+                                    <Link style={{float: 'left'}} to="/signup"><a>First time user? Sign Up</a></Link>
                                     <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
                                 </Form.Item>
                             </Form>

@@ -49,6 +49,9 @@ class ForgotPassword extends Component {
         return (
             <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
 				<Row gutter={16}>
+                    <Col offset={8} span={8}>
+                        <img src="https://rsrit.com/wp-content/uploads/2017/12/logo_dark.png" alt="reliable" width="150px" height="50px"></img>
+                    </Col>
 					<Col offset={8} span={8}>
 						<Card title="Forgot Password">
 							<Form>

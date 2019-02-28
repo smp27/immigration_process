@@ -7,18 +7,19 @@ import ForgotPassword from '../components/forgotpassword';
 import Signup from '../components/signup';
 import EmployeeList from '../components/employeelist';
 import { connect } from 'react-redux';
-
-const auth = {
-  isLoggedIn: true
-}
-
-const PrivateRoute = ({ component: Component, ...rest}) => (
-  <Route {...rest} render={(props) => (
-    auth.isLoggedIn === true
-      ? <Component {...props} />
-      : <Redirect to="/" />
+import PrivateRoute from '../components/privateroute';
+// const auth = {
+//   isLoggedIn: true
+// }
+/*
+const PrivateRoute = ({ component: Component, ...props}) => (
+  <Route {...props} render={(props) => (
+    (props.loginStatus === true
+      ? (<Component {...props} />)
+      : (<Redirect to="/" />))
   )} />
-)
+)*/
+
 
 const Routes = () => {
   return (
@@ -39,10 +40,13 @@ const Routes = () => {
   );
 };
 
-const mapStateToProps = state => {
-  // console.log(state);
-  // auth.isLoggedIn = state.loginStatus;
-  // loginStatus: state.loginStatus
-};
+//  connect(mapStateToProps)(
+//const mapStateToProps = state => {
+//   return {
+//   // console.log(state);
+//   // auth.isLoggedIn = state.loginStatus;
+//    loginStatus: state.loginStatus
+  
+// }};
 
-export default connect(mapStateToProps)(Routes);
+export default Routes;
