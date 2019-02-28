@@ -65,25 +65,25 @@ class Login extends Component {
         return (
             <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
                 <Row gutter={16}>
-                <Col offset={8} span={8}>
-                <Card title="Login">
-                    <Form>
-                        <Form.Item error={!!errors.email} style={{color: 'red'}}>
-                            <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
-                            {errors.email}
-                        </Form.Item>
-                        <Form.Item error={!!errors.password} style={{color: 'red'}}>
-                                <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
-                            {errors.password}
-                        </Form.Item>
-                        <Button type="primary" onClick={this.onSubmit}>Submit</Button>
-                        <Form.Item>
-                            <Link style={{float: 'left'}} to="/signup"><a>First time user?</a></Link>
-                            <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
-                        </Form.Item>
-                    </Form>
-                </Card>
-                </Col>
+					<Col offset={8} span={8}>
+						<Card title="Login">
+							<Form>
+								<Form.Item error={!!errors.email} style={{color: 'red'}}>
+									<Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
+									{errors.email}
+								</Form.Item>
+								<Form.Item error={!!errors.password} style={{color: 'red'}}>
+										<Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
+									{errors.password}
+								</Form.Item>
+								<Button type="primary" onClick={this.onSubmit}>Submit</Button>
+								<Form.Item>
+									<Link style={{float: 'left'}} to="/signup"><a>First time user?</a>   Sign Up!</Link>
+									<Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
+								</Form.Item>
+							</Form>
+						</Card>
+					</Col>
                 </Row>
             </div>
         );

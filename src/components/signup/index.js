@@ -58,25 +58,25 @@ class Signup extends Component {
         const { data, errors } = this.state;
         return (
             <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
-                <Row gutter={16}>
-                    <Col offset={8} span={8}>
-                        <Card title="Sign Up">
-                            <Form>
-                                <Form.Item style={{color: 'red'}} error={!!errors.email}>
-                                    <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
-                                    {errors.email}
-                                </Form.Item>
-                                <Form.Item style={{color: 'red'}} error={!!errors.password}>
-                                        <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
-                                    {errors.password}
-                                </Form.Item>
-                                <Button type="primary" onClick={this.onSubmit}>Submit</Button>
-                                <Form.Item>
-                                    <Link style={{float: 'right'}} to="/">Login</Link>
-                                </Form.Item>
-                            </Form>
-                        </Card>
-                    </Col>
+				<Row gutter={16}>
+					<Col offset={8} span={8}>
+						<Card title="Sign Up">
+							<Form>
+								<Form.Item style={{color: 'red'}} error={!!errors.email}>
+									<Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
+									{errors.email}
+								</Form.Item>
+								<Form.Item style={{color: 'red'}} error={!!errors.password}>
+										<Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
+									{errors.password}
+								</Form.Item>
+								<Button type="primary" onClick={this.onSubmit}>Submit</Button>
+								<Form.Item>
+									<Link style={{float: 'right'}} to="/">Login</Link>
+								</Form.Item>
+							</Form>
+						</Card>
+					</Col>
                 </Row>
             </div>
         );
