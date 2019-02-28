@@ -1223,8 +1223,14 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                             </Card>
                                         </Col>
+                                        </Row>
+                                        </Form>
+                                        </Panel>
+                                        <Panel header="Employee Information" key="5">
+                                        <Form layout="inline">
+                                        <Row>
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                            <Card title="Employee Documents">
+                                            <Card title="Employee Information">
                                                 <Form.Item error={!!errors.passportPage} style={{ color: 'red' }} label="Passport Page">
                                                     <Input id="passportPage" type="file" name="passportPage" onChange={this.uploadFile} placeholder="Passport Page" />
                                                     {errors.passportPage}
@@ -1275,7 +1281,7 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    <Panel header="Reliable Information" key="5">
+                                    <Panel header="Reliable Information" key="6">
                                     <Form  layout="inline">
                                         <Row>
                                             <Col xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -1313,7 +1319,7 @@ class H1bForm extends Component {
                                             </Row>
                                             </Form>
                                             </Panel>
-                                            <Panel header="Attorney Information" key="6">
+                                            <Panel header="Attorney Information" key="7">
                                             <Form layout="inline">
                                             <Row>
                                             <Col xs={12} sm={12} md={12} lg={12} xl={12}>
