@@ -4,7 +4,7 @@ const initialState = {
     loginStatus : false,
     image: [],
     getEmployeesList:[],
-    error: {}
+    error: ''
 };
 
 export default function(state = initialState, action) {
@@ -49,6 +49,14 @@ export default function(state = initialState, action) {
                 ...state,
                 loggedInUser: action.payload,
                 loginStatus: true
+            }
+
+        case 'LOGIN_ERROR_ASYNC' : 
+            console.log('Login error async reducer');
+            return {
+                ...state,
+                error: action.payload.message,
+                loginStatus: false
             }
 
         case 'VISA_FORM_ASYNC' : 

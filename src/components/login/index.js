@@ -3,7 +3,7 @@ import  Validator from 'validator';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login } from '../../actions';
-import { Form, Input, Button, Card } from 'antd';
+import { Form, Input, Button, Card, Row, Col } from 'antd';
 import "antd/dist/antd.css";
 
 class Login extends Component {
@@ -23,18 +23,29 @@ class Login extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
+        // console.log(nextProps);
         if(nextProps.loginStatus) {
             this.props.history.push("/h1bform");
         }
     }
+
+    // static getDerivedStateFromProps(nextProps, prevState) {
+    //     console.log(nextProps);
+    //     if(nextProps.error !== "") {
+    //         prevState.errors = {email: nextProps.error};
+    //     }
+    //     if(nextProps.loginStatus) {
+    //         this.props.history.push("/h1bform");
+    //     }
+    //     return null;
+    // }
 
     onChange = e => this.setState({
         data: { ...this.state.data, [e.target.name]: e.target.value}
     });
 
     onSubmit = () => {
-      console.log(this.state.data);
+        // console.log(this.state.data);
         const errors = this.validate(this.state.data);
         this.setState({errors});
         if(Object.keys(errors).length===0){
@@ -52,24 +63,28 @@ class Login extends Component {
     render() {
         const { data, errors } = this.state;
         return (
-            <div>
+            <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
+                <Row gutter={16}>
+                <Col offset={8} span={8}>
                 <Card title="Login">
                     <Form>
-                        <Form.Item error={!!errors.email}>
+                        <Form.Item error={!!errors.email} style={{color: 'red'}}>
                             <Input id="email" type="text" name="email" value= {data.email} onChange={this.onChange} placeholder="example@example.com" />
                             {errors.email}
                         </Form.Item>
-                        <Form.Item error={!!errors.password}>
+                        <Form.Item error={!!errors.password} style={{color: 'red'}}>
                                 <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
                             {errors.password}
                         </Form.Item>
                         <Button type="primary" onClick={this.onSubmit}>Submit</Button>
                         <Form.Item>
-                            <Link style={{float: 'left'}} to="/signup">Sign Up!</Link>
+                            <Link style={{float: 'left'}} to="/signup"><a>First time user?</a></Link>
                             <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
                         </Form.Item>
                     </Form>
                 </Card>
+                </Col>
+                </Row>
             </div>
         );
     }
@@ -80,7 +95,8 @@ Login.protoTypes = {
 };
 
 const mapStateToProps = state => ({
-    loginStatus: state.loginStatus
+    loginStatus: state.loginStatus,
+    error: state.error
 });
 
 export default connect(mapStateToProps)(Login);

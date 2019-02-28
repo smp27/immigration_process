@@ -29,6 +29,6 @@ export const forgotPassword = (email) => ({
     payload: email
 }); 
 
-export const getEmployeeList = () => ({
+export const getListOfEmployees = () => ({
     type: Types.GET_EMPLOYEE_LIST
 });

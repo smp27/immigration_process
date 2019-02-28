@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getEmployeeList } from '../../actions';
+import { getListOfEmployees } from '../../actions';
 import { Layout, Menu, List } from 'antd'
 import "antd/dist/antd.css";
 
@@ -26,7 +26,7 @@ class EmployeeList extends Component {
     }
 
     componentDidMount() {
-        // this.props.dispatch(getEmployeeList());
+        this.props.dispatch(getListOfEmployees());
     }
 
     render() {

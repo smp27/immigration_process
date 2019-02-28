@@ -36,13 +36,24 @@ const forgotPasswordServiceCall = (email) => {
 };
 
 function* loginAsync(action) {
-    console.log('login async saga');
-    const response = yield call(loginUserServiceCall, action.payload.email, action.payload.password);
-    console.log(response);
-    yield put({
-        type: 'LOGIN_ASYNC',
-        payload: action.payload
-    });
+    try{
+        console.log('login async saga');
+        const response = yield call(loginUserServiceCall, action.payload.email, action.payload.password);
+        console.log(response);
+        if(response.user){
+            yield put({
+                type: 'LOGIN_ASYNC',
+                payload: action.payload
+            });
+        }
+    } catch(e) {
+        // console.log(e);
+        console.log('login error async saga');
+        yield put({
+            type: 'LOGIN_ERROR_ASYNC',
+            payload: e
+        });
+    }
 }
 
 function* visaFormAsync(action) {
@@ -107,8 +118,7 @@ function* getEmployeesList(){
 
     const getDataChannel = yield call(createEventChannelToGetData());
     while(true) {
-        const response = yield take(getDataChannel); 
-        console.log(response);
+        const response = yield take(getDataChannel);
         if(response){
             yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, response});    
         }   
