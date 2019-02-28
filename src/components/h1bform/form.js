@@ -879,8 +879,7 @@ class H1bForm extends Component {
                                             <Card title="Immigration Information">
                                                 <Form.Item error={!!errors.currentStatus} style={{ color: 'red' }} label="Current Status">
                                                         {/* <Input id="currentStatus" type="text" name="currentStatus"  value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} placeholder="Current Status" /> */}
-                                                        <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >
-                                                            <Radio value={'D.D'}>D.D</Radio>
+                                                        <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
                                                             <Radio value={'F1'}>F1</Radio>
                                                             <Radio value={'H1B'}>H1B</Radio>
                                                             <Radio value={'H4'}>H4</Radio>
@@ -909,16 +908,16 @@ class H1bForm extends Component {
                                                         <DatePicker onChange={this.onImmigrationvisaExpireDateDateChange} dateFormat="yyyy/MM/dd" placeholder= "Visa Expire Date" defaultValue= {moment()} />
                                                         {errors.visaExpireDate}
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate">
+                                                <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate Name">
                                                         <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
                                                         {errors.immigrationConsule}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.consulateCity} style={{ color: 'red' }} label="City">
-                                                        <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="City" />
+                                                        <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
                                                         {errors.consulateCity}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.consulateCountry} style={{ color: 'red' }} label="Country">
-                                                        <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Country" />
+                                                        <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
                                                         {errors.consulateCountry}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.otherName2} style={{ color: 'red' }} label="Other Name 2">
