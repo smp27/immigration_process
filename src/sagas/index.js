@@ -4,6 +4,8 @@ import { eventChannel } from 'redux-saga';
 import { auth, storage, db } from '../firebase';
 import { doSignOut } from '../firebase/auth';
 
+import {getListOfEmployeesSuccessResponse} from '../actions';
+
 const database = db;
 
 const loginUserServiceCall = (email, password) => {
@@ -79,6 +81,28 @@ function* fileUploadAsync(action) {
     console.log(response);
 }
 
+function insertNewImmiForm(item) {
+    const newItemRef = database.ref('ImmigrationForm').push();
+    return newItemRef.set(item);
+}
+
+function* createNewImmiFormItemSaga() {    
+    const action = yield take(Types.SUBMIT_IMMI_FORM);
+    try {
+        const response = yield call(insertNewImmiForm, action.payload);
+        
+        
+            yield put({
+                type: Types.SUBMIT_IMMI_FORM_SUCCESS,
+                payload: response
+            });
+        
+       
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function insertNewEmployee(item) {
     const newItemRef = database.ref('employeesList').push();
     return newItemRef.set(item);
@@ -104,25 +128,27 @@ function* createEmpItemSaga() {
 
 function createEventChannelToGetData(){
 
-    database.ref('employeesList/').on('value', function(snapshot){
-        snapshot.forEach(function(childSnapshot){
-            console.log(childSnapshot.val());
-        })
-    });
+    // database.ref('employeesList/').on('value', function(snapshot){
+    //     snapshot.forEach(function(childSnapshot){
+    //         console.log(childSnapshot.val());
+    //     })
+    // });
 
-    // const listener = eventChannel(
-    //     emit => {
-    //         database.ref('employeesList')
-    //         .on('value', data => emit(data.val()));
-    //             return () => database.ref('employeesList').off(listener);
-    //     }
-    // );
-    // return listener;
+    const listener = new eventChannel(
+        emit => {
+            database.ref('ImmigrationForm')
+            .on('value', (data) =>{ 
+                console.log(data.val());
+                emit(data.val())
+            });
+            return () => { return database.ref('ImmigrationForm').off(listener) };
+        }
+    );
+    return listener;
 }
   
 // Get Incentive Transaction List
-function* getEmployeesList(){
-    console.log('Get employee list');
+function* getEmployeesList(){    
     const getDataChannel = yield call(createEventChannelToGetData());
     while(true) {
         const response = yield take(getDataChannel);
@@ -153,6 +179,30 @@ function* forgotPasswordAsync(action) {
     // yield put({type: 'FORGOT_PASSWORD_ASYNC', payload: action.payload});
 }
 
+function* startListener() {
+    // #1: Creates an eventChannel and starts the listener;
+    const channel = new eventChannel(emiter => {
+      const listener = database.ref("ImmigrationForm").on("value", snapshot => {
+          emiter({ response: snapshot.val() || {} });
+        });
+  
+      // #2: Return the shutdown method;
+      return () => {
+        listener.off();
+      };
+    });
+  
+    // #3: Creates a loops to keep the execution in memory;
+    while (true) {
+      const { response } = yield take(channel);
+      console.log(response);
+
+      yield put(getListOfEmployeesSuccessResponse(response))
+      // #4: Pause the task until the channel emits a signal and dispatch an action in the store;
+      //yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, data});// this is causing the error.
+    }
+  }
+
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
     // yield takeLatest(Types.VISA_FORM, visaFormAsync);
@@ -160,6 +210,9 @@ export function* rootSaga() {
     yield takeLatest(Types.FILE_UPLOAD, fileUploadAsync);
     yield takeLatest(Types.SIGN_UP, signUpAsync);
     yield takeLatest(Types.FORGOT_PASSWORD, forgotPasswordAsync);
-    yield fork(createEmpItemSaga);
-    yield all([takeLatest(Types.GET_EMPLOYEE_LIST, getEmployeesList)]);
+    //yield all([takeLatest(Types.SUBMIT_IMMI_FORM, createNewImmiFormItemSaga)]);
+   // yield fork(createEmpItemSaga);
+    yield fork(createNewImmiFormItemSaga);
+    //yield fork(startListener);    
+    yield all([takeLatest(Types.GET_EMPLOYEE_LIST, startListener)]);
 }

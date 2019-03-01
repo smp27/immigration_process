@@ -10,6 +10,13 @@ export const visaForm = (formData) => ({
     payload: formData
 });
 
+export const submitImmiFormAction = (formData) => ({
+    type: Types.SUBMIT_IMMI_FORM,
+    payload: formData
+});
+
+
+
 export const logout = () => ({
     type: Types.LOGOUT
 });
@@ -31,4 +38,8 @@ export const forgotPassword = (email) => ({
 
 export const getListOfEmployees = () => ({
     type: Types.GET_EMPLOYEE_LIST
+});
+export const getListOfEmployeesSuccessResponse = (data) => ({
+    type: Types.GET_EMPLOYEE_LIST_SUCCESS,
+    data
 });

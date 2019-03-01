@@ -26,7 +26,7 @@ class EmployeeList extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(getListOfEmployees());
+       // this.props.dispatch(getListOfEmployees());
     }
 
     render() {

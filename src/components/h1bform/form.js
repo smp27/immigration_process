@@ -4,10 +4,9 @@ import { Upload, Collapse, Icon, Modal, Form, Radio, DatePicker, Dropdown, Layou
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { visaForm, fileUpload } from '../../actions';
+import { visaForm, fileUpload, submitImmiFormAction, getListOfEmployees } from '../../actions';
 import moment from 'moment';
 import { storage } from '../../firebase';
-import { getListOfEmployees } from '../../actions';
 
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
@@ -224,7 +223,12 @@ class H1bForm extends Component {
     componentDidMount() {
         this.props.dispatch(getListOfEmployees());
     }
-
+    static getDerivedStateFromProps(nextProps, state){
+        if(nextProps.sucessFormSubmission) {
+            //nextProps.dispatch(getListOfEmployees());
+            alert("Sucessfully Submitted the Form.")
+        }
+    }
     //--------------------------------------------------------------------------------------------------------
     //Date functions
 
@@ -509,11 +513,10 @@ class H1bForm extends Component {
         e.preventDefault();
         
         const errors = this.validate(this.state.employeeDetails);
-        this.setState({errors: errors});
-        console.log(Object.keys(errors).length);
-        console.log(errors);
+        this.setState({errors: errors});        
         if(Object.keys(errors).length === 0) {
-            this.props.dispatch(visaForm(this.state.employeeDetails));
+           this.props.dispatch(visaForm(this.state.employeeDetails));
+            this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };
 
@@ -1768,7 +1771,8 @@ H1bForm.protoTypes = {
 const mapStateToProps = state => {
     return {
         loggedInUser: state.loggedInUser,
-        getEmployeesList:state.getEmployeesList
+        getEmployeesList:state.getEmployeesList,
+        sucessFormSubmission: state.sucessFormSubmission
     }
 };
 
