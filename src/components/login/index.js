@@ -22,7 +22,6 @@ class Login extends Component {
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
-   
 
     static getDerivedStateFromProps(nextProps, state){
         if(nextProps.loginStatus) {

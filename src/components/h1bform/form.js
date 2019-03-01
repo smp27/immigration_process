@@ -76,14 +76,16 @@ class H1bForm extends Component {
                   address2:'',
                   city:'',
                   state:'',
-                  zipCode:''
+                  zipCode:'',
+                  country: ''
                 },
                 overseasAddressDetails:{
                     overseasAddress1:'',
                     overseasAddress2:'',
-                    city:'',
-                    state:'',
-                    zipCode:''
+                    overseasCity:'',
+                    overseasState:'',
+                    overseasZipCode:'',
+                    overseasCountry: ''
                 },
                 contactDetails:{
                     homeNumber:'',
@@ -227,123 +229,123 @@ class H1bForm extends Component {
     //Date functions
 
     onBirthDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.passportDetails["dateOfBirth"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.passportDetails["dateOfBirth"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onPassportIssueDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.passportDetails["issueDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.passportDetails["issueDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onPassportExpirationDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.passportDetails["expirationDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.passportDetails["expirationDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onImmigrationUSVisaIssuedDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["USVisaIssued"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["USVisaIssued"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
     
     onImmigrationWhenDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["when"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["when"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onImmigrationvisaExpireDateDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["visaExpireDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["visaExpireDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onImmigrationEntryValidTillDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["entryValidTill"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["entryValidTill"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onImmigrationLastEntryUSDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["lastEntryUS"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["lastEntryUS"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onPortOfEntryDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["portOfEntry"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["portOfEntry"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onVisaStampingDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails["visaStamping"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails["visaStamping"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onTravelInfoStartDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelDetails["startDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelDetails["startDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onTravelInfoEndDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelDetails["endDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelDetails["endDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onTravelHistoryDepartureDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelHistory["departureDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelHistory["departureDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onTravelHistoryArrivalDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelHistory["arrivalDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelHistory["arrivalDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onI140ReceiptDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.I140Detials["I140ReceiptDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.I140Detials["I140ReceiptDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onI140DateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.I140Detials["I140Date"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.I140Detials["I140Date"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onKidBirthDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.kidsDetails["kidBirthDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.kidsDetails["kidBirthDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onSpouseBirthDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.H4Details["spouseBirthDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.H4Details["spouseBirthDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onMarraigeDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.H4Details["marraigeDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.H4Details["marraigeDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     onProjectStartDateChange = (e, date) => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.workDetails["projectStartDate"] = moment(date).valueOf();
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.workDetails["projectStartDate"] = moment(date).valueOf();
+        return this.setState({employeeDetails});
     };
 
     //------------------------------------------------------------------------------------------------
@@ -355,81 +357,81 @@ class H1bForm extends Component {
     });
 
     onContactChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.contactDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.contactDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onAddressChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.addressDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.addressDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onOverseasAddressChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.overseasAddressDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.overseasAddressDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onPassportDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.passportDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.passportDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onImmigirationDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.immigirationDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.immigirationDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onTravelDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onTravelHistoryChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.travelHistory[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.travelHistory[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onH4CheckListDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.H4CheckListDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.H4CheckListDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onI140DetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.I140Detials[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.I140Detials[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onSpouseDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.spouseDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.spouseDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onKidsDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.kidsDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.kidsDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onH4DetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.H4Details[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.H4Details[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     onWorkDetailsChange = e => {
-        let empDetails = Object.assign({}, this.state.employeeDetails);
-        empDetails.workDetails[e.target.name] = e.target.value;
-        return this.setState({empDetails});
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        employeeDetails.workDetails[e.target.name] = e.target.value;
+        return this.setState({employeeDetails});
     };
 
     //------------------------------------------------------------------------------------------------------
@@ -460,7 +462,7 @@ class H1bForm extends Component {
                 let fileData = {
                     firstName: firstName,
                     lastName: lastName,
-                    folderFileName: firstName+ ' '+lastName + "/"+fN+"/"+e.target.name+"/",
+                    folderFileName: firstName+ " " +lastName + "/"+fN+"/"+e.target.name+"/",
                     inputFileName:e.target.name,
                     file: e.target.files[0]
                 };
@@ -494,8 +496,9 @@ class H1bForm extends Component {
         },
       () => {
           // complete function ....
-          storage.ref(fileData.folderFileName).child(fileData.file.name).getDownloadURL().then(url => {              
+          storage.ref(fileData.folderFileName).child(fileData.file.name).getDownloadURL().then(url => {
               this.setState({[fileData.inputFileName+"URL"]:url});
+              console.log(this.state);
           })
       });
     }
@@ -505,9 +508,11 @@ class H1bForm extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         
-       const errors = this.validate(this.state.employeeDetails);
-       this.setState({errors: errors});
-       if(Object.keys(errors).length === 0) {
+        const errors = this.validate(this.state.employeeDetails);
+        this.setState({errors: errors});
+        console.log(Object.keys(errors).length);
+        console.log(errors);
+        if(Object.keys(errors).length === 0) {
             this.props.dispatch(visaForm(this.state.employeeDetails));
         }
     };
@@ -518,134 +523,313 @@ class H1bForm extends Component {
         // console.log(employeeDetails);
         const errors = {};
 
-        if(!employeeDetails.typeOfApplication) errors.typeOfApplication = "Can't be empty";
+        if(!employeeDetails.typeOfApplication)
+            errors.typeOfApplication = "Can't be empty";
+        else 
+            delete errors.typeOfApplication;
         // if(!employeeDetails.premiumProcessInfo) errors.premiumProcessInfo = "Can't be empty";
 
-        if(!employeeDetails.firstName) errors.firstName = "Can't be empty";
+        if(!employeeDetails.firstName)
+            errors.firstName = "Can't be empty";
+        else
+            delete errors.firstName;
         // if(!employeeDetails.middleName) errors.middleName = "Can't be empty";
-        if(!employeeDetails.lastName) errors.lastName = "Can't be empty";
+        if(!employeeDetails.lastName)
+            errors.lastName = "Can't be empty";
+        else
+            delete errors.lastName;
         
-        if(!employeeDetails.resume) errors.resume = "Can't be empty";
-        if(!employeeDetails.bachelorDegree) errors.bachelorDegree = "Can't be empty";
-        if(!employeeDetails.mastersTranscripts) errors.mastersTranscripts = "Can't be empty";
-        if(!employeeDetails.payStubs) errors.payStubs = "Can't be empty";
-        if(!employeeDetails.passportPage) errors.passportPage = "Can't be empty";
-        if(!employeeDetails.i94) errors.i94 = "Can't be empty";
-        if(!employeeDetails.evidence) errors.evidence = "Can't be empty";
+        // if(!employeeDetails.resume) errors.resume = "Can't be empty";
+        // if(!employeeDetails.bachelorDegree) errors.bachelorDegree = "Can't be empty";
+        // if(!employeeDetails.mastersTranscripts) errors.mastersTranscripts = "Can't be empty";
+        // if(!employeeDetails.payStubs) errors.payStubs = "Can't be empty";
+        // if(!employeeDetails.passportPage) errors.passportPage = "Can't be empty";
+        // if(!employeeDetails.i94) errors.i94 = "Can't be empty";
+        // if(!employeeDetails.universityDocs) errors.universityDocs = "Can't be empty";
+        // if(!employeeDetails.ssnCopy) errors.ssnCopy = "Can't be empty";
+        // if(!employeeDetails.evidence) errors.evidence = "Can't be empty";
         
         //Address Details
-        if(!employeeDetails.addressDetails.address1) errors.address1 = "Can't be empty";
-        if(!employeeDetails.addressDetails.address2) errors.address2 = "Can't be empty";
-        if(!employeeDetails.addressDetails.city) errors.city = "Can't be empty";
-        if(!employeeDetails.addressDetails.state) errors.state = "Can't be empty";
-        if(!Validator.isNumeric(employeeDetails.addressDetails.zipCode)) errors.zipCode = "Enter Zipcode";
+        if(!employeeDetails.addressDetails.address1)
+            errors.address1 = "Can't be empty";
+        else
+            delete errors.address1;
+            
+        if(!employeeDetails.addressDetails.address2)
+            errors.address2 = "Can't be empty";
+        else
+            delete errors.address2;
+        
+        if(!employeeDetails.addressDetails.city)
+            errors.city = "Can't be empty";
+        else
+            delete errors.city;
+    
+        if(!employeeDetails.addressDetails.state)
+            errors.state = "Can't be empty";
+        else
+            delete errors.state;
+    
+        if(!employeeDetails.addressDetails.country) 
+            errors.country = "Can't be empty";
+        else
+            delete errors.country;
+    
+        if(!Validator.isNumeric(employeeDetails.addressDetails.zipCode))
+            errors.zipCode = "Can't be empty";
+        else
+            delete errors.zipCode;
+    
 
         //Previous Address Details
-        if(!employeeDetails.overseasAddressDetails.overseasAddress1) errors.overseasAddress1 = "Can't be empty";
-        if(!employeeDetails.overseasAddressDetails.overseasAddress2) errors.overseasAddress2 = "Can't be empty";
-        if(!employeeDetails.overseasAddressDetails.city) errors.city = "Can't be empty";
-        if(!employeeDetails.overseasAddressDetails.state) errors.state = "Can't be empty";
-        if(!Validator.isNumeric(employeeDetails.overseasAddressDetails.zipCode)) errors.zipCode = "Enter Zipcode";
+        if(!employeeDetails.overseasAddressDetails.overseasAddress1)
+            errors.overseasAddress1 = "Can't be empty";
+        else
+            delete errors.overseasAddress1;
+    
+        if(!employeeDetails.overseasAddressDetails.overseasAddress2) 
+            errors.overseasAddress2 = "Can't be empty";
+        else
+            delete errors.overseasAddress2;
+    
+        if(!employeeDetails.overseasAddressDetails.overseasCity) 
+            errors.overseasCity = "Can't be empty";
+        else
+            delete errors.overseasCity;
+    
+        if(!employeeDetails.overseasAddressDetails.overseasState)
+            errors.overseasState = "Can't be empty";
+        else
+            delete errors.overseasState;
+    
+        if(!Validator.isNumeric(employeeDetails.overseasAddressDetails.overseasZipCode))
+            errors.overseasZipCode = "Can't be empty";
+        else
+            delete errors.overseasZipCode;
+    
+        if(!employeeDetails.overseasAddressDetails.overseasCountry)
+            errors.overseasCountry = "Can't be empty";
+        else
+            delete errors.overseasCountry;
         
         //Contact Details
         // if(!Validator.isNumeric(employeeDetails.contactDetails.homeNumber)) errors.homeNumber = "Enter Home Number";
         // if(!Validator.isNumeric(employeeDetails.contactDetails.workNumber)) errors.workNumber = "Enter Work Number";
-        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber)) errors.mobileNumber = "Enter Mobile Number";
-        if(!Validator.isEmail(employeeDetails.contactDetails.email)) errors.email = "Invalid Email";
+        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber))
+            errors.mobileNumber = "Can't be empty";
+        else
+            delete errors.mobileNumber;
+    
+        if(!Validator.isEmail(employeeDetails.contactDetails.email)) 
+            errors.email = "Can't be empty";
+        else
+            delete errors.email;
 
         //Passport Details
-        if(!employeeDetails.passportDetails.passportNumber) errors.passportNumber = "Cant't be empty";
-        if(!employeeDetails.passportDetails.birthCountry) errors.birthCountry = "Cant't be empty";
-        if(!employeeDetails.passportDetails.dateOfBirth) errors.dateOfBirth = "Cant't be empty";
-        if(!employeeDetails.passportDetails.issueDate) errors.issueDate = "Cant't be empty";
-        if(!employeeDetails.passportDetails.expirationDate) errors.expirationDate = "Cant't be empty";
-        if(!employeeDetails.passportDetails.countryPassport) errors.countryPassport = "Cant't be empty";
-        if(!employeeDetails.passportDetails.countryOfCitizenship) errors.countryOfCitizenship = "Cant't be empty";
-        if(!employeeDetails.passportDetails.socialSecurityNumber) errors.socialSecurityNumber = "Cant't be empty";
-        if(!employeeDetails.passportDetails.alienNumber) errors.alienNumber = "Cant't be empty";
+        if(!employeeDetails.passportDetails.passportNumber) 
+            errors.passportNumber = "Can't be empty";
+        else
+            delete errors.passportNumber;
+    
+        // if(!employeeDetails.passportDetails.birthCountry) errors.birthCountry = "Cant't be empty";
+        if(!employeeDetails.passportDetails.dateOfBirth) 
+            errors.dateOfBirth = "Can't be empty";
+        else
+            delete errors.dateOfBirth ;
+    
+        if(!employeeDetails.passportDetails.issueDate) 
+            errors.issueDate = "Can't be empty";
+        else
+            delete errors.issueDate ;
+    
+        if(!employeeDetails.passportDetails.expirationDate) 
+            errors.expirationDate = "Can't be empty";
+        else
+            delete errors.expirationDate ;
+    
+        // if(!employeeDetails.passportDetails.countryPassport) errors.countryPassport = "Cant't be empty";
+        if(!employeeDetails.passportDetails.countryOfCitizenship) 
+            errors.countryOfCitizenship = "Can't be empty";
+        else
+            delete errors.countryOfCitizenship;
+    
+        if(!employeeDetails.passportDetails.socialSecurityNumber) 
+            errors.socialSecurityNumber = "Can't be empty";
+        else
+            delete errors.socialSecurityNumber ;
+    
+        // if(!employeeDetails.passportDetails.alienNumber) errors.alienNumber = "Cant't be empty";
 
         //Immigration Details
-        if(!employeeDetails.immigirationDetails.currentStatus) errors.currentStatus = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.currentStatusOtherName) errors.currentStatusOtherName = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.USVisaIssued) errors.USVisaIssued = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.when) errors.when = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.visaExpireDate) errors.visaExpireDate = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.immigrationConsule) errors.immigrationConsule = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.consulateCity) errors.consulateCity = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.consulateCountry) errors.consulateCountry = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.otherName2) errors.otherName2 = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.i94Number) errors.i94Number = "Cant't be empty";
+        if(!employeeDetails.immigirationDetails.currentStatus)
+            errors.currentStatus = "Can't be empty";
+        else
+            delete errors.currentStatus ;
+    
+        // if(!employeeDetails.immigirationDetails.currentStatusOtherName) errors.currentStatusOtherName = "Cant't be empty";
+        if(!employeeDetails.immigirationDetails.USVisaIssued)
+            errors.USVisaIssued = "Can't be empty";
+        else
+            delete errors.lastNaUSVisaIssuedme ;
+    
+        // if(!employeeDetails.immigirationDetails.when) errors.when = "Cant't be empty";
+        if(!employeeDetails.immigirationDetails.visaExpireDate) 
+            errors.visaExpireDate = "Can't be empty";
+        else
+            delete errors.visaExpireDate ;
+    
+        if(!employeeDetails.immigirationDetails.immigrationConsule) 
+            errors.immigrationConsule = "Can't be empty";
+        else
+            delete errors.immigrationConsule ;
+    
+        if(!employeeDetails.immigirationDetails.consulateCity) 
+            errors.consulateCity = "Can't be empty";
+        else
+            delete errors.consulateCity;
+    
+        if(!employeeDetails.immigirationDetails.consulateCountry) 
+            errors.consulateCountry = "Can't be empty";
+        else
+            delete errors.consulateCountry ;
+    
+        // if(!employeeDetails.immigirationDetails.otherName2) errors.otherName2 = "Cant't be empty";
+        if(!employeeDetails.immigirationDetails.i94Number)
+            errors.i94Number = "Can't be empty";
+        else
+            delete errors.i94Number ;
+    
        // if(!employeeDetails.immigirationDetails.entryValidTill) errors.entryValidTill = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.lastEntryUS) errors.lastEntryUS = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.portOfEntry) errors.portOfEntry = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.visaStamping) errors.visaStamping = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.visaConsulate) errors.visaConsulate = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.USConsulateOther) errors.USConsulateOther = "Cant't be empty";
+        if(!employeeDetails.immigirationDetails.lastEntryUS) 
+            errors.lastEntryUS = "Can't be empty";
+        else
+            delete errors.lastEntryUS ;
+    
+        if(!employeeDetails.immigirationDetails.portOfEntry)
+            errors.portOfEntry = "Can't be empty";
+        else
+            delete errors.portOfEntry;
+    
+        // if(!employeeDetails.immigirationDetails.visaStamping) errors.visaStamping = "Cant't be empty";
+        // if(!employeeDetails.immigirationDetails.visaConsulate) errors.visaConsulate = "Cant't be empty";
+        // if(!employeeDetails.immigirationDetails.USConsulateOther) errors.USConsulateOther = "Cant't be empty";
 
         //Travel Details
-        if(!employeeDetails.travelDetails.startDate) errors.startDate = "Can't be empty";
-        if(!employeeDetails.travelDetails.endDate) errors.endDate = "Can't be empty";
-        if(!employeeDetails.travelDetails.daysCount) errors.daysCount = "Can't be empty";
+        // if(!employeeDetails.travelDetails.startDate) errors.startDate = "Can't be empty";
+        // if(!employeeDetails.travelDetails.endDate) errors.endDate = "Can't be empty";
+        // if(!employeeDetails.travelDetails.daysCount) errors.daysCount = "Can't be empty";
 
         //Travel History
-        if(!employeeDetails.travelHistory.departureDate) errors.departureDate = "Can't be empty";
-        if(!employeeDetails.travelHistory.arrivalDate) errors.arrivalDate = "Can't be empty";
-        if(!employeeDetails.travelHistory.daysSpent) errors.daysSpent = "Can't be empty";
+        if(!employeeDetails.travelHistory.departureDate)
+            errors.departureDate = "Can't be empty";
+        else
+            delete errors.departureDate ;
+    
+        if(!employeeDetails.travelHistory.arrivalDate) 
+            errors.arrivalDate = "Can't be empty";
+        else
+            delete errors.arrivalDate ;
+    
+        if(!employeeDetails.travelHistory.daysSpent)
+            errors.daysSpent = "Can't be empty";
+        else
+            delete errors.daysSpent ;
 
         //Checklist H4
-        if(!employeeDetails.H4Details.H4Passport) errors.H4Passport = "Can't be empty";
-        if(!employeeDetails.H4Details.H4i94) errors.H4i94 = "Can't be empty";
-        if(!employeeDetails.H4Details.H4Approval) errors.H4Approval = "Can't be empty";
-        if(!employeeDetails.H4Details.H4Marraige) errors.H4Marraige = "Can't be empty";
-        if(!employeeDetails.H4Details.H4ChildrenCertificate) errors.H4ChildrenCertificate = "Enter Zipcode";
+        // if(!employeeDetails.H4Details.H4Passport) errors.H4Passport = "Can't be empty";
+        // if(!employeeDetails.H4Details.H4i94) errors.H4i94 = "Can't be empty";
+        // if(!employeeDetails.H4Details.H4Approval) errors.H4Approval = "Can't be empty";
+        // if(!employeeDetails.H4Details.H4Marraige) errors.H4Marraige = "Can't be empty";
+        // if(!employeeDetails.H4Details.H4ChildrenCertificate) errors.H4ChildrenCertificate = "Enter Zipcode";
         
         //Work Details
-        if(!employeeDetails.workDetails.className) errors.className = "Can't be empty";
-        if(!employeeDetails.workDetails.clientAddress) errors.clientAddress = "Can't be empty";
-        if(!employeeDetails.workDetails.clientAddress2) errors.clientAddress2 = "Can't be empty";
-        if(!employeeDetails.workDetails.clientCity) errors.clientCity = "Can't be empty";
-        if(!employeeDetails.workDetails.clientState) errors.clientState = "Can't be empty";
-        if(!employeeDetails.workDetails.clientZipCode) errors.clientZipCode = "Can't be empty";
-        if(!employeeDetails.workDetails.vendorName) errors.vendorName = "Can't be empty";
-        if(!employeeDetails.workDetails.contactInformation) errors.contactInformation = "Can't be empty";
-        if(!employeeDetails.workDetails.projectStartDate) errors.projectStartDate = "Can't be empty";
-        if(!employeeDetails.workDetails.vendorInfo) errors.vendorInfo = "Can't be empty";
+        // if(!employeeDetails.workDetails.className) 
+        //     errors.className = "Can't be empty";
+        // else
+        //     delete errors.className ;
+    
+        if(!employeeDetails.workDetails.clientAddress) 
+            errors.clientAddress = "Can't be empty";
+        else
+            delete errors.clientAddress ;
+    
+        if(!employeeDetails.workDetails.clientAddress2) 
+            errors.clientAddress2 = "Can't be empty";
+        else
+            delete errors.clientAddress2 ;
+    
+        if(!employeeDetails.workDetails.clientCity) 
+            errors.clientCity = "Can't be empty";
+        else
+            delete errors.clientCity ;
+    
+        if(!employeeDetails.workDetails.clientState) 
+            errors.clientState = "Can't be empty";
+        else
+            delete errors.clientState ;
+    
+        if(!employeeDetails.workDetails.clientZipCode) 
+            errors.clientZipCode = "Can't be empty";
+        else
+            delete errors.clientZipCode ;
+    
+        if(!employeeDetails.workDetails.vendorName) 
+            errors.vendorName = "Can't be empty";
+        else
+            delete errors.vendorName ;
+    
+        if(!employeeDetails.workDetails.vendorEmail) 
+            errors.vendorEmail = "Can't be empty";
+        else
+            delete errors.vendorEmail;
+    
+        // if(!employeeDetails.workDetails.contactInformation) 
+        //     errors.contactInformation = "Can't be empty";
+        // else
+        //     delete errors.contactInformation ;
+    
+        if(!employeeDetails.workDetails.projectStartDate) 
+            errors.projectStartDate = "Can't be empty";
+        else
+            delete errors.projectStartDate ;
+    
+        // if(!employeeDetails.workDetails.vendorInfo) errors.vendorInfo = "Can't be empty";
 
         //I-140 Details
-        if(!employeeDetails.I140Detials.I140Approval) errors.I140Approval = "Can't be empty";
-        if(!employeeDetails.I140Detials.I140Date) errors.I140Date = "Can't be empty";
-        if(!employeeDetails.I140Detials.I140ReceiptDate) errors.I140ReceiptDate = "Can't be empty";
+        // if(!employeeDetails.I140Detials.I140Approval) errors.I140Approval = "Can't be empty";
+        // if(!employeeDetails.I140Detials.I140Date) errors.I140Date = "Can't be empty";
+        // if(!employeeDetails.I140Detials.I140ReceiptDate) errors.I140ReceiptDate = "Can't be empty";
 
         //Spouse Details
-        if(!employeeDetails.spouseDetails.maritalStatus) errors.maritalStatus = "Can't be empty";
-        if(!employeeDetails.spouseDetails.spouseH4) errors.spouseH4 = "Can't be empty";
-        if(!employeeDetails.spouseDetails.dependenceRelationship) errors.dependenceRelationship = "Can't be empty";
+        // if(!employeeDetails.spouseDetails.maritalStatus) errors.maritalStatus = "Can't be empty";
+        // if(!employeeDetails.spouseDetails.spouseH4) errors.spouseH4 = "Can't be empty";
+        // if(!employeeDetails.spouseDetails.dependenceRelationship) errors.dependenceRelationship = "Can't be empty";
 
         //H4 Details
-        if(!employeeDetails.H4Details.spouseFullName) errors.spouseFullName = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseBirthDate) errors.spouseBirthDate = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseCountry) errors.spouseCountry = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseCountryOfCitizen) errors.spouseCountryOfCitizen = "Can't be empty";
-        if(!employeeDetails.H4Details.marraigeDate) errors.marraigeDate = "Can't be empty";
-        if(!employeeDetails.H4Details.countryOfMarraige) errors.countryOfMarraige = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseImmigrationStatus) errors.spouseImmigrationStatus = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseSoicalSecurityNumber) errors.spouseSoicalSecurityNumber = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseCurrentAddress) errors.spouseCurrentAddress = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseCity) errors.spouseCity = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseState) errors.spouseState = "Can't be empty";
-        if(!employeeDetails.H4Details.spouseZipcode) errors.spouseZipcode = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseFullName) errors.spouseFullName = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseBirthDate) errors.spouseBirthDate = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseCountry) errors.spouseCountry = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseCountryOfCitizen) errors.spouseCountryOfCitizen = "Can't be empty";
+        // if(!employeeDetails.H4Details.marraigeDate) errors.marraigeDate = "Can't be empty";
+        // if(!employeeDetails.H4Details.countryOfMarraige) errors.countryOfMarraige = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseImmigrationStatus) errors.spouseImmigrationStatus = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseSoicalSecurityNumber) errors.spouseSoicalSecurityNumber = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseCurrentAddress) errors.spouseCurrentAddress = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseCity) errors.spouseCity = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseState) errors.spouseState = "Can't be empty";
+        // if(!employeeDetails.H4Details.spouseZipcode) errors.spouseZipcode = "Can't be empty";
 
         //Kids Details
-        if(!employeeDetails.kidsDetails.dependenceRelationship2) errors.dependenceRelationship2 = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidFullName) errors.kidFullName = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidGender) errors.kidGender = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidMaritalStatus) errors.kidMaritalStatus = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidBirthDate) errors.kidBirthDate = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidCountry) errors.kidCountry = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidCountryOfCitizen) errors.kidCountryOfCitizen = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidImmigrationStatus) errors.kidImmigrationStatus = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidSocialSecurityNumber) errors.kidSocialSecurityNumber = "Can't be empty";
-        if(!employeeDetails.kidsDetails.kidCurrentAddress) errors.kidCurrentAddress = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.dependenceRelationship2) errors.dependenceRelationship2 = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidFullName) errors.kidFullName = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidGender) errors.kidGender = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidMaritalStatus) errors.kidMaritalStatus = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidBirthDate) errors.kidBirthDate = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidCountry) errors.kidCountry = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidCountryOfCitizen) errors.kidCountryOfCitizen = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidImmigrationStatus) errors.kidImmigrationStatus = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidSocialSecurityNumber) errors.kidSocialSecurityNumber = "Can't be empty";
+        // if(!employeeDetails.kidsDetails.kidCurrentAddress) errors.kidCurrentAddress = "Can't be empty";
 
         //Errors
         return errors;
@@ -809,24 +993,24 @@ class H1bForm extends Component {
                                                     {errors.overseasAddress2}
                                                 </Form.Item>
 
-                                                <Form.Item error={!!errors.city} style={{ color: 'red' }} label="City">
-                                                    <Input id="city" type="city" name="city"value= {employeeDetails.overseasAddressDetails.city} onChange={this.onOverseasAddressChange} placeholder="City" />
-                                                    {errors.city}
+                                                <Form.Item error={!!errors.overseasCity} style={{ color: 'red' }} label="City">
+                                                    <Input id="overseasCity" type="city" name="overseasCity" value= {employeeDetails.overseasAddressDetails.overseasCity} onChange={this.onOverseasAddressChange} placeholder="City" />
+                                                    {errors.overseasCity}
                                                 </Form.Item>
 
-                                                <Form.Item error={!!errors.state} style={{ color: 'red' }} label="State">
-                                                        <Input id="state" type="state" name="state"  value= {employeeDetails.overseasAddressDetails.state} onChange={this.onOverseasAddressChange} placeholder="State" />
-                                                        {errors.state}
+                                                <Form.Item error={!!errors.overseasState} style={{ color: 'red' }} label="State">
+                                                        <Input id="overseasState" type="state" name="overseasState"  value= {employeeDetails.overseasAddressDetails.overseasState} onChange={this.onOverseasAddressChange} placeholder="State" />
+                                                        {errors.overseasState}
                                                 </Form.Item>
 
-                                                <Form.Item error={!!errors.zipCode} style={{ color: 'red' }} label="Zip Code">
-                                                        <Input  id="zipCode" type="number" name="zipCode" value={employeeDetails.overseasAddressDetails.zipCode}onChange={this.onOverseasAddressChange} placeholder= "Enter Your Zipcode"/>
-                                                        {errors.zipCode}
+                                                <Form.Item error={!!errors.overseasZipCode} style={{ color: 'red' }} label="Zip Code">
+                                                        <Input  id="overseasZipCode" type="number" name="overseasZipCode" value={employeeDetails.overseasAddressDetails.overseasZipCode}onChange={this.onOverseasAddressChange} placeholder= "Enter Your Zipcode"/>
+                                                        {errors.overseasZipCode}
                                                 </Form.Item>
 
-                                                <Form.Item error={!!errors.country} style={{ color: 'red' }} label="Country">
-                                                        <Input id="country" type="country" name="country"  value= {employeeDetails.overseasAddressDetails.country} onChange={this.onOverseasAddressChange} placeholder="Country" />
-                                                        {errors.country}
+                                                <Form.Item error={!!errors.overseasCountry} style={{ color: 'red' }} label="Country">
+                                                        <Input id="overseasCountry" type="country" name="overseasCountry"  value= {employeeDetails.overseasAddressDetails.overseasCountry} onChange={this.onOverseasAddressChange} placeholder="Country" />
+                                                        {errors.overseasCountry}
                                                 </Form.Item>
 
                                             </Card>
@@ -1238,41 +1422,145 @@ class H1bForm extends Component {
                                                     <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
                                                     {errors.passportPage}
                                                     <progress value={this.state.passportPageProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.passportPageURL && this.state.passportPageURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.passportPageURL} download>
+                                                                    Download Passport
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.i94} style={{ color: 'red' }} label="I-94">
                                                     <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
                                                     {errors.i94}
                                                     <progress value={this.state.i94Progress} max="100"/>
+                                                    <div>
+                                                        { this.state.i94URL && this.state.i94URL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.i94URL} download>
+                                                                    Download I-94
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.bachelorDegree} style={{ color: 'red' }} label="Bachelor Degree">
                                                     <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
                                                     {errors.bachelorDegree}                                                    
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.bachelorDegreeURL && this.state.bachelorDegreeURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.bachelorDegreeURL} download>
+                                                                    Download Bachelor Degree
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.mastersTranscripts} style={{ color: 'red' }} label="Masters Transcripts">
                                                     <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
                                                     {errors.mastersTranscripts}                                                    
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.mastersTranscriptsURL && this.state.mastersTranscriptsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.mastersTranscriptsURL} download>
+                                                                    Download Maters transcripts
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.universityDocs} style={{ color: 'red' }} label="University Documents">
                                                     <Input id="universityDocs" type="file" name="universityDocs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="University Documents" />
                                                     {errors.universityDocs}
                                                     <progress value={this.state.universityDocsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.universityDocsURL && this.state.universityDocsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.universityDocsURL} download>
+                                                                    Download University Documents
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.resume} style={{ color: 'red' }} label="Resume">
                                                     <Input id="resume" type="file" name="resume" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Resume" />
                                                     {errors.resume}
                                                     <progress value={this.state.resumeProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.resumeURL && this.state.resumeURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.resumeURL} download>
+                                                                    Download Resume
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.ssnCopy} style={{ color: 'red' }} label="SSN">
                                                     <Input id="ssnCopy" type="file" name="ssnCopy" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="SSN" />
                                                     {errors.ssnCopy}
                                                     <progress value={this.state.ssnCopyProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.ssnCopyURL && this.state.ssnCopyURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.ssnCopyURL} download>
+                                                                    Download SSN copy
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.payStubs} style={{ color: 'red' }} label="Pay Stubs">
                                                     <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
                                                     {errors.payStubs}
                                                     <progress value={this.state.payStubsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.payStubsURL && this.state.payStubsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.payStubsURL} download>
+                                                                    Download Paystub
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.evidence} style={{ color: 'red' }} label="Evidence">
                                                     <Input id="evidence" type="file" name="evidence" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Evidence" />
@@ -1293,11 +1581,37 @@ class H1bForm extends Component {
                                                         <Input id="employmentDocs" type="file" name="employmentDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee Agreements" />
                                                         {errors.employmentDocs}
                                                         <progress value={this.state.employmentDocsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.employmentDocsURL && this.state.employmentDocsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.employmentDocsURL} download>
+                                                                    Download Employement Documents
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.vendorDocs} style={{ color: 'red' }} label="Employee and Employer Relation">
                                                         <Input id="vendorDocs" type="file" name="vendorDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee and Employer relation" />
                                                         {errors.vendorDocs}
                                                         <progress value={this.state.vendorDocsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.vendorDocsURL && this.state.vendorDocsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.vendorDocsURL} download>
+                                                                    Download Vendor Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer1} style={{ color: 'red' }} label="Layer 1">
                                                         <Input id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
@@ -1307,6 +1621,19 @@ class H1bForm extends Component {
                                                         <Input id="layer1Documents" type="file" name="layer1Documents" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Layer 1 Documents" />
                                                         {errors.layer1Documents}
                                                         <progress value={this.state.layer1DocumentsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.layer1DocumentsURL && this.state.layer1DocumentsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.layer1DocumentsURL} download>
+                                                                    Download Layer 1 Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer2} style={{ color: 'red' }} label="Layer 2">
                                                         <Input id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
@@ -1316,6 +1643,19 @@ class H1bForm extends Component {
                                                         <Input id="layer2Documents" type="file" name="layer2Documents" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="Layer 2 Documents" />
                                                         {errors.layer2Documents}
                                                         <progress value={this.state.layer2DocumentsProgress} max="100"/>
+                                                    <div>
+                                                        { this.state.layer2DocumentsURL && this.state.layer2DocumentsURL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.layer2DocumentsURL} download>
+                                                                    Download Layer 2 Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                 </Card>
                                             </Col>
@@ -1331,21 +1671,73 @@ class H1bForm extends Component {
                                                         <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 1" />
                                                         {errors.attorneyDocument1}
                                                         <progress value={this.state.attorneyDocument1Progress} max="100"/>
+                                                    <div>
+                                                        { this.state.attorneyDocument1URL && this.state.attorneyDocument1URL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.attorneyDocument1URL} download>
+                                                                    Download Attorney Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument2} style={{ color: 'red' }} label="Attorney Document 2">
                                                         <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 2" />
                                                         {errors.attorneyDocument2}
-                                                        <progress value={this.state.attorneyDocument1Progress} max="100"/>
+                                                        <progress value={this.state.attorneyDocument2Progress} max="100"/>
+                                                    <div>
+                                                        { this.state.attorneyDocument2URL && this.state.attorneyDocument2URL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.attorneyDocument2URL} download>
+                                                                    Download Attorney Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument3} style={{ color: 'red' }} label="Attorney Document 3">
                                                         <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 3" />
                                                         {errors.attorneyDocument3}
                                                         <progress value={this.state.attorneyDocument3Progress} max="100"/>
+                                                    <div>
+                                                        { this.state.attorneyDocument3URL && this.state.attorneyDocument3URL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.attorneyDocument3URL} download>
+                                                                    Download Attorney Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument4} style={{ color: 'red' }} label="Attorney Document 4">
                                                         <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 4" />
                                                         {errors.attorneyDocument4}
                                                         <progress value={this.state.attorneyDocument4Progress} max="100"/>
+                                                    <div>
+                                                        { this.state.attorneyDocument4URL && this.state.attorneyDocument4URL !== '' ?
+                                                            (
+                                                            <span>
+                                                                <p>Upload new Document</p>
+                                                                <a target="_blank" href={this.state.attorneyDocument4URL} download>
+                                                                    Download Attorney Document
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </div>
                                                     </Form.Item>
                                                 </Card>
                                             </Col>

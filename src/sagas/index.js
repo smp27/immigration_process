@@ -85,6 +85,7 @@ function insertNewEmployee(item) {
 }
 
 function* createEmpItemSaga() {
+    console.log('createEmpItemSaga');
     const action = yield take(Types.VISA_FORM);
     try {
         const response = yield call(insertNewEmployee, action.payload);
@@ -102,14 +103,21 @@ function* createEmpItemSaga() {
 }
 
 function createEventChannelToGetData(){
-    const listener = eventChannel(
-        emit => {
-            database.ref('employeesList')
-            .on('value', data => emit(data.val()));
-                return () => database.ref('employeesList').off(listener);
-        }
-    );
-    return listener;
+
+    database.ref('employeesList/').on('value', function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+            console.log(childSnapshot.val());
+        })
+    });
+
+    // const listener = eventChannel(
+    //     emit => {
+    //         database.ref('employeesList')
+    //         .on('value', data => emit(data.val()));
+    //             return () => database.ref('employeesList').off(listener);
+    //     }
+    // );
+    // return listener;
 }
   
 // Get Incentive Transaction List
@@ -155,77 +163,3 @@ export function* rootSaga() {
     yield fork(createEmpItemSaga);
     yield all([takeLatest(Types.GET_EMPLOYEE_LIST, getEmployeesList)]);
 }
-
-
-// firebase.auth()
-//     .signInWithEmailAndPassword(action.payload.email, action.payload.password)
-//         .then(function(response){
-//             // Sign-in successful.
-//             console.log(response);
-//             return {
-//                 ...state,
-//                 loggedInUser: action.payload,
-//                 loggedInUser: true
-//             }
-//         })
-//         .catch(function(error) {
-//             // An error happened.
-//             console.log(error);
-//             return {
-//                 ...state,
-//                 loggedInUser: false
-//             }
-//         });
-// break;
-
-
-// var file = action.payload;
-// storageRef.put(file).then(function(snapshot) {
-//     console.log('Uploaded a blob or file!');
-// });
-// storageRef.child('user_images').put(action.payload)
-//     .then(function(response){
-//         console.log(response);
-//     })
-//     .catch(function(error){
-//         console.log(error);
-//     });
-
-
-// firebase.auth()
-//     .signOut()
-//         .then(function() {
-//             // Sign-out successful.
-//             return { 
-//                 ...state,
-//                 loginStatus: false
-//              };
-//         }).catch(function(error) {
-//             // An error happened.
-//             return { 
-//                 ...state
-//              };
-//         });
-// break;
-
-
-//write data
-// db.collection("users").add({
-//     username: "Ada",
-//     email: "Lovelace@gmail.com"
-// })
-// .then(function(docRef) {
-//     console.log("Document written with ID: ", docRef.id);
-// })
-// .catch(function(error) {
-//     console.error("Error adding document: ", error);
-// });
-
-//read data
-// db.collection("users").get().then((querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//         console.log(doc.id);
-//         console.log(doc.data());
-//     });
-// });
-
