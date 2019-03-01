@@ -104,9 +104,9 @@ function* createEmpItemSaga() {
 function createEventChannelToGetData(){
     const listener = eventChannel(
         emit => {
-            database.ref('users')
+            database.ref('employeesList')
             .on('value', data => emit(data.val()));
-                return () => database.ref('users').off(listener);
+                return () => database.ref('employeesList').off(listener);
         }
     );
     return listener;
@@ -115,10 +115,10 @@ function createEventChannelToGetData(){
 // Get Incentive Transaction List
 function* getEmployeesList(){
     console.log('Get employee list');
-
     const getDataChannel = yield call(createEventChannelToGetData());
     while(true) {
         const response = yield take(getDataChannel);
+        console.log(response);
         if(response){
             yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, response});    
         }   

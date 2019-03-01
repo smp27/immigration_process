@@ -3,6 +3,7 @@ import  Validator from 'validator';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login } from '../../actions';
+import { getListOfEmployees } from '../../actions';
 import { Form, Input, Button, Card, Row, Col } from 'antd';
 import "antd/dist/antd.css";
 
@@ -21,16 +22,11 @@ class Login extends Component {
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
-
-    componentWillReceiveProps(nextProps) {
-        // console.log(nextProps);
-        if(nextProps.loginStatus) {
-            this.props.history.push("/h1bform");
-        }
-    }
+   
 
     static getDerivedStateFromProps(nextProps, state){
         if(nextProps.loginStatus) {
+            //nextProps.dispatch(getListOfEmployees());
             nextProps.history.push("/h1bform");
         }
     }
@@ -102,9 +98,12 @@ Login.protoTypes = {
 
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = state => {
+    return {
     loginStatus: state.loginStatus,
-    error: state.error
-});
+    error: state.error,
+    getEmployeesList:state.getEmployeesList
+    }
+};
 
 export default connect(mapStateToProps)(Login);

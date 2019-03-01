@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { visaForm, fileUpload } from '../../actions';
 import moment from 'moment';
 import { storage } from '../../firebase';
+import { getListOfEmployees } from '../../actions';
 
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
@@ -216,6 +217,10 @@ class H1bForm extends Component {
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.dispatch(getListOfEmployees());
     }
 
     //--------------------------------------------------------------------------------------------------------
@@ -1368,9 +1373,11 @@ H1bForm.protoTypes = {
 
 };
 
-const mapStateToProps = state => ({
-    loggedInUser: state.loggedInUser,
-    getEmployeesList:state.getEmployeesList
-});
+const mapStateToProps = state => {
+    return {
+        loggedInUser: state.loggedInUser,
+        getEmployeesList:state.getEmployeesList
+    }
+};
 
 export default connect(mapStateToProps)(H1bForm);
