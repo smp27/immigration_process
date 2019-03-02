@@ -8,6 +8,13 @@ import { visaForm, fileUpload, submitImmiFormAction, getListOfEmployees } from '
 import moment from 'moment';
 import { storage } from '../../firebase';
 
+//To access data from the web
+const xhr = new XMLHttpRequest();
+// import file saver to download the file's
+const FileSaver = require('file-saver');
+//Access token to acces dropbox account
+const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
+
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
@@ -223,13 +230,14 @@ class H1bForm extends Component {
     componentDidMount() {
         this.props.dispatch(getListOfEmployees());
     }
-
+    
     static getDerivedStateFromProps(nextProps, state){
         if(nextProps.sucessFormSubmission) {
-            //nextProps.dispatch(getListOfEmployees());
+            // nextProps.dispatch(getListOfEmployees());
             alert("Sucessfully Submitted the Form.")
         }
     }
+
     //--------------------------------------------------------------------------------------------------------
     //Date functions
 
@@ -458,33 +466,99 @@ class H1bForm extends Component {
         this.props.dispatch(fileUpload(fileList));
     }
 
+    //Upload file to the dropbox
     uploadFile = (e, fN) => {
-        
+        // this keyword is not working inside the xhr functions, th is declared as proxy to this keyword
+        const th = this;
+        // let errorDetails = Object.assign({}, this.state.errors);
+        let errorDetails = new Map();
+
+        const file = e.target.files[0];
+        const filename = e.target.name;
+
         if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
-            const {firstName, lastName} =  this.state.employeeDetails;
+            // const {firstName, lastName} =  this.state.employeeDetails;
         
             if(e.target.files[0].type === "application/pdf") {
-                let fileData = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    folderFileName: firstName+ " " +lastName + "/"+fN+"/"+e.target.name+"/",
-                    inputFileName:e.target.name,
-                    file: e.target.files[0]
+                    
+                xhr.upload.onprogress = function(evt) {
+                    const percentComplete = parseInt(100.0 * evt.loaded / evt.total);
+                    th.setState({[filename+"Progress"] :percentComplete});
+                    // Upload in progress. Do something here with the percent complete.
                 };
-                this.handleUpload(fileData);
+                
+                xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const fileInfo = JSON.parse(xhr.response);
+                    // console.log(fileInfo);
+                    errorDetails.passportPage = '';
+                    th.setState({[filename]:fileInfo.name});
+                    th.setState({[filename+"PathLower"]:fileInfo.path_lower});
+                    // th.downloadFile(e,fileInfo);
+                    // Upload succeeded. Do something here with the file info.
+                }
+                else {
+                    const errorMessage = xhr.response || 'Unable to upload file';
+                    console.log(errorMessage);
+                    // Upload failed. Do something here with the error.
+                }
+                };
+                
+                xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
+                xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+                xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+                xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+                path: '/' +  file.name,
+                mode: 'add',
+                autorename: true,
+                mute: false
+                }));
+                
+                xhr.send(file);
+
+                // let fileData = {
+                //     firstName: firstName,
+                //     lastName: lastName,
+                //     folderFileName: firstName+ " " +lastName + "/"+fN+"/"+e.target.name+"/",
+                //     inputFileName:e.target.name,
+                //     file: e.target.files[0]
+                // };
+                // this.handleUpload(fileData);
                 //this.props.dispatch(fileUpload(fileData));
             } else {
-                let errorDetails = Object.assign({}, this.state.errors);
                 errorDetails.passportPage = 'Please upload Only PDF files';
-                this.setState({errors: errorDetails});
             } 
         } else {
-            let errorDetails = Object.assign({}, this.state.errors);
-            // let errorName = Object.assign
             errorDetails.passportPage = 'Enter the Name of the Employee';
-            this.setState({errors: errorDetails});
         }
+        this.setState({errors: errorDetails});
     };
+
+    //Download file from the dropbox
+    downloadFile = ( evt, fileName, filePathLower) => {
+        evt.preventDefault();
+        // xhr.responseType = 'arraybuffer';
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+                FileSaver.saveAs(blob, fileName, true);
+                // Download succeeded. Do something here with the file info.
+            }
+            else {
+                const errorMessage = xhr.response || 'Unable to download file';
+                console.log(errorMessage);
+                // Download failed. Do something here with the error.
+            }
+        };
+        
+        xhr.open('POST', 'https://content.dropboxapi.com/2/files/download');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+        xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+            path: filePathLower
+        }));
+        xhr.send();
+    }
 
     // Upload Document to Employee folder
     handleUpload = (fileData) => {
@@ -514,7 +588,7 @@ class H1bForm extends Component {
         e.preventDefault();
         
         const errors = this.validate(this.state.employeeDetails);
-        this.setState({errors: errors});        
+        this.setState({errors: errors});
         if(Object.keys(errors).length === 0) {
             this.props.dispatch(visaForm(this.state.employeeDetails));
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
@@ -860,7 +934,7 @@ class H1bForm extends Component {
                                 <img src="https://rsrit.com/wp-content/uploads/2017/12/logo_dark.png" alt="reliable" width="150px" height="50px"></img>
                             </Col>
                             <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
-                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}>Reliable Immigration Form</h1>
+                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/employeelist">Reliable Immigration Form</Link></h1>
                             </Col>
                              <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
                                 <Link style={{ float: 'right'}} to="/logout">Logout</Link>
@@ -1426,19 +1500,19 @@ class H1bForm extends Component {
                                                     <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
                                                     {errors.passportPage}
                                                     <progress value={this.state.passportPageProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.passportPageURL && this.state.passportPageURL !== '' ?
+                                                    <span>
+                                                        { this.state.passportPagePathLower && this.state.passportPagePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.passportPageURL} download>
+                                                                <span>Upload new Document</span>
+                                                                <a onClick={ (e) => {this.downloadFile(e, this.state.passportPage, this.state.passportPagePathLower) } }>
                                                                     Download Passport
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.i94} style={{ color: 'red' }} label="I-94">
                                                     <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
