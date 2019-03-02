@@ -223,6 +223,7 @@ class H1bForm extends Component {
     componentDidMount() {
         this.props.dispatch(getListOfEmployees());
     }
+
     static getDerivedStateFromProps(nextProps, state){
         if(nextProps.sucessFormSubmission) {
             //nextProps.dispatch(getListOfEmployees());
@@ -515,7 +516,7 @@ class H1bForm extends Component {
         const errors = this.validate(this.state.employeeDetails);
         this.setState({errors: errors});        
         if(Object.keys(errors).length === 0) {
-           this.props.dispatch(visaForm(this.state.employeeDetails));
+            this.props.dispatch(visaForm(this.state.employeeDetails));
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };

@@ -3,7 +3,6 @@ import * as Types from '../actions/types';
 import { eventChannel } from 'redux-saga';
 import { auth, storage, db } from '../firebase';
 import { doSignOut } from '../firebase/auth';
-
 import {getListOfEmployeesSuccessResponse} from '../actions';
 
 const database = db;

@@ -16,12 +16,15 @@ export default function(state = initialState, action) {
         case 'GET_EMPLOYEE_LIST' :
             return {...state};
             
-            case Types.SUBMIT_IMMI_FORM :
-             return {...state,
+        case Types.SUBMIT_IMMI_FORM :
+            return {
+                ...state,
                 sucessFormSubmission:false
             };
-         case Types.SUBMIT_IMMI_FORM_SUCCESS :
-             return {...state,
+
+        case Types.SUBMIT_IMMI_FORM_SUCCESS :
+            return {
+                ...state,
                 sucessFormSubmission:true
             };
 
