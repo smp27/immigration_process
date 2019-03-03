@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import  Validator from 'validator';
-import { Upload, Collapse, Icon, Modal, Form, Radio, DatePicker, Dropdown, Layout, Menu, Input, Row, Col, Button, Card} from 'antd';
+import { Collapse, Icon, Form, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -18,17 +18,6 @@ const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchO
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
-
-const typeOfApplicationMenu = [
-    { label: 'CAP H1B', value: 'CAP H1B' },
-    { label: 'H1B Extension', value: 'H1B Extension' },
-    { label: 'H1B RFE', value: 'H1B RFE'}
-];
-
-const premiumProcessMenu = [
-    { label: 'yes', value: 'Yes' },
-    { label: 'no', value: 'No' }
-];
 
 class H1bForm extends Component {
     constructor(props) {
@@ -494,7 +483,6 @@ class H1bForm extends Component {
                     errorDetails.passportPage = '';
                     th.setState({[filename]:fileInfo.name});
                     th.setState({[filename+"PathLower"]:fileInfo.path_lower});
-                    // th.downloadFile(e,fileInfo);
                     // Upload succeeded. Do something here with the file info.
                 }
                 else {
@@ -693,7 +681,7 @@ class H1bForm extends Component {
         //Contact Details
         // if(!Validator.isNumeric(employeeDetails.contactDetails.homeNumber)) errors.homeNumber = "Enter Home Number";
         // if(!Validator.isNumeric(employeeDetails.contactDetails.workNumber)) errors.workNumber = "Enter Work Number";
-        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber))
+        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber) || employeeDetails.contactDetails.mobileNumber === 10)
             errors.mobileNumber = "Can't be empty";
         else
             delete errors.mobileNumber;
@@ -914,17 +902,8 @@ class H1bForm extends Component {
     };    
 
     render() { 
-        const { employeeDetails, reliableDocuments, attorneyDocuments, errors } = this.state;
+        const { employeeDetails, reliableDocuments, errors } = this.state;
 
-        const { previewVisible, previewImage, fileList } = this.state;
-
-        const uploadButton = (
-            <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
-        
         return ( 
             <div>
                 <Layout>
@@ -1010,7 +989,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
 
                                                 <Form.Item error={!!errors.mobileNumber} style={{ color: 'red' }} label="Mobile Number">
-                                                    <Input id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange}placeholder="(000) 000-0000" />
+                                                    <Input id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
                                                     {errors.mobileNumber}
                                                 </Form.Item>
 
@@ -1192,7 +1171,7 @@ class H1bForm extends Component {
                                                         {errors.otherName2}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.i94Number} style={{ color: 'red' }} label="I-94">
-                                                        <Input id="i94Number" type="text" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
+                                                        <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
                                                         {errors.i94Number}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
@@ -1505,8 +1484,8 @@ class H1bForm extends Component {
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a onClick={ (e) => {this.downloadFile(e, this.state.passportPage, this.state.passportPagePathLower) } }>
-                                                                    Download Passport
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.passportPage, this.state.passportPagePathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
@@ -1518,127 +1497,127 @@ class H1bForm extends Component {
                                                     <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
                                                     {errors.i94}
                                                     <progress value={this.state.i94Progress} max="100"/>
-                                                    <div>
-                                                        { this.state.i94URL && this.state.i94URL !== '' ?
+                                                    <span>
+                                                        { this.state.i94PathLower && this.state.i94PathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.i94URL} download>
-                                                                    Download I-94
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.i94, this.state.i94PathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.bachelorDegree} style={{ color: 'red' }} label="Bachelor Degree">
                                                     <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
                                                     {errors.bachelorDegree}                                                    
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.bachelorDegreeURL && this.state.bachelorDegreeURL !== '' ?
+                                                    <span>
+                                                        { this.state.bachelorDegreePathLower && this.state.bachelorDegreePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.bachelorDegreeURL} download>
-                                                                    Download Bachelor Degree
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.bachelorDegree, this.state.bachelorDegreePathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.mastersTranscripts} style={{ color: 'red' }} label="Masters Transcripts">
                                                     <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
                                                     {errors.mastersTranscripts}                                                    
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.mastersTranscriptsURL && this.state.mastersTranscriptsURL !== '' ?
+                                                    <span>
+                                                        { this.state.mastersTranscriptsPathLower && this.state.mastersTranscriptsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.mastersTranscriptsURL} download>
-                                                                    Download Maters transcripts
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.mastersTranscripts, this.state.mastersTranscriptsPathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.universityDocs} style={{ color: 'red' }} label="University Documents">
                                                     <Input id="universityDocs" type="file" name="universityDocs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="University Documents" />
                                                     {errors.universityDocs}
                                                     <progress value={this.state.universityDocsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.universityDocsURL && this.state.universityDocsURL !== '' ?
+                                                    <span>
+                                                        { this.state.universityDocsPathLower && this.state.universityDocsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.universityDocsURL} download>
-                                                                    Download University Documents
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.universityDocs, this.state.universityDocsPathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.resume} style={{ color: 'red' }} label="Resume">
                                                     <Input id="resume" type="file" name="resume" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Resume" />
                                                     {errors.resume}
                                                     <progress value={this.state.resumeProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.resumeURL && this.state.resumeURL !== '' ?
+                                                    <span>
+                                                        { this.state.resumePathLower && this.state.resumePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.resumeURL} download>
-                                                                    Download Resume
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.resume, this.state.resumePathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.ssnCopy} style={{ color: 'red' }} label="SSN">
                                                     <Input id="ssnCopy" type="file" name="ssnCopy" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="SSN" />
                                                     {errors.ssnCopy}
                                                     <progress value={this.state.ssnCopyProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.ssnCopyURL && this.state.ssnCopyURL !== '' ?
+                                                    <span>
+                                                        { this.state.ssnCopyPathLower && this.state.ssnCopyPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.ssnCopyURL} download>
-                                                                    Download SSN copy
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.ssnCopy, this.state.ssnCopyPathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.payStubs} style={{ color: 'red' }} label="Pay Stubs">
                                                     <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
                                                     {errors.payStubs}
                                                     <progress value={this.state.payStubsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.payStubsURL && this.state.payStubsURL !== '' ?
+                                                    <span>
+                                                        { this.state.payStubsPathLower && this.state.payStubsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.payStubsURL} download>
-                                                                    Download Paystub
+                                                                <span>Upload new Document</span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.payStubs, this.state.payStubsPathLower) } }>
+                                                                    Download Recent document
                                                                 </a>
                                                             </span>
                                                             )
                                                             : (<span></span>)
                                                         }
-                                                    </div>
+                                                    </span>
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.evidence} style={{ color: 'red' }} label="Evidence">
                                                     <Input id="evidence" type="file" name="evidence" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Evidence" />
@@ -1659,37 +1638,37 @@ class H1bForm extends Component {
                                                         <Input id="employmentDocs" type="file" name="employmentDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee Agreements" />
                                                         {errors.employmentDocs}
                                                         <progress value={this.state.employmentDocsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.employmentDocsURL && this.state.employmentDocsURL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.employmentDocsURL} download>
-                                                                    Download Employement Documents
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.employmentDocsPathLower && this.state.employmentDocsPathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employmentDocs, this.state.employmentDocsPathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.vendorDocs} style={{ color: 'red' }} label="Employee and Employer Relation">
                                                         <Input id="vendorDocs" type="file" name="vendorDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee and Employer relation" />
                                                         {errors.vendorDocs}
                                                         <progress value={this.state.vendorDocsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.vendorDocsURL && this.state.vendorDocsURL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.vendorDocsURL} download>
-                                                                    Download Vendor Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.vendorDocsPathLower && this.state.vendorDocsPathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.vendorDocs, this.state.vendorDocsPathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer1} style={{ color: 'red' }} label="Layer 1">
                                                         <Input id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
@@ -1699,19 +1678,19 @@ class H1bForm extends Component {
                                                         <Input id="layer1Documents" type="file" name="layer1Documents" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Layer 1 Documents" />
                                                         {errors.layer1Documents}
                                                         <progress value={this.state.layer1DocumentsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.layer1DocumentsURL && this.state.layer1DocumentsURL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.layer1DocumentsURL} download>
-                                                                    Download Layer 1 Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.layer1DocumentsPathLower && this.state.layer1DocumentsPathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.layer1Documents, this.state.layer1DocumentsPathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer2} style={{ color: 'red' }} label="Layer 2">
                                                         <Input id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
@@ -1721,19 +1700,19 @@ class H1bForm extends Component {
                                                         <Input id="layer2Documents" type="file" name="layer2Documents" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="Layer 2 Documents" />
                                                         {errors.layer2Documents}
                                                         <progress value={this.state.layer2DocumentsProgress} max="100"/>
-                                                    <div>
-                                                        { this.state.layer2DocumentsURL && this.state.layer2DocumentsURL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.layer2DocumentsURL} download>
-                                                                    Download Layer 2 Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.layer2DocumentsPathLower && this.state.layer2DocumentsPathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.layer2Documents, this.state.layer2DocumentsPathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                 </Card>
                                             </Col>
@@ -1749,73 +1728,73 @@ class H1bForm extends Component {
                                                         <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 1" />
                                                         {errors.attorneyDocument1}
                                                         <progress value={this.state.attorneyDocument1Progress} max="100"/>
-                                                    <div>
-                                                        { this.state.attorneyDocument1URL && this.state.attorneyDocument1URL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.attorneyDocument1URL} download>
-                                                                    Download Attorney Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.attorneyDocument1PathLower && this.state.attorneyDocument1PathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.attorneyDocument1, this.state.attorneyDocument1PathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument2} style={{ color: 'red' }} label="Attorney Document 2">
                                                         <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 2" />
                                                         {errors.attorneyDocument2}
                                                         <progress value={this.state.attorneyDocument2Progress} max="100"/>
-                                                    <div>
-                                                        { this.state.attorneyDocument2URL && this.state.attorneyDocument2URL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.attorneyDocument2URL} download>
-                                                                    Download Attorney Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.attorneyDocument2PathLower && this.state.attorneyDocument2PathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.attorneyDocument2, this.state.attorneyDocument2PathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument3} style={{ color: 'red' }} label="Attorney Document 3">
                                                         <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 3" />
                                                         {errors.attorneyDocument3}
                                                         <progress value={this.state.attorneyDocument3Progress} max="100"/>
-                                                    <div>
-                                                        { this.state.attorneyDocument3URL && this.state.attorneyDocument3URL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.attorneyDocument3URL} download>
-                                                                    Download Attorney Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.attorneyDocument3PathLower && this.state.attorneyDocument3PathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.attorneyDocument3, this.state.attorneyDocument3PathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.attorneyDocument4} style={{ color: 'red' }} label="Attorney Document 4">
                                                         <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 4" />
                                                         {errors.attorneyDocument4}
                                                         <progress value={this.state.attorneyDocument4Progress} max="100"/>
-                                                    <div>
-                                                        { this.state.attorneyDocument4URL && this.state.attorneyDocument4URL !== '' ?
-                                                            (
-                                                            <span>
-                                                                <p>Upload new Document</p>
-                                                                <a target="_blank" href={this.state.attorneyDocument4URL} download>
-                                                                    Download Attorney Document
-                                                                </a>
-                                                            </span>
-                                                            )
-                                                            : (<span></span>)
-                                                        }
-                                                    </div>
+                                                        <span>
+                                                            { this.state.attorneyDocument4PathLower && this.state.attorneyDocument4PathLower !== '' ?
+                                                                (
+                                                                <span>
+                                                                    <span>Upload new Document</span>
+                                                                    <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.attorneyDocument4, this.state.attorneyDocument4PathLower) } }>
+                                                                        Download Recent document
+                                                                    </a>
+                                                                </span>
+                                                                )
+                                                                : (<span></span>)
+                                                            }
+                                                        </span>
                                                     </Form.Item>
                                                 </Card>
                                             </Col>

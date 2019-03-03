@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getListOfEmployees } from '../../actions';
-import { Layout, Menu, List, Row, Col } from 'antd'
+// import { getListOfEmployees } from '../../actions';
+import { Layout, List, Row, Col } from 'antd'
 import "antd/dist/antd.css";
 
 const { Header, Content } = Layout;

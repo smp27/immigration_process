@@ -3,7 +3,6 @@ import  Validator from 'validator';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login } from '../../actions';
-import { getListOfEmployees } from '../../actions';
 import { Form, Input, Button, Card, Row, Col } from 'antd';
 import "antd/dist/antd.css";
 
@@ -25,9 +24,12 @@ class Login extends Component {
 
     static getDerivedStateFromProps(nextProps, state){
         if(nextProps.loginStatus) {
-            //nextProps.dispatch(getListOfEmployees());
             nextProps.history.push("/h1bform");
         }
+        if(nextProps.error !== "") {
+            state.errors = {email: state.error};
+        }
+        return null;
     }
     // static getDerivedStateFromProps(nextProps, prevState) {
     //     console.log(nextProps);
@@ -76,12 +78,12 @@ class Login extends Component {
                                     {errors.email}
                                 </Form.Item>
                                 <Form.Item error={!!errors.password} style={{color: 'red'}}>
-                                        <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
+                                    <Input id="password" type="password" name="password" value= {data.password} onChange={this.onChange} placeholder="Make it Secure" />
                                     {errors.password}
                                 </Form.Item>
                                 <Button type="primary" onClick={this.onSubmit}>Submit</Button>
                                 <Form.Item>
-                                    <Link style={{float: 'left'}} to="/signup"><a>First time user? Sign Up</a></Link>
+                                    <Link style={{float: 'left'}} to="/signup">First time user? Sign Up</Link>
                                     <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
                                 </Form.Item>
                             </Form>
