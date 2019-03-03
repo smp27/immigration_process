@@ -1086,7 +1086,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.dateOfBirth} style={{ color: 'red' }} label="Date of Birth">
                                                         {/* <Input id="dateOfBirth" type="text" name="dateOfBirth"  value= {employeeDetails.passportDetails.dateOfBirth} onChange={this.onChange} placeholder="Date of Birth" /> */}
-                                                        <DatePicker onChange={this.onBirthDateChange} dateFormat="yyyy/MM/dd" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
                                                         {errors.dateOfBirth}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.countryPassport} style={{ color: 'red' }} label="Country">
@@ -1099,12 +1099,12 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.issueDate} style={{ color: 'red' }} label="Issue Date">
                                                         {/* <Input id="issueDate" type="date" name="issueDate"  value= {employeeDetails.passportDetails.issueDate} onChange={this.onChange} placeholder="Issue Date" /> */}
-                                                        <DatePicker onChange={this.onPassportIssueDateChange} dateFormat="yyyy/MM/dd" placeholder= "Issue Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onPassportIssueDateChange} format="MM/DD/YYYY" placeholder= "Issue Date" defaultValue= {moment()} />
                                                         {errors.issueDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.expirationDate} style={{ color: 'red' }} label="Expiration Date">
                                                         {/* <Input id="expirationDate" type="text" name="expirationDate"  value= {employeeDetails.passportDetails.expirationDate} onChange={this.onChange} placeholder="Expiration Date" /> */}
-                                                        <DatePicker onChange={this.onPassportExpirationDateChange} dateFormat="yyyy/MM/dd" placeholder= "Expiration Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onPassportExpirationDateChange} format="MM/DD/YYYY" placeholder= "Expiration Date" defaultValue= {moment()} />
                                                         {errors.expirationDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.countryOfCitizenship} style={{ color: 'red' }} label="Country Of Citizenship">
@@ -1141,17 +1141,17 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.USVisaIssued} style={{ color: 'red' }} label="Visa Start Date">
                                                         {/* <Input id="USVisaIssued" type="text" name="USVisaIssued"  value= {employeeDetails.immigirationDetails.USVisaIssued} onChange={this.onChange} placeholder="US Visa Issued" /> */}
-                                                        <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} dateFormat="yyyy/MM/dd" placeholder= "Visa Start Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
                                                         {errors.USVisaIssued}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.when} style={{ color: 'red' }} label="When">
                                                         <Input id="when" type="text" name="when"  value= {employeeDetails.immigirationDetails.when} onChange={this.onChange} placeholder="When" />
-                                                        <DatePicker onChange={this.onImmigrationWhenDateChange} dateFormat="yyyy/MM/dd" placeholder= "When" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onImmigrationWhenDateChange} format="MM/DD/YYYY" placeholder= "When" defaultValue= {moment()} />
                                                         {errors.when}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.visaExpireDate} style={{ color: 'red' }} label="Visa Expire Date">
                                                         {/* <Input id="visaExpireDate" type="text" name="visaExpireDate"  value= {employeeDetails.immigirationDetails.visaExpireDate} onChange={this.onChange} placeholder="Valid Until" /> */}
-                                                        <DatePicker onChange={this.onImmigrationvisaExpireDateDateChange} dateFormat="yyyy/MM/dd" placeholder= "Visa Expire Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onImmigrationvisaExpireDateDateChange} format="MM/DD/YYYY" placeholder= "Visa Expire Date" defaultValue= {moment()} />
                                                         {errors.visaExpireDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate Name">
@@ -1176,22 +1176,22 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
                                                         <Input id="entryValidTill" type="text" name="entryValidTill"  value= {employeeDetails.immigirationDetails.entryValidTill} onChange={this.onChange} placeholder="Entry Valid Till" /> 
-                                                        <DatePicker onChange={this.onImmigrationEntryValidTillDateChange} dateFormat="yyyy/MM/dd" placeholder= "Entry Valid Till" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onImmigrationEntryValidTillDateChange} format="MM/DD/YYYY" placeholder= "Entry Valid Till" defaultValue= {moment()} />
                                                         {errors.entryValidTill}
                                                 </Form.Item>*/}
                                                 <Form.Item error={!!errors.lastEntryUS} style={{ color: 'red' }} label="Last Entry US">
                                                         {/* <Input id="lastEntryUS" type="text" name="lastEntryUS"  value= {employeeDetails.immigirationDetails.lastEntryUS} onChange={this.onChange} placeholder="Last Entry US" /> */}
-                                                        <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} dateFormat="yyyy/MM/dd" placeholder= "Last Entry US" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
                                                         {errors.lastEntryUS}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry (City, State)">
                                                         <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
-                                                        {/* <DatePicker onChange={this.onPortOfEntryDateChange} dateFormat="yyyy/MM/dd" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
+                                                        {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
                                                         {errors.portOfEntry}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.visaStamping} style={{ color: 'red' }} label="Visa Stamping">
                                                         <Input id="visaStamping" type="text" name="visaStamping"  value= {employeeDetails.immigirationDetails.visaStamping} onChange={this.onImmigirationDetailsChange} placeholder="Visa Stamping" />
-                                                        <DatePicker onChange={this.onVisaStampingDateChange} dateFormat="yyyy/MM/dd" placeholder= "Visa Stamping" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onVisaStampingDateChange} format="MM/DD/YYYY" placeholder= "Visa Stamping" defaultValue= {moment()} />
                                                         {errors.visaStamping}
                                                 </Form.Item> */}
                                                 {/* <Form.Item error={!!errors.visaConsulate} style={{ color: 'red' }} label="Visa Consulate">
@@ -1214,12 +1214,12 @@ class H1bForm extends Component {
                                             <Card title="Travel Information">
                                                 <Form.Item error={!!errors.startDate} style={{ color: 'red' }} label="Start Date">
                                                         <Input id="startDate" type="text" name="startDate"  value= {employeeDetails.travelDetails.startDate} onChange={this.onChange} placeholder="Start Date" />
-                                                        <DatePicker onChange={this.onTravelInfoStartDateChange} dateFormat="yyyy/MM/dd" placeholder= "Start Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onTravelInfoStartDateChange} format="MM/DD/YYYY" placeholder= "Start Date" defaultValue= {moment()} />
                                                         {errors.startDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.endDate} style={{ color: 'red' }} label="End Date">
                                                         <Input id="endDate" type="text" name="endDate"  value= {employeeDetails.travelDetails.endDate} onChange={this.onChange} placeholder="End Date" />
-                                                        <DatePicker onChange={this.onTravelInfoEndDateChange} dateFormat="yyyy/MM/dd" placeholder= "End Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onTravelInfoEndDateChange} format="MM/DD/YYYY" placeholder= "End Date" defaultValue= {moment()} />
                                                         {errors.endDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.daysCount} style={{ color: 'red' }} label="Days Count">
@@ -1232,12 +1232,12 @@ class H1bForm extends Component {
                                             <Card title="Overseas Travel History (If Applicable)">
                                                 <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
                                                         {/* <Input id="departureDate" type="text" name="departureDate"  value= {employeeDetails.travelHistory.departureDate} onChange={this.onChange} placeholder="Departure Date" /> */}
-                                                        <DatePicker onChange={this.onTravelHistoryDepartureDateChange} dateFormat="yyyy/MM/dd" placeholder= "Departure Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onTravelHistoryDepartureDateChange} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
                                                         {errors.departureDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.arrivalDate} style={{ color: 'red' }} label="Arrival Date">
                                                         {/* <Input id="arrivalDate" type="text" name="arrivalDate"  value= {employeeDetails.travelHistory.arrivalDate} onChange={this.onChange} placeholder="Arrival Date" /> */}
-                                                        <DatePicker onChange={this.onTravelHistoryArrivalDateChange} dateFormat="yyyy/MM/dd" placeholder= "Arrival Date" defaultValue= {moment()} />
+                                                        <DatePicker onChange={this.onTravelHistoryArrivalDateChange} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
                                                         {errors.arrivalDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.daysSpent} style={{ color: 'red' }} label="Days Count">
@@ -1284,12 +1284,12 @@ class H1bForm extends Component {
                                                         </Form.Item>
                                                         <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval">
                                                                 <Input id="I140Date" type="text" name="I140Date"  value= {employeeDetails.I140Detials.I140Date} onChange={this.onChange} placeholder="I-140 Date" />
-                                                                <DatePicker onChange={this.onI140DateChange} dateFormat="yyyy/MM/dd" placeholder= "I-140 Approval" defaultValue= {moment()} />
+                                                                <DatePicker onChange={this.onI140DateChange} format="MM/DD/YYYY" placeholder= "I-140 Approval" defaultValue= {moment()} />
                                                                 {errors.I140Approval}
                                                         </Form.Item>
                                                         <Form.Item error={!!errors.I140Receipt} style={{ color: 'red' }} label="I-140 Receipt">
                                                                 <Input id="I140ReceiptDate" type="text" name="I140ReceiptDate"  value= {employeeDetails.I140Detials.I140ReceiptDate} onChange={this.onChange} placeholder="I-140 Receipt Date" />
-                                                                <DatePicker onChange={this.onI140ReceiptDateChange} dateFormat="yyyy/MM/dd" placeholder= "I-140 Receipt" defaultValue= {moment()} />
+                                                                <DatePicker onChange={this.onI140ReceiptDateChange} format="MM/DD/YYYY" placeholder= "I-140 Receipt" defaultValue= {moment()} />
                                                                 {errors.I140Receipt}
                                                         </Form.Item>
                                                         <Form.Item error={!!errors.I140Documents} style={{ color: 'red' }} label="I-140 Documents">
@@ -1335,7 +1335,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.kidBirthDate} style={{ color: 'red' }} label="Birth Date">
                                                     <Input id="kidBirthDate" type="text" name="kidBirthDate"  value= {employeeDetails.kidsDetails.kidBirthDate} onChange={this.onChange} placeholder="Birth Date" />
-                                                    <DatePicker onChange={this.onKidBirthDateChange} dateFormat="yyyy/MM/dd" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                    <DatePicker onChange={this.onKidBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
                                                     {errors.kidBirthDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.kidCountry} style={{ color: 'red' }} label="Country">
@@ -1368,7 +1368,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.spouseBirthDate} style={{ color: 'red' }} label="Spouse Birth Date">
                                                     <Input id="spouseBirthDate" type="text" name="spouseBirthDate"  value= {employeeDetails.H4Details.spouseBirthDate} onChange={this.onChange} placeholder="Spouse Birth Date" />
-                                                    <DatePicker onChange={this.onSpouseBirthDateChange} dateFormat="yyyy/MM/dd" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                    <DatePicker onChange={this.onSpouseBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
                                                     {errors.spouseBirthDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.spouseCountry} style={{ color: 'red' }} label="Spouse Country">
@@ -1381,7 +1381,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.marraigeDate} style={{ color: 'red' }} label="Marraige Date">
                                                     <Input id="marraigeDate" type="text" name="marraigeDate"  value= {employeeDetails.H4Details.marraigeDate} onChange={this.onChange} placeholder="Marraige Date" />
-                                                    <DatePicker onChange={this.onMarraigeDateChange} dateFormat="yyyy/MM/dd" placeholder= "Marraige Date" defaultValue= {moment()} />
+                                                    <DatePicker onChange={this.onMarraigeDateChange} format="MM/DD/YYYY" placeholder= "Marraige Date" defaultValue= {moment()} />
                                                     {errors.marraigeDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.countryOfMarraige} style={{ color: 'red' }} label="Country Of Marraige">
@@ -1462,7 +1462,7 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.projectStartDate} style={{ color: 'red' }} label="Project Start Date">
                                                     {/* <Input id="projectStartDate" type="text" name="projectStartDate"  value= {employeeDetails.workDetails.projectStartDate} onChange={this.onChange} placeholder="Project Start Date" /> */}
-                                                    <DatePicker onChange={this.onProjectStartDateChange} dateFormat="yyyy/MM/dd" placeholder= "Project Start Date" defaultValue= {moment()} />
+                                                    <DatePicker onChange={this.onProjectStartDateChange} format="MM/DD/YYYY" placeholder= "Project Start Date" defaultValue= {moment()} />
                                                     {errors.projectStartDate}
                                                 </Form.Item>
                                             </Card>
