@@ -80,6 +80,13 @@ function* fileUploadAsync(action) {
     console.log(response);
 }
 
+function* adminUploadsAsync(action) {
+    yield put({
+        type: 'ADMIN_UPLOADS_ASYNC', 
+        payload: action.payload
+    });
+}
+
 function insertNewImmiForm(item) {
     const newItemRef = database.ref('ImmigrationForm').push();
     return newItemRef.set(item);
@@ -103,7 +110,7 @@ function* createNewImmiFormItemSaga() {
 }
 
 function insertNewEmployee(item) {
-    const newItemRef = database.ref('employeesList').push();
+    const newItemRef = database.ref('ImmigrationForm').push();
     return newItemRef.set(item);
 }
 
@@ -147,7 +154,7 @@ function createEventChannelToGetData(){
 }
   
 // Get Incentive Transaction List
-function* getEmployeesList(){    
+function* getEmployeesList(){
     const getDataChannel = yield call(createEventChannelToGetData());
     while(true) {
         const response = yield take(getDataChannel);
@@ -181,26 +188,26 @@ function* forgotPasswordAsync(action) {
 function* startListener() {
     // #1: Creates an eventChannel and starts the listener;
     const channel = new eventChannel(emiter => {
-      const listener = database.ref("ImmigrationForm").on("value", snapshot => {
-          emiter({ response: snapshot.val() || {} });
+        const listener = database.ref("ImmigrationForm").on("value", snapshot => {
+            emiter({ response: snapshot.val() || {} });
         });
   
-      // #2: Return the shutdown method;
-      return () => {
-        listener.off();
-      };
+        // #2: Return the shutdown method;
+        return () => {
+            listener.off();
+        };
     });
   
     // #3: Creates a loops to keep the execution in memory;
     while (true) {
       const { response } = yield take(channel);
-      console.log(response);
+    //   console.log(response);
 
       yield put(getListOfEmployeesSuccessResponse(response))
       // #4: Pause the task until the channel emits a signal and dispatch an action in the store;
       //yield put({type: Types.GET_EMPLOYEE_LIST_SUCCESS, data});// this is causing the error.
     }
-  }
+}
 
 export function* rootSaga() {
     yield takeLatest(Types.LOGIN, loginAsync);
@@ -214,4 +221,5 @@ export function* rootSaga() {
     yield fork(createNewImmiFormItemSaga);
     //yield fork(startListener);    
     yield all([takeLatest(Types.GET_EMPLOYEE_LIST, startListener)]);
+    yield takeLatest(Types.ADMIN_UPLOADS, adminUploadsAsync);
 }

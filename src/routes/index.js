@@ -7,6 +7,7 @@ import ForgotPassword from '../components/forgotpassword';
 import Signup from '../components/signup';
 import EmployeeList from '../components/employeelist';
 import PrivateRoute from '../components/privateroute';
+import Admin from '../components/admin';
 
 const Routes = () => {
   return (
@@ -16,6 +17,7 @@ const Routes = () => {
           <Route exact path="/forgotpassword" render={(props) => <ForgotPassword {...props} />} />
           <Route exact path="/signup" render={(props) => <Signup {...props} />} />
           <PrivateRoute path="/employeelist" component={EmployeeList} />
+          <PrivateRoute path="/admin" component={Admin} />
           <PrivateRoute path="/h1bform" component={H1bForm} />
           <PrivateRoute path="/logout" component={Logout} />
           <Redirect to="/" />

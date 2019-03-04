@@ -117,23 +117,23 @@ class H1bForm extends Component {
                     visaConsulate: '',
                     USConsulateOther: ''
                 },
-                travelDetails: {
-                    startDate: '',
-                    endDate: '',
-                    daysCount: ''
-                },
+                // travelDetails: {
+                //     startDate: '',
+                //     endDate: '',
+                //     daysCount: ''
+                // },
                 travelHistory: {
                     departureDate: '',
                     arrivalDate: '',
                     daysSpent: ''
                 },
-                H4CheckListDetails: {
-                    H4Passport: '',
-                    H4i94: '',
-                    H4Approval: '',
-                    H4Marraige: '',
-                    H4ChildrenCertificate: ''
-                },
+                // H4CheckListDetails: {
+                //     H4Passport: '',
+                //     H4i94: '',
+                //     H4Approval: '',
+                //     H4Marraige: '',
+                //     H4ChildrenCertificate: ''
+                // },
                 workDetails:{
                     clientName: '',
                     clientAddress: '',
@@ -146,44 +146,44 @@ class H1bForm extends Component {
                     contactNumber: '',
                     projectStartDate: ''
                 },
-                I140Detials: {
-                    I140Approval: '',
-                    I140Receipt: '',
-                    I140Documents: '',
-                    I140DocumentsURL: ''
-                },
-                spouseDetails: {
-                    maritalStatus: '',
-                    spouseH4: '',
-                    dependenceRelationship: ''
-                },
-                H4Details: {
-                    spouseFullName: '',
-                    spouseBirthDate: '',
-                    spouseCountry: '',
-                    spouseCountryOfCitizen: '',
-                    marraigeDate: '',
-                    countryOfMarraige: '',
-                    spouseImmigrationStatus: '',
-                    spouseSoicalSecurityNumber: '',
-                    dependenceRelationship: '',
-                    spouseCurrentAddress: '',
-                    spouseCity: '',
-                    spouseState: '',
-                    spouseZipcode: ''
-                },
-                kidsDetails: {
-                    dependenceRelationship2: '',
-                    kidFullName: '',
-                    kidGender: '',
-                    kidMaritalStatus: '',
-                    kidBirthDate: '',
-                    kidCountry: '',
-                    kidCountryOfCitizen: '',
-                    kidImmigrationStatus: '',
-                    kidSocialSecurityNumber: '',
-                    kidCurrentAddress: ''
-                }
+                // I140Detials: {
+                //     I140Approval: '',
+                //     I140Receipt: '',
+                //     I140Documents: '',
+                //     I140DocumentsURL: ''
+                // },
+                // spouseDetails: {
+                //     maritalStatus: '',
+                //     spouseH4: '',
+                //     dependenceRelationship: ''
+                // },
+                // H4Details: {
+                //     spouseFullName: '',
+                //     spouseBirthDate: '',
+                //     spouseCountry: '',
+                //     spouseCountryOfCitizen: '',
+                //     marraigeDate: '',
+                //     countryOfMarraige: '',
+                //     spouseImmigrationStatus: '',
+                //     spouseSoicalSecurityNumber: '',
+                //     dependenceRelationship: '',
+                //     spouseCurrentAddress: '',
+                //     spouseCity: '',
+                //     spouseState: '',
+                //     spouseZipcode: ''
+                // },
+                // kidsDetails: {
+                //     dependenceRelationship2: '',
+                //     kidFullName: '',
+                //     kidGender: '',
+                //     kidMaritalStatus: '',
+                //     kidBirthDate: '',
+                //     kidCountry: '',
+                //     kidCountryOfCitizen: '',
+                //     kidImmigrationStatus: '',
+                //     kidSocialSecurityNumber: '',
+                //     kidCurrentAddress: ''
+                // }
             },
             reliableDocuments: {
                 layer1: '',
@@ -913,7 +913,7 @@ class H1bForm extends Component {
                                 <img src="https://rsrit.com/wp-content/uploads/2017/12/logo_dark.png" alt="reliable" width="150px" height="50px"></img>
                             </Col>
                             <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
-                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/employeelist">Reliable Immigration Form</Link></h1>
+                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/admin">Reliable Immigration Form</Link></h1>
                             </Col>
                              <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
                                 <Link style={{ float: 'right'}} to="/logout">Logout</Link>
@@ -1475,6 +1475,34 @@ class H1bForm extends Component {
                                         <Row>
                                         <Col >
                                             <Card title="Documents From Employee">
+                                                <div>
+                                                <Form.Item>
+                                                    <span style={{marginRight: '10px'}}>
+                                                        { this.props.adminUploads.clientLetterTemplate && this.props.adminUploads.clientLetterTemplatePathLower !== '' ?
+                                                            (
+                                                            <span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.props.adminUploads.clientLetterTemplate, this.props.adminUploads.clientLetterTemplatePathLower) } }>
+                                                                    Download Client Letter Template
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </span>
+                                                    <span style={{marginLeft: '10px'}}>
+                                                        { this.props.adminUploads.vendorLetterTemplate && this.props.adminUploads.vendorLetterTemplatePathLower !== '' ?
+                                                            (
+                                                            <span>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.props.adminUploads.vendorLetterTemplate, this.props.adminUploads.vendorLetterTemplatePathLower) } }>
+                                                                    Download Vendor Letter Template
+                                                                </a>
+                                                            </span>
+                                                            )
+                                                            : (<span></span>)
+                                                        }
+                                                    </span>
+                                                </Form.Item>
+                                                </div>
                                                 <Form.Item error={!!errors.passportPage} style={{ color: 'red' }} label="Passport Page">
                                                     <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
                                                     {errors.passportPage}
@@ -1808,8 +1836,6 @@ class H1bForm extends Component {
                                             </Form.Item>
                                         </Row>
                                     </Form>
-                            
-                        
                         </Collapse>    
                     </Content>
                 </Layout> 
@@ -1826,7 +1852,8 @@ const mapStateToProps = state => {
     return {
         loggedInUser: state.loggedInUser,
         getEmployeesList:state.getEmployeesList,
-        sucessFormSubmission: state.sucessFormSubmission
+        sucessFormSubmission: state.sucessFormSubmission,
+        adminUploads: state.adminUploads
     }
 };
 

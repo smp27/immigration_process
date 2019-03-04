@@ -42,3 +42,8 @@ export const getListOfEmployeesSuccessResponse = (data) => ({
     type: Types.GET_EMPLOYEE_LIST_SUCCESS,
     data
 });
+
+export const adminUploads = (data) => ({
+    type: Types.ADMIN_UPLOADS,
+    payload: data
+});
