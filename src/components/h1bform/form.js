@@ -13,8 +13,8 @@ const xhr = new XMLHttpRequest();
 // import file saver to download the file's
 const FileSaver = require('file-saver');
 //Access token to acces dropbox account
-const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
-
+//const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
+const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
@@ -457,6 +457,20 @@ class H1bForm extends Component {
 
     //Upload file to the dropbox
     uploadFile = (e, fN) => {
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        //
         // this keyword is not working inside the xhr functions, th is declared as proxy to this keyword
         const th = this;
         // let errorDetails = Object.assign({}, this.state.errors);
@@ -466,7 +480,7 @@ class H1bForm extends Component {
         const filename = e.target.name;
 
         if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
-            // const {firstName, lastName} =  this.state.employeeDetails;
+             const {firstName, lastName} =  this.state.employeeDetails;
         
             if(e.target.files[0].type === "application/pdf") {
                     
@@ -496,7 +510,7 @@ class H1bForm extends Component {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
                 xhr.setRequestHeader('Content-Type', 'application/octet-stream');
                 xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-                path: '/' +  file.name,
+                path: '/' + firstName +' ' +lastName+ '/'+ fN + '/'+file.name ,
                 mode: 'add',
                 autorename: true,
                 mute: false
@@ -578,7 +592,7 @@ class H1bForm extends Component {
         const errors = this.validate(this.state.employeeDetails);
         this.setState({errors: errors});
         if(Object.keys(errors).length === 0) {
-            this.props.dispatch(visaForm(this.state.employeeDetails));
+            //this.props.dispatch(visaForm(this.state.employeeDetails));
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };
