@@ -621,10 +621,10 @@ class H1bForm extends Component {
         else
             delete errors.address1;
             
-        if(!employeeDetails.addressDetails.address2)
-            errors.address2 = "Can't be empty";
-        else
-            delete errors.address2;
+        // if(!employeeDetails.addressDetails.address2)
+        //     errors.address2 = "Can't be empty";
+        // else
+        //     delete errors.address2;
         
         if(!employeeDetails.addressDetails.city)
             errors.city = "Can't be empty";
@@ -653,10 +653,10 @@ class H1bForm extends Component {
         else
             delete errors.overseasAddress1;
     
-        if(!employeeDetails.overseasAddressDetails.overseasAddress2) 
-            errors.overseasAddress2 = "Can't be empty";
-        else
-            delete errors.overseasAddress2;
+        // if(!employeeDetails.overseasAddressDetails.overseasAddress2) 
+        //     errors.overseasAddress2 = "Can't be empty";
+        // else
+        //     delete errors.overseasAddress2;
     
         if(!employeeDetails.overseasAddressDetails.overseasCity) 
             errors.overseasCity = "Can't be empty";
@@ -719,7 +719,7 @@ class H1bForm extends Component {
         else
             delete errors.countryOfCitizenship;
     
-        if(!employeeDetails.passportDetails.socialSecurityNumber) 
+        if(!Validator.isNumeric(employeeDetails.passportDetails.socialSecurityNumber) || employeeDetails.passportDetails.socialSecurityNumber === 9) 
             errors.socialSecurityNumber = "Can't be empty";
         else
             delete errors.socialSecurityNumber ;
@@ -760,7 +760,7 @@ class H1bForm extends Component {
             delete errors.consulateCountry ;
     
         // if(!employeeDetails.immigirationDetails.otherName2) errors.otherName2 = "Cant't be empty";
-        if(!employeeDetails.immigirationDetails.i94Number)
+        if(!Validator.isNumeric(employeeDetails.immigirationDetails.i94Number))
             errors.i94Number = "Can't be empty";
         else
             delete errors.i94Number ;
@@ -819,10 +819,10 @@ class H1bForm extends Component {
         else
             delete errors.clientAddress ;
     
-        if(!employeeDetails.workDetails.clientAddress2) 
-            errors.clientAddress2 = "Can't be empty";
-        else
-            delete errors.clientAddress2 ;
+        // if(!employeeDetails.workDetails.clientAddress2) 
+        //     errors.clientAddress2 = "Can't be empty";
+        // else
+        //     delete errors.clientAddress2 ;
     
         if(!employeeDetails.workDetails.clientCity) 
             errors.clientCity = "Can't be empty";
@@ -834,7 +834,7 @@ class H1bForm extends Component {
         else
             delete errors.clientState ;
     
-        if(!employeeDetails.workDetails.clientZipCode) 
+        if(!Validator.isNumeric(employeeDetails.workDetails.clientZipCode)) 
             errors.clientZipCode = "Can't be empty";
         else
             delete errors.clientZipCode ;
@@ -844,7 +844,7 @@ class H1bForm extends Component {
         else
             delete errors.vendorName ;
     
-        if(!employeeDetails.workDetails.vendorEmail) 
+        if(!Validator.isEmail(employeeDetails.workDetails.vendorEmail)) 
             errors.vendorEmail = "Can't be empty";
         else
             delete errors.vendorEmail;
@@ -1124,25 +1124,25 @@ class H1bForm extends Component {
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Immigration Information">
                                                 <Form.Item error={!!errors.currentStatus} style={{ color: 'red' }} label="Current Status">
-                                                        {/* <Input id="currentStatus" type="text" name="currentStatus"  value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} placeholder="Current Status" /> */}
-                                                        <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
-                                                            <Radio value={'F1'}>F1</Radio>
-                                                            <Radio value={'H1B'}>H1B</Radio>
-                                                            <Radio value={'H4'}>H4</Radio>
-                                                            <Radio value={'B1/B2'}>B1/B2</Radio>
-                                                            <Radio value={'L1/L2'}>L1/L2</Radio>
-                                                            <Radio value={'other'}>Other</Radio>
-                                                        </RadioGroup>
-                                                        {errors.currentStatus}
+                                                    {/* <Input id="currentStatus" type="text" name="currentStatus"  value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} placeholder="Current Status" /> */}
+                                                    <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
+                                                        <Radio value={'F1'}>F1</Radio>
+                                                        <Radio value={'H1B'}>H1B</Radio>
+                                                        <Radio value={'H4'}>H4</Radio>
+                                                        <Radio value={'B1/B2'}>B1/B2</Radio>
+                                                        <Radio value={'L1/L2'}>L1/L2</Radio>
+                                                        <Radio value={'other'}>Other</Radio>
+                                                    </RadioGroup>
+                                                    {errors.currentStatus}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.currentStatusOtherName} style={{ color: 'red' }} label="Current Status Other Name">
                                                         <Input id="currentStatusOtherName" type="text" name="currentStatusOtherName"  value= {employeeDetails.immigirationDetails.currentStatusOtherName} onChange={this.onImmigirationDetailsChange} placeholder="Current Status Other Name" />
                                                         {errors.currentStatusOtherName}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.USVisaIssued} style={{ color: 'red' }} label="Visa Start Date">
-                                                        {/* <Input id="USVisaIssued" type="text" name="USVisaIssued"  value= {employeeDetails.immigirationDetails.USVisaIssued} onChange={this.onChange} placeholder="US Visa Issued" /> */}
-                                                        <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
-                                                        {errors.USVisaIssued}
+                                                    {/* <Input id="USVisaIssued" type="text" name="USVisaIssued"  value= {employeeDetails.immigirationDetails.USVisaIssued} onChange={this.onChange} placeholder="US Visa Issued" /> */}
+                                                    <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
+                                                    {errors.USVisaIssued}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.when} style={{ color: 'red' }} label="When">
                                                         <Input id="when" type="text" name="when"  value= {employeeDetails.immigirationDetails.when} onChange={this.onChange} placeholder="When" />
@@ -1155,24 +1155,24 @@ class H1bForm extends Component {
                                                         {errors.visaExpireDate}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate Name">
-                                                        <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
-                                                        {errors.immigrationConsule}
+                                                    <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
+                                                    {errors.immigrationConsule}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.consulateCity} style={{ color: 'red' }} label="City">
-                                                        <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
-                                                        {errors.consulateCity}
+                                                    <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
+                                                    {errors.consulateCity}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.consulateCountry} style={{ color: 'red' }} label="Country">
-                                                        <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
-                                                        {errors.consulateCountry}
+                                                    <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
+                                                    {errors.consulateCountry}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.otherName2} style={{ color: 'red' }} label="Other Name 2">
                                                         <Input id="otherName2" type="text" name="otherName2"  value= {employeeDetails.immigirationDetails.otherName2} onChange={this.onImmigirationDetailsChange} placeholder="Other Name 2" />
                                                         {errors.otherName2}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.i94Number} style={{ color: 'red' }} label="I-94">
-                                                        <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
-                                                        {errors.i94Number}
+                                                    <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
+                                                    {errors.i94Number}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
                                                         <Input id="entryValidTill" type="text" name="entryValidTill"  value= {employeeDetails.immigirationDetails.entryValidTill} onChange={this.onChange} placeholder="Entry Valid Till" /> 
@@ -1180,14 +1180,14 @@ class H1bForm extends Component {
                                                         {errors.entryValidTill}
                                                 </Form.Item>*/}
                                                 <Form.Item error={!!errors.lastEntryUS} style={{ color: 'red' }} label="Last Entry US">
-                                                        {/* <Input id="lastEntryUS" type="text" name="lastEntryUS"  value= {employeeDetails.immigirationDetails.lastEntryUS} onChange={this.onChange} placeholder="Last Entry US" /> */}
-                                                        <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
-                                                        {errors.lastEntryUS}
+                                                    {/* <Input id="lastEntryUS" type="text" name="lastEntryUS"  value= {employeeDetails.immigirationDetails.lastEntryUS} onChange={this.onChange} placeholder="Last Entry US" /> */}
+                                                    <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
+                                                    {errors.lastEntryUS}
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry (City, State)">
-                                                        <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
-                                                        {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
-                                                        {errors.portOfEntry}
+                                                    <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
+                                                    {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
+                                                    {errors.portOfEntry}
                                                 </Form.Item>
                                                 {/* <Form.Item error={!!errors.visaStamping} style={{ color: 'red' }} label="Visa Stamping">
                                                         <Input id="visaStamping" type="text" name="visaStamping"  value= {employeeDetails.immigirationDetails.visaStamping} onChange={this.onImmigirationDetailsChange} placeholder="Visa Stamping" />
