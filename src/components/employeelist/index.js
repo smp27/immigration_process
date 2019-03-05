@@ -2,10 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 // import { getListOfEmployees } from '../../actions';
-import { Layout, List, Row, Col } from 'antd'
+import { Menu, Dropdown, Icon, Layout, List, Row, Col } from 'antd'
 import "antd/dist/antd.css";
 
 const { Header, Content } = Layout;
+
+const menu = (
+    <Menu>
+        <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
+        <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
+        <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
+    </Menu>
+);
 
 class EmployeeList extends Component {
 
@@ -15,11 +23,17 @@ class EmployeeList extends Component {
         this.state = {
             list: []
         }
+        this.onClick = this.onClick.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, state){
         state.list = nextProps.getEmployeesList;
         return null;
+    }
+
+    onClick(e, data) {
+        e.preventDefault();
+        console.log(data);
     }
 
     render() {
@@ -35,8 +49,13 @@ class EmployeeList extends Component {
                             <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
                                 <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                             </Col>
-                             <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
-                                <Link style={{ float: 'right'}} to="/logout">Logout</Link>
+                             <Col span={8} style={{ float: 'right' }}>
+                                {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
+                                <Dropdown overlay={menu}>
+                                    <a className="ant-dropdown-link" href="#">
+                                        Menu <Icon type="down" />
+                                    </a>
+                                </Dropdown>
                              </Col> 
                         </Row>
                     </Header>
@@ -45,7 +64,7 @@ class EmployeeList extends Component {
                         header={<div>Employee's List</div>}
                         bordered
                         dataSource={data}
-                        renderItem={item => (<List.Item>{item.firstName} {item.lastName}</List.Item>)}
+                        renderItem={item => (<List.Item onClick={ (e) => {this.onClick(e, item) } }>{item.firstName} {item.lastName}</List.Item>)}
                         />
                     </Content>
                 </Layout>

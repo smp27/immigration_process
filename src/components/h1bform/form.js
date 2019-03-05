@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import  Validator from 'validator';
-import { Collapse, Icon, Form, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
+import { Menu, Collapse, Popover, Icon, Form, Dropdown, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -8,16 +8,30 @@ import { visaForm, fileUpload, submitImmiFormAction, getListOfEmployees } from '
 import moment from 'moment';
 import { storage } from '../../firebase';
 
+// import html2canvas and jspdf to export webpage to pdf and download
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+const pdf = new jsPDF();
+
 //To access data from the web
 const xhr = new XMLHttpRequest();
 // import file saver to download the file's
 const FileSaver = require('file-saver');
 //Access token to acces dropbox account
-//const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
-const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
+const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
+// const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
+
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
+
+const menu = (
+    <Menu>
+        <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
+        <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
+        <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
+    </Menu>
+);
 
 class H1bForm extends Component {
     constructor(props) {
@@ -214,6 +228,7 @@ class H1bForm extends Component {
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.exportToPdf = this.exportToPdf.bind(this);
     }
 
     componentDidMount() {
@@ -457,20 +472,6 @@ class H1bForm extends Component {
 
     //Upload file to the dropbox
     uploadFile = (e, fN) => {
-
-
-
-
-
-
-
-
-
-
-
-        
-
-        //
         // this keyword is not working inside the xhr functions, th is declared as proxy to this keyword
         const th = this;
         // let errorDetails = Object.assign({}, this.state.errors);
@@ -480,7 +481,7 @@ class H1bForm extends Component {
         const filename = e.target.name;
 
         if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
-             const {firstName, lastName} =  this.state.employeeDetails;
+            const {firstName, lastName} =  this.state.employeeDetails;
         
             if(e.target.files[0].type === "application/pdf") {
                     
@@ -510,7 +511,7 @@ class H1bForm extends Component {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
                 xhr.setRequestHeader('Content-Type', 'application/octet-stream');
                 xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-                path: '/' + firstName +' ' +lastName+ '/'+ fN + '/'+file.name ,
+                path: '/' + firstName +' ' +lastName+ '/'+ fN + '/'+file.name,
                 mode: 'add',
                 autorename: true,
                 mute: false
@@ -588,14 +589,28 @@ class H1bForm extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        
         const errors = this.validate(this.state.employeeDetails);
         this.setState({errors: errors});
         if(Object.keys(errors).length === 0) {
-            //this.props.dispatch(visaForm(this.state.employeeDetails));
+            // this.props.dispatch(visaForm(this.state.employeeDetails));
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };
+
+    exportToPdf = () => {
+        //get data from react render and assign to variable 
+        // const formData = document.getElementById('mainDiv');
+        const formData = document.getElementById('personalInformationForm');
+        html2canvas(formData)
+            .then((canvas) => {
+                // make a screenshot of the webpage
+                const screenshot = canvas.toDataURL('image/png');
+                //convert screenshot to the pdf
+                pdf.addImage(screenshot, 'JPEG', 15, 40, 180, 160);
+                //download pdf
+                pdf.save("download.pdf");
+            });
+    }
 
     //Validation Function
 
@@ -655,7 +670,7 @@ class H1bForm extends Component {
         else
             delete errors.country;
     
-        if(!Validator.isNumeric(employeeDetails.addressDetails.zipCode))
+        if(!Validator.isNumeric(employeeDetails.addressDetails.zipCode) && employeeDetails.addressDetails.zipCode.length === 5)
             errors.zipCode = "Can't be empty";
         else
             delete errors.zipCode;
@@ -682,7 +697,7 @@ class H1bForm extends Component {
         else
             delete errors.overseasState;
     
-        if(!Validator.isNumeric(employeeDetails.overseasAddressDetails.overseasZipCode))
+        if(!Validator.isNumeric(employeeDetails.overseasAddressDetails.overseasZipCode)  && employeeDetails.overseasAddressDetails.overseasZipCode.length === 5)
             errors.overseasZipCode = "Can't be empty";
         else
             delete errors.overseasZipCode;
@@ -695,7 +710,7 @@ class H1bForm extends Component {
         //Contact Details
         // if(!Validator.isNumeric(employeeDetails.contactDetails.homeNumber)) errors.homeNumber = "Enter Home Number";
         // if(!Validator.isNumeric(employeeDetails.contactDetails.workNumber)) errors.workNumber = "Enter Work Number";
-        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber) || employeeDetails.contactDetails.mobileNumber === 10)
+        if(!Validator.isNumeric(employeeDetails.contactDetails.mobileNumber) || employeeDetails.contactDetails.mobileNumber.length === 10)
             errors.mobileNumber = "Can't be empty";
         else
             delete errors.mobileNumber;
@@ -733,7 +748,7 @@ class H1bForm extends Component {
         else
             delete errors.countryOfCitizenship;
     
-        if(!Validator.isNumeric(employeeDetails.passportDetails.socialSecurityNumber) || employeeDetails.passportDetails.socialSecurityNumber === 9) 
+        if(!Validator.isNumeric(employeeDetails.passportDetails.socialSecurityNumber) || employeeDetails.passportDetails.socialSecurityNumber.length === 9) 
             errors.socialSecurityNumber = "Can't be empty";
         else
             delete errors.socialSecurityNumber ;
@@ -774,7 +789,7 @@ class H1bForm extends Component {
             delete errors.consulateCountry ;
     
         // if(!employeeDetails.immigirationDetails.otherName2) errors.otherName2 = "Cant't be empty";
-        if(!Validator.isNumeric(employeeDetails.immigirationDetails.i94Number))
+        if(!Validator.isNumeric(employeeDetails.immigirationDetails.i94Number) && employeeDetails.immigirationDetails.i94Number.length === 11)
             errors.i94Number = "Can't be empty";
         else
             delete errors.i94Number ;
@@ -848,7 +863,7 @@ class H1bForm extends Component {
         else
             delete errors.clientState ;
     
-        if(!Validator.isNumeric(employeeDetails.workDetails.clientZipCode)) 
+        if(!Validator.isNumeric(employeeDetails.workDetails.clientZipCode) && employeeDetails.workDetails.clientZipCode.length === 5) 
             errors.clientZipCode = "Can't be empty";
         else
             delete errors.clientZipCode ;
@@ -913,13 +928,13 @@ class H1bForm extends Component {
 
         //Errors
         return errors;
-    };    
+    };
 
     render() { 
         const { employeeDetails, reliableDocuments, errors } = this.state;
 
         return ( 
-            <div>
+            <div id="mainDiv">
                 <Layout>
                     <Header className="card" style={{ background: '#fff', padding: 0 }} >
                         <Row>
@@ -927,11 +942,16 @@ class H1bForm extends Component {
                                 <img src="https://rsrit.com/wp-content/uploads/2017/12/logo_dark.png" alt="reliable" width="150px" height="50px"></img>
                             </Col>
                             <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
-                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/admin">Reliable Immigration Form</Link></h1>
+                                <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                             </Col>
-                             <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
-                                <Link style={{ float: 'right'}} to="/logout">Logout</Link>
-                             </Col> 
+                            <Col span={8} style={{ float: 'right' }}>
+                                {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
+                                <Dropdown overlay={menu}>
+                                    <a className="ant-dropdown-link" href="#">
+                                        Menu <Icon type="down" />
+                                    </a>
+                                </Dropdown>
+                            </Col> 
                         </Row>
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}> 
@@ -966,7 +986,7 @@ class H1bForm extends Component {
                             </Form>                     
                         <Panel className="boldClass"  header="Personal Information"  key="1">
                             {/* Employee Registration */}
-                                <Form layout="inline">
+                                <Form id="personalInformationForm" layout="inline">
                                     
                                     <Row>
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -1521,6 +1541,9 @@ class H1bForm extends Component {
                                                     <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
                                                     {errors.passportPage}
                                                     <progress value={this.state.passportPageProgress} max="100"/>
+                                                    <Popover content="1st, last and visa pages">
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <span>
                                                         { this.state.passportPagePathLower && this.state.passportPagePathLower !== '' ?
                                                             (
@@ -1557,6 +1580,9 @@ class H1bForm extends Component {
                                                     <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
                                                     {errors.bachelorDegree}                                                    
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
+                                                    <Popover content="Bachelors degree and transcripts text">
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <span>
                                                         { this.state.bachelorDegreePathLower && this.state.bachelorDegreePathLower !== '' ?
                                                             (
@@ -1575,6 +1601,9 @@ class H1bForm extends Component {
                                                     <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
                                                     {errors.mastersTranscripts}                                                    
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
+                                                    <Popover content="Masters degree and transcripts text">
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <span>
                                                         { this.state.mastersTranscriptsPathLower && this.state.mastersTranscriptsPathLower !== '' ?
                                                             (
@@ -1647,6 +1676,9 @@ class H1bForm extends Component {
                                                     <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
                                                     {errors.payStubs}
                                                     <progress value={this.state.payStubsProgress} max="100"/>
+                                                    <Popover content="Most recent 3 pays">
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <span>
                                                         { this.state.payStubsPathLower && this.state.payStubsPathLower !== '' ?
                                                             (
@@ -1847,6 +1879,9 @@ class H1bForm extends Component {
                                         <Row>
                                             <Form.Item>
                                                 <Button type="primary" onClick={this.onSubmit}>Submit</Button>
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Button type="primary" onClick={this.exportToPdf}>Download Form</Button>
                                             </Form.Item>
                                         </Row>
                                     </Form>

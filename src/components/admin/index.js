@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Layout, Row, Col, Form, Card, Input } from 'antd'
+import { Menu, Dropdown, Icon, Layout, Row, Col, Form, Card, Input } from 'antd'
 import { adminUploads } from '../../actions';
 import "antd/dist/antd.css";
 
@@ -13,6 +13,14 @@ const FileSaver = require('file-saver');
 const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
 
 const { Header, Content } = Layout;
+
+const menu = (
+  <Menu>
+      <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
+      <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
+      <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
+  </Menu>
+);
 
 class Admin extends Component {
   constructor(props) {
@@ -100,8 +108,13 @@ class Admin extends Component {
                           <Col span={12} style={{ fontWeight: 'bold', color: '#0066c', textAlign: 'center', paddingLeft: 65 }}>
                               <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                           </Col>
-                          <Col span={8} style={{ float: 'right', fontWeight: 'bold', color: '#0066c', textAlign: 'left', paddingRight: 35 }}>
-                              <Link style={{ float: 'right'}} to="/logout">Logout</Link>
+                          <Col span={8} style={{ float: 'right' }}>
+                              {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
+                              <Dropdown overlay={menu}>
+                                  <a className="ant-dropdown-link" href="#">
+                                      Menu <Icon type="down" />
+                                  </a>
+                              </Dropdown>
                           </Col> 
                       </Row>
                   </Header>
