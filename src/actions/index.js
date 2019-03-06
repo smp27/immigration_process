@@ -47,3 +47,8 @@ export const adminUploads = (data) => ({
     type: Types.ADMIN_UPLOADS,
     payload: data
 });
+
+export const setEmployeeData = (data) => ({
+    type: Types.SET_EMPLOYEE_DATA,
+    payload: data
+});

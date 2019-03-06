@@ -87,6 +87,13 @@ function* adminUploadsAsync(action) {
     });
 }
 
+function* setEmployeeData(action) {
+    yield put({
+        type: 'SET_EMPLOYEE_DATA_ASYNC',
+        payload: action.payload
+    });
+}
+
 function insertNewImmiForm(item) {
     const newItemRef = database.ref('ImmigrationForm').push();
     return newItemRef.set(item);
@@ -222,4 +229,5 @@ export function* rootSaga() {
     //yield fork(startListener);    
     yield all([takeLatest(Types.GET_EMPLOYEE_LIST, startListener)]);
     yield takeLatest(Types.ADMIN_UPLOADS, adminUploadsAsync);
+    yield takeLatest(Types.SET_EMPLOYEE_DATA, setEmployeeData);
 }

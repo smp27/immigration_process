@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 // import { getListOfEmployees } from '../../actions';
-import { Menu, Dropdown, Icon, Layout, List, Row, Col } from 'antd'
+import { Table, Menu, Dropdown, Icon, Layout, List, Row, Col } from 'antd'
 import "antd/dist/antd.css";
+import { setEmployeeData } from '../../actions';
 
 const { Header, Content } = Layout;
 
@@ -14,6 +15,27 @@ const menu = (
         <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
     </Menu>
 );
+
+const columns = [{
+    title: 'First Name',
+    dataIndex: 'firstName',
+  }, {
+    title: 'Last Name',
+    dataIndex: 'lastName',
+  }, {
+    title: 'Email',
+    dataIndex: 'email',
+  }];
+  
+//   const rowSelection = {
+//     onChange: (selectedRowKeys, selectedRows) => {
+//       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+//     },
+//     getCheckboxProps: record => ({
+//       disabled: record.firstName === 'Disabled User', // Column configuration not to be checked
+//       firstName: record.firstName,
+//     }),
+//   };
 
 class EmployeeList extends Component {
 
@@ -36,8 +58,20 @@ class EmployeeList extends Component {
         console.log(data);
     }
 
+    onSelectChange = (selectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        console.log(selectedRows);
+        this.props.dispatch(setEmployeeData(selectedRows[0]));
+    }
+
     render() {
         const data = this.state.list;
+
+        const rowSelection = {
+            data,
+            onChange: this.onSelectChange,
+          };
+
         return (
             <div>
                 <Layout>
@@ -60,12 +94,7 @@ class EmployeeList extends Component {
                         </Row>
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-                    <List
-                        header={<div>Employee's List</div>}
-                        bordered
-                        dataSource={data}
-                        renderItem={item => (<List.Item onClick={ (e) => {this.onClick(e, item) } }>{item.firstName} {item.lastName}</List.Item>)}
-                        />
+                        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
                     </Content>
                 </Layout>
             </div>
@@ -77,9 +106,11 @@ EmployeeList.protoTypes = {
 
 };
 
-const mapStateToProps = state => ({
-    // error: state.error
-    getEmployeesList:state.getEmployeesList
-});
+const mapStateToProps = state => {
+    return {
+        getEmployeesList:state.getEmployeesList,
+        employeeData: state.employeeData
+    }
+};
 
 export default connect(mapStateToProps)(EmployeeList);

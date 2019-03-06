@@ -8,12 +8,23 @@ const initialState = {
     getEmployeesList:[],
     error: '',
     sucessFormSubmission:false,
+    employeeData: {},
     adminUploads: {
         clientLetterTemplate: '',
         clientLetterTemplatePathLower: '',
         vendorLetterTemplate: '',
         vendorLetterTemplatePathLower: ''
-    }
+    },
+    adminsList: [
+        'shaik.mehboob@rsrit.com',
+        'abhinay.g@rsrit.com',
+        'sandeep.perkari@rsrit.com',
+        'sridhar.katukuri@rsrit.com',
+        'venkat.gone@rsrit.com',
+        'poornima.d@rsrit.com',
+        'visha.felix@rsrit.com',
+    ],
+    isAdmin: false
 };
 
 export default function(state = initialState, action) {
@@ -65,6 +76,11 @@ export default function(state = initialState, action) {
             };
             
         case 'LOGIN_ASYNC' : 
+            if(state.adminsList.includes(action.payload.email)) {
+                state.isAdmin = true;
+            } else {
+                state.isAdmin = false;
+            }
             return {
                 ...state,
                 loggedInUser: action.payload,
@@ -94,6 +110,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 adminUploads: Object.assign(state.adminUploads, action.payload)
+            }
+
+        case 'SET_EMPLOYEE_DATA_ASYNC' :
+            return {
+                ...state,
+                employeeData: action.payload
             }
 
         default: 
