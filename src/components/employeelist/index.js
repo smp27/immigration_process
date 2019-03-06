@@ -59,9 +59,8 @@ class EmployeeList extends Component {
     }
 
     onSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        console.log(selectedRows);
         this.props.dispatch(setEmployeeData(selectedRows[0]));
+        this.props.history.push('/form');
     }
 
     render() {
