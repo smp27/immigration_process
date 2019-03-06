@@ -18,8 +18,10 @@ const xhr = new XMLHttpRequest();
 // import file saver to download the file's
 const FileSaver = require('file-saver');
 //Access token to acces dropbox account
-const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
-// const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
+//Shaik Drop Box
+//const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
+// Sandeep Drop Box
+const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
 
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
@@ -523,7 +525,7 @@ class H1bForm extends Component {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
                 xhr.setRequestHeader('Content-Type', 'application/octet-stream');
                 xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-                path: '/' + firstName +' ' +lastName+ '/'+ fN + '/'+file.name,
+                path: '/' + 'Talent team Team Folder' +'/'+ firstName +' ' +lastName+ '/'+ fN + '/'+file.name,
                 mode: 'add',
                 autorename: true,
                 mute: false
@@ -1197,24 +1199,27 @@ class H1bForm extends Component {
                                                         {errors.birthCountry}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.dateOfBirth} style={{ color: 'red' }} label="Date of Birth">
-                                                        {/* <Input id="dateOfBirth" type="text" name="dateOfBirth"  value= {employeeDetails.passportDetails.dateOfBirth} onChange={this.onChange} placeholder="Date of Birth" /> */}
+                                                    <Popover content="Date of Birth">
                                                         <DatePicker onChange={this.onBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
                                                         {errors.dateOfBirth}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Date of Birth">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
+                                                
+                                                    
                                                 {/* <Form.Item error={!!errors.countryPassport} style={{ color: 'red' }} label="Country">
                                                         <Input id="countryPassport" type="text" name="countryPassport"  value= {employeeDetails.passportDetails.countryPassport} onChange={this.onPassportDetailsChange} placeholder="Country" />
                                                         {errors.countryPassport}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.passportNumber} style={{ color: 'red' }} label="Passport Number">
+                                                    <Popover content="Passport number">
                                                         <Input id="passportNumber" type="text" name="passportNumber"  value= {employeeDetails.passportDetails.passportNumber} onChange={this.onPassportDetailsChange} placeholder="Passport Number" />
                                                         {errors.passportNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Passport number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
+                                                
+                                                    
 
                                                 <Form.Item error={!!errors.issueDate} style={{ color: 'red' }} label="Issue Date">
                                                         {/* <Input id="issueDate" type="date" name="issueDate"  value= {employeeDetails.passportDetails.issueDate} onChange={this.onChange} placeholder="Issue Date" /> */}
