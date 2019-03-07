@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 import { Menu, Dropdown, Icon, Layout, Row, Col, Form, Card, Input } from 'antd'
 import { adminUploads } from '../../actions';
 import "antd/dist/antd.css";
+import { DROPBOX_ACCESS_TOKEN_KEY } from '../../stores/config';
 
 //To access data from the web
 const xhr = new XMLHttpRequest();
 // import file saver to download the file's
 const FileSaver = require('file-saver');
-//Shaik Drop Box
-//const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
-// Sandeep Drop Box
-const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
+
+//Access token to acces dropbox account
+const dropboxToken = DROPBOX_ACCESS_TOKEN_KEY;
 
 const { Header, Content } = Layout;
 
@@ -124,13 +124,13 @@ class Admin extends Component {
                     <Form layout="inline">
                       <Row>
                         <Card title="Letter Template">
-                          <Form.Item error={!!errors.clientLetterTemplate} style={{ color: 'red' }} label="Client Letter Templete">
-                            <Input id="clientLetterTemplate" type="file" name="clientLetterTemplate" onChange={(e) => this.uploadFile(e, "Client")} placeholder="Client Letter Templete" />
+                          <Form.Item error={!!errors.clientLetterTemplate} style={{ color: 'red' }} label="Client Letter Template">
+                            <Input id="clientLetterTemplate" type="file" name="clientLetterTemplate" onChange={(e) => this.uploadFile(e, "Client")} placeholder="Client Letter Template" />
                             {errors.clientLetterTemplate}
                             <progress value={this.state.clientLetterTemplateProgress} max="100"/>
                           </Form.Item>
-                          <Form.Item error={!!errors.vendorLetterTemplate} style={{ color: 'red' }} label="Vendor Letter Templete">
-                            <Input id="vendorLetterTemplate" type="file" name="vendorLetterTemplate" onChange={(e) => this.uploadFile(e, "Client")} placeholder="Vendor Letter Templete" />
+                          <Form.Item error={!!errors.vendorLetterTemplate} style={{ color: 'red' }} label="Vendor Letter Template">
+                            <Input id="vendorLetterTemplate" type="file" name="vendorLetterTemplate" onChange={(e) => this.uploadFile(e, "Client")} placeholder="Vendor Letter Template" />
                             {errors.vendorLetterTemplate}
                             <progress value={this.state.vendorLetterTemplateProgress} max="100"/>
                           </Form.Item>

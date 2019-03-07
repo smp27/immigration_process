@@ -24,7 +24,7 @@ const columns = [{
     dataIndex: 'lastName',
   }, {
     title: 'Email',
-    dataIndex: 'email',
+    dataIndex: 'contactDetails.email',
   }];
   
 //   const rowSelection = {
