@@ -2,19 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 // import { getListOfEmployees } from '../../actions';
-import { Table, Menu, Dropdown, Icon, Layout, List, Row, Col } from 'antd'
+import { Table, Menu, Icon, Layout, Row, Col } from 'antd'
 import "antd/dist/antd.css";
 import { setEmployeeData } from '../../actions';
 
 const { Header, Content } = Layout;
-
-const menu = (
-    <Menu>
-        <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
-        <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
-        <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
-    </Menu>
-);
 
 const columns = [{
     title: 'First Name',
@@ -26,17 +18,7 @@ const columns = [{
     title: 'Email',
     dataIndex: 'contactDetails.email',
   }];
-  
-//   const rowSelection = {
-//     onChange: (selectedRowKeys, selectedRows) => {
-//       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-//     },
-//     getCheckboxProps: record => ({
-//       disabled: record.firstName === 'Disabled User', // Column configuration not to be checked
-//       firstName: record.firstName,
-//     }),
-//   };
-
+ 
 class EmployeeList extends Component {
 
     constructor(props) {
@@ -46,6 +28,7 @@ class EmployeeList extends Component {
             list: []
         }
         this.onClick = this.onClick.bind(this);
+        this.onRowSelect = this.onRowSelect.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, state){
@@ -58,18 +41,13 @@ class EmployeeList extends Component {
         console.log(data);
     }
 
-    onSelectChange = (selectedRowKeys, selectedRows) => {
-        this.props.dispatch(setEmployeeData(selectedRows[0]));
+    onRowSelect(data) {
+        this.props.dispatch(setEmployeeData(data));
         this.props.history.push('/form');
     }
 
     render() {
         const data = this.state.list;
-
-        const rowSelection = {
-            data,
-            onChange: this.onSelectChange,
-          };
 
         return (
             <div>
@@ -83,17 +61,26 @@ class EmployeeList extends Component {
                                 <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                             </Col>
                              <Col span={8} style={{ float: 'right' }}>
-                                {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
-                                <Dropdown overlay={menu}>
-                                    <a className="ant-dropdown-link" href="#">
-                                        Menu <Icon type="down" />
-                                    </a>
-                                </Dropdown>
+                                <Menu style={{ float: 'right'}}>
+                                    <Menu.SubMenu title={<span className="submenu-title-wrapper"><Icon type="down-circle" />Menu</span>}>
+                                        <Menu.Item><Link to="/employeelist">Employee List</Link></Menu.Item>
+                                        <Menu.Divider />
+                                        <Menu.Item><Link to="/admin">Admin Panel</Link></Menu.Item>
+                                        <Menu.Divider />
+                                        <Menu.Item><Link to="/logout">Logout</Link></Menu.Item>
+                                    </Menu.SubMenu>
+                                </Menu>
                              </Col> 
                         </Row>
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-                        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+                        <Table 
+                            onRow={(data) => ({
+                                onClick: () => { this.onRowSelect(data) }
+                            })}
+                            columns={columns}
+                            dataSource={data} 
+                        />
                     </Content>
                 </Layout>
             </div>

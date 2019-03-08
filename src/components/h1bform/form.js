@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import  Validator from 'validator';
-import { Menu, Collapse, Popover, Icon, Form, Dropdown, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
+import { Menu, Collapse, Popover, Icon, Form, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -947,6 +947,8 @@ class H1bForm extends Component {
         const employeeData = this.props.employeeData;
         let downloadButton;
         let submitButton;
+        let employeeListPageLink;
+        let adminPageLink;
 
         if(isAdmin && Object.keys(employeeData).length != 0) {
             downloadButton = <Form.Item>
@@ -957,14 +959,10 @@ class H1bForm extends Component {
                 <Button type="primary" onClick={this.onSubmit}>Submit</Button>
             </Form.Item>
         }
-
-        const menu = (
-            <Menu>
-                <Menu.Item><Link style={{ float: 'right'}}  to="/employeelist">Employee List</Link></Menu.Item>
-                <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
-                <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
-            </Menu>
-        );
+        if(isAdmin) {
+            employeeListPageLink = <Menu.Item><Link to="/employeelist">Employee List</Link></Menu.Item>
+            adminPageLink = <Menu.Item><Link to="/admin">Admin Panel</Link></Menu.Item>
+        }
 
         return ( 
             <div id="mainDiv">
@@ -978,12 +976,15 @@ class H1bForm extends Component {
                                 <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                             </Col>
                             <Col span={8} style={{ float: 'right' }}>
-                                {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
-                                <Dropdown overlay={menu}>
-                                    <a className="ant-dropdown-link" href="#">
-                                        Menu <Icon type="down" />
-                                    </a>
-                                </Dropdown>
+                                <Menu style={{ float: 'right'}}>
+                                    <Menu.SubMenu title={<span className="submenu-title-wrapper"><Icon type="down-circle" />Menu</span>}>
+                                        {employeeListPageLink}
+                                        <Menu.Divider />
+                                        {adminPageLink}
+                                        <Menu.Divider />
+                                        <Menu.Item><Link to="/logout">Logout</Link></Menu.Item>
+                                    </Menu.SubMenu>
+                                </Menu>
                             </Col> 
                         </Row>
                     </Header>

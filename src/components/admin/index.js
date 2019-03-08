@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Menu, Dropdown, Icon, Layout, Row, Col, Form, Card, Input } from 'antd'
+import { Menu, Icon, Layout, Row, Col, Form, Card, Input } from 'antd'
 import { adminUploads } from '../../actions';
 import "antd/dist/antd.css";
 import { DROPBOX_ACCESS_TOKEN_KEY } from '../../stores/config';
@@ -111,12 +111,15 @@ class Admin extends Component {
                               <h1 style={{ fontWeight: 'bold', color: '#0066c' }}><Link style={{ float: 'right'}} to="/h1bform">Reliable Immigration Form</Link></h1>
                           </Col>
                           <Col span={8} style={{ float: 'right' }}>
-                              {/* <Link style={{ float: 'right'}} to="/logout">Logout</Link> */}
-                              <Dropdown overlay={menu}>
-                                  <a className="ant-dropdown-link" href="#">
-                                      Menu <Icon type="down" />
-                                  </a>
-                              </Dropdown>
+                              <Menu style={{ float: 'right'}}>
+                                  <Menu.SubMenu title={<span className="submenu-title-wrapper"><Icon type="down-circle" />Menu</span>}>
+                                      <Menu.Item><Link to="/employeelist">Employee List</Link></Menu.Item>
+                                      <Menu.Divider />
+                                      <Menu.Item><Link to="/admin">Admin Panel</Link></Menu.Item>
+                                      <Menu.Divider />
+                                      <Menu.Item><Link to="/logout">Logout</Link></Menu.Item>
+                                  </Menu.SubMenu>
+                              </Menu>
                           </Col> 
                       </Row>
                   </Header>
