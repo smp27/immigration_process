@@ -228,6 +228,7 @@ class H1bForm extends Component {
             previewVisible: false,
             previewImage: '',
             fileList: [],
+            shouldDisable: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -250,6 +251,7 @@ class H1bForm extends Component {
         const previousFormData = nextProps.getEmployeesList.filter(function(item) { return item.employeeID === nextProps.loggedInUser.email});
         if(previousFormData.length > 0) {
             state.employeeDetails = previousFormData[0];
+            state.shouldDisable = true;
         }
     }
 
@@ -945,6 +947,7 @@ class H1bForm extends Component {
         const { employeeDetails, reliableDocuments, errors } = this.state;
         const isAdmin = this.props.isAdmin;
         const employeeData = this.props.employeeData;
+        const isDisabledTrue = this.state.shouldDisable;
         let downloadButton;
         let submitButton;
         let employeeListPageLink;
@@ -1027,7 +1030,7 @@ class H1bForm extends Component {
                                             <Card title="Applicant Information">
                                             <Form.Item error={!!errors.firstName} style={{ color: 'red' }} label="First Name">
                                                 <Popover content="Enter first name">
-                                                    <Input id="firstName" type="text" name="firstName" value= {employeeDetails.firstName} onChange={this.onChange} placeholder="First Name" />
+                                                    <Input disabled={isDisabledTrue} id="firstName" type="text" name="firstName" value= {employeeDetails.firstName} onChange={this.onChange} placeholder="First Name" />
                                                         {errors.firstName}
                                                     <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                 </Popover>
@@ -1035,7 +1038,7 @@ class H1bForm extends Component {
 
                                             <Form.Item error={!!errors.middleName} style={{ color: 'red' }} label="Middle Name">
                                                 <Popover content="Enter middle name">
-                                                    <Input id="middleName" type="text" name="middleName" value= {employeeDetails.middleName} onChange={this.onChange} placeholder="Middle Name" />
+                                                    <Input disabled={isDisabledTrue} id="middleName" type="text" name="middleName" value= {employeeDetails.middleName} onChange={this.onChange} placeholder="Middle Name" />
                                                     {/* {errors.middleName} */}
                                                     <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                 </Popover>
@@ -1043,7 +1046,7 @@ class H1bForm extends Component {
 
                                             <Form.Item error={!!errors.lastName} style={{ color: 'red' }} label="Last Name">
                                                 <Popover content="Enter last name">
-                                                    <Input id="lastName" type="text" name="lastName" value= {employeeDetails.lastName} onChange={this.onChange} placeholder="Last Name" />
+                                                    <Input disabled={isDisabledTrue} id="lastName" type="text" name="lastName" value= {employeeDetails.lastName} onChange={this.onChange} placeholder="Last Name" />
                                                     {errors.lastName}
                                                     <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                 </Popover>
@@ -1057,7 +1060,7 @@ class H1bForm extends Component {
                                                 
                                                 <Form.Item error={!!errors.homeNumber} style={{ color: 'red' }} label="Home Number(Optional)">
                                                     <Popover content="Home Number">
-                                                        <Input id="homeNumber" type="number" max={10} name="homeNumber" value= {employeeDetails.contactDetails.homeNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
+                                                        <Input disabled={isDisabledTrue} id="homeNumber" type="number" max={10} name="homeNumber" value= {employeeDetails.contactDetails.homeNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
                                                             {errors.homeNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1065,7 +1068,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.workNumber} style={{ color: 'red' }} label="Work Number">
                                                     <Popover content="Work number">
-                                                        <Input id="workNumber" type="number" max={10} name="workNumber" value= {employeeDetails.contactDetails.workNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
+                                                        <Input disabled={isDisabledTrue} id="workNumber" type="number" max={10} name="workNumber" value= {employeeDetails.contactDetails.workNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
                                                         {/* {errors.workNumber} */}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1073,7 +1076,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.mobileNumber} style={{ color: 'red' }} label="Mobile Number">
                                                     <Popover content="Mobile number">
-                                                        <Input id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
+                                                        <Input disabled={isDisabledTrue} id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
                                                         {errors.mobileNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1081,7 +1084,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.email} style={{ color: 'red' }} label="Email">
                                                     <Popover content="Email">
-                                                        <Input id="email" type="email" name="email"  value= {employeeDetails.contactDetails.email} onChange={this.onContactChange} placeholder="Email" />
+                                                        <Input disabled={isDisabledTrue} id="email" type="email" name="email"  value= {employeeDetails.contactDetails.email} onChange={this.onContactChange} placeholder="Email" />
                                                             {errors.email}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1096,7 +1099,7 @@ class H1bForm extends Component {
                                                 
                                                 <Form.Item error={!!errors.address1} style={{ color: 'red' }} label="Present Address 1">
                                                     <Popover content="Address 1">
-                                                        <Input id="address1" type="address1" name="address1"value= {employeeDetails.addressDetails.address1} onChange={this.onAddressChange} placeholder="Present Address 1" />
+                                                        <Input disabled={isDisabledTrue} id="address1" type="address1" name="address1"value= {employeeDetails.addressDetails.address1} onChange={this.onAddressChange} placeholder="Present Address 1" />
                                                             {errors.address1}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1104,7 +1107,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.address2} style={{ color: 'red' }} label="Present Address 2">
                                                     <Popover content="Address 2">
-                                                        <Input id="address2" type="address2" name="address2"value= {employeeDetails.addressDetails.address2} onChange={this.onAddressChange} placeholder="Present Address 2" />
+                                                        <Input disabled={isDisabledTrue} id="address2" type="address2" name="address2"value= {employeeDetails.addressDetails.address2} onChange={this.onAddressChange} placeholder="Present Address 2" />
                                                         {errors.address2}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1112,7 +1115,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.city} style={{ color: 'red' }} label="City">
                                                     <Popover content="City">
-                                                        <Input id="city" type="city" name="city"value= {employeeDetails.addressDetails.city} onChange={this.onAddressChange} placeholder="City" />
+                                                        <Input disabled={isDisabledTrue} id="city" type="city" name="city"value= {employeeDetails.addressDetails.city} onChange={this.onAddressChange} placeholder="City" />
                                                         {errors.city}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1120,7 +1123,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.state}  label="State">
                                                     <Popover content="State">
-                                                        <Input id="state" type="state" name="state"  value= {employeeDetails.addressDetails.state} onChange={this.onAddressChange} placeholder="State" />
+                                                        <Input disabled={isDisabledTrue} id="state" type="state" name="state"  value= {employeeDetails.addressDetails.state} onChange={this.onAddressChange} placeholder="State" />
                                                             {errors.state}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1128,7 +1131,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.zipCode} style={{ color: 'red' }} label="Zip Code">
                                                     <Popover content="Zipcode">
-                                                        <Input  id="zipCode" type="number" name="zipCode" value={employeeDetails.addressDetails.zipCode}onChange={this.onAddressChange} placeholder= "Enter Your Zipcode"/>
+                                                        <Input disabled={isDisabledTrue} id="zipCode" type="number" name="zipCode" value={employeeDetails.addressDetails.zipCode}onChange={this.onAddressChange} placeholder= "Enter Your Zipcode"/>
                                                             {errors.zipCode}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1136,7 +1139,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.country} style={{ color: 'red' }} label="Country">
                                                     <Popover content="Country">
-                                                        <Input id="country" type="country" name="country"  value= {employeeDetails.addressDetails.country} onChange={this.onAddressChange} placeholder="Country" />
+                                                        <Input disabled={isDisabledTrue} id="country" type="country" name="country"  value= {employeeDetails.addressDetails.country} onChange={this.onAddressChange} placeholder="Country" />
                                                             {errors.country}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1149,7 +1152,7 @@ class H1bForm extends Component {
                                                 
                                                 <Form.Item error={!!errors.overseasAddress1} style={{ color: 'red' }} label="Overseas Address 1">
                                                     <Popover content="Address 1">
-                                                        <Input id="overseasAddress1" type="overseasAddress1" name="overseasAddress1" value= {employeeDetails.overseasAddressDetails.overseasAddress1} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 1" />
+                                                        <Input disabled={isDisabledTrue} id="overseasAddress1" type="overseasAddress1" name="overseasAddress1" value= {employeeDetails.overseasAddressDetails.overseasAddress1} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 1" />
                                                             {errors.overseasAddress1}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1157,7 +1160,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.overseasAddress2} style={{ color: 'red' }} label="Overseas Address 2">
                                                     <Popover content="Address 2">
-                                                        <Input id="overseasAddress2" type="overseasAddress2" name="overseasAddress2" value= {employeeDetails.overseasAddressDetails.overseasAddress2} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 2" />
+                                                        <Input disabled={isDisabledTrue} id="overseasAddress2" type="overseasAddress2" name="overseasAddress2" value= {employeeDetails.overseasAddressDetails.overseasAddress2} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 2" />
                                                         {errors.overseasAddress2}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1165,7 +1168,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.overseasCity} style={{ color: 'red' }} label="City">
                                                     <Popover content="City">
-                                                        <Input id="overseasCity" type="city" name="overseasCity" value= {employeeDetails.overseasAddressDetails.overseasCity} onChange={this.onOverseasAddressChange} placeholder="City" />
+                                                        <Input disabled={isDisabledTrue} id="overseasCity" type="city" name="overseasCity" value= {employeeDetails.overseasAddressDetails.overseasCity} onChange={this.onOverseasAddressChange} placeholder="City" />
                                                         {errors.overseasCity}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1173,7 +1176,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.overseasState} style={{ color: 'red' }} label="State">
                                                     <Popover content="State">
-                                                        <Input id="overseasState" type="state" name="overseasState"  value= {employeeDetails.overseasAddressDetails.overseasState} onChange={this.onOverseasAddressChange} placeholder="State" />
+                                                        <Input disabled={isDisabledTrue} id="overseasState" type="state" name="overseasState"  value= {employeeDetails.overseasAddressDetails.overseasState} onChange={this.onOverseasAddressChange} placeholder="State" />
                                                             {errors.overseasState}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1181,7 +1184,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.overseasZipCode} style={{ color: 'red' }} label="Zip Code">
                                                     <Popover content="Zipcode">
-                                                        <Input  id="overseasZipCode" type="number" name="overseasZipCode" value={employeeDetails.overseasAddressDetails.overseasZipCode}onChange={this.onOverseasAddressChange} placeholder= "Enter Your Zipcode"/>
+                                                        <Input disabled={isDisabledTrue} id="overseasZipCode" type="number" name="overseasZipCode" value={employeeDetails.overseasAddressDetails.overseasZipCode}onChange={this.onOverseasAddressChange} placeholder= "Enter Your Zipcode"/>
                                                             {errors.overseasZipCode}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1189,7 +1192,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.overseasCountry} style={{ color: 'red' }} label="Country">
                                                     <Popover content="Country">
-                                                        <Input id="overseasCountry" type="country" name="overseasCountry"  value= {employeeDetails.overseasAddressDetails.overseasCountry} onChange={this.onOverseasAddressChange} placeholder="Country" />
+                                                        <Input disabled={isDisabledTrue} id="overseasCountry" type="country" name="overseasCountry"  value= {employeeDetails.overseasAddressDetails.overseasCountry} onChange={this.onOverseasAddressChange} placeholder="Country" />
                                                             {errors.overseasCountry}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1211,7 +1214,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.dateOfBirth} style={{ color: 'red' }} label="Date of Birth">
                                                     <Popover content="Date of Birth">
-                                                        <DatePicker onChange={this.onBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
                                                         {errors.dateOfBirth}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1223,7 +1226,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.passportNumber} style={{ color: 'red' }} label="Passport Number">
                                                     <Popover content="Passport number">
-                                                        <Input id="passportNumber" type="text" name="passportNumber"  value= {employeeDetails.passportDetails.passportNumber} onChange={this.onPassportDetailsChange} placeholder="Passport Number" />
+                                                        <Input disabled={isDisabledTrue} id="passportNumber" type="text" name="passportNumber"  value= {employeeDetails.passportDetails.passportNumber} onChange={this.onPassportDetailsChange} placeholder="Passport Number" />
                                                         {errors.passportNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1231,7 +1234,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.issueDate} style={{ color: 'red' }} label="Issue Date">
                                                     <Popover content="Passport issue date">
-                                                        <DatePicker onChange={this.onPassportIssueDateChange} format="MM/DD/YYYY" placeholder= "Issue Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onPassportIssueDateChange} format="MM/DD/YYYY" placeholder= "Issue Date" defaultValue= {moment()} />
                                                             {errors.issueDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1239,7 +1242,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.expirationDate} style={{ color: 'red' }} label="Expiration Date">
                                                     <Popover content="Passport expiration date">
-                                                        <DatePicker onChange={this.onPassportExpirationDateChange} format="MM/DD/YYYY" placeholder= "Expiration Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onPassportExpirationDateChange} format="MM/DD/YYYY" placeholder= "Expiration Date" defaultValue= {moment()} />
                                                             {errors.expirationDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1247,7 +1250,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.countryOfCitizenship} style={{ color: 'red' }} label="Country Of Citizenship">
                                                     <Popover content="Country of citizenship">
-                                                        <Input id="countryOfCitizenship" type="text" name="countryOfCitizenship"  value= {employeeDetails.passportDetails.countryOfCitizenship} onChange={this.onPassportDetailsChange} placeholder="Country Of Citizenship" />
+                                                        <Input disabled={isDisabledTrue} id="countryOfCitizenship" type="text" name="countryOfCitizenship"  value= {employeeDetails.passportDetails.countryOfCitizenship} onChange={this.onPassportDetailsChange} placeholder="Country Of Citizenship" />
                                                             {errors.countryOfCitizenship}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1255,7 +1258,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.socialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
                                                     <Popover content="Social security number">
-                                                        <Input id="socialSecurityNumber" type="number" name="socialSecurityNumber"  value= {employeeDetails.passportDetails.socialSecurityNumber} onChange={this.onPassportDetailsChange} placeholder="Social Security Number" />
+                                                        <Input disabled={isDisabledTrue} id="socialSecurityNumber" type="number" name="socialSecurityNumber"  value= {employeeDetails.passportDetails.socialSecurityNumber} onChange={this.onPassportDetailsChange} placeholder="Social Security Number" />
                                                             {errors.socialSecurityNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1263,7 +1266,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.alienNumber} style={{ color: 'red' }} label="Alien Number">
                                                     <Popover content="Alien number">
-                                                        <Input id="alienNumber" type="number" name="alienNumber"  value= {employeeDetails.passportDetails.alienNumber} onChange={this.onPassportDetailsChange} placeholder="Alien Number" />
+                                                        <Input disabled={isDisabledTrue} id="alienNumber" type="number" name="alienNumber"  value= {employeeDetails.passportDetails.alienNumber} onChange={this.onPassportDetailsChange} placeholder="Alien Number" />
                                                             {errors.alienNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1275,7 +1278,7 @@ class H1bForm extends Component {
                                             <Card title="Immigration Information">
                                                 <Form.Item error={!!errors.currentStatus} style={{ color: 'red' }} label="Current Status">
                                                     <Popover content="Current status">
-                                                        <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
+                                                        <RadioGroup disabled={isDisabledTrue} name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
                                                             <Radio value={'F1'}>F1</Radio>
                                                             <Radio value={'H1B'}>H1B</Radio>
                                                             <Radio value={'H4'}>H4</Radio>
@@ -1293,7 +1296,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.USVisaIssued} style={{ color: 'red' }} label="Visa Start Date">
                                                     <Popover content="US visa issued date">
-                                                        <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
                                                         {errors.USVisaIssued}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1305,7 +1308,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.visaExpireDate} style={{ color: 'red' }} label="Visa Expire Date">
                                                     <Popover content="Visa expired date">
-                                                        <DatePicker onChange={this.onImmigrationvisaExpireDateDateChange} format="MM/DD/YYYY" placeholder= "Visa Expire Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onImmigrationvisaExpireDateDateChange} format="MM/DD/YYYY" placeholder= "Visa Expire Date" defaultValue= {moment()} />
                                                             {errors.visaExpireDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1313,7 +1316,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate Name">
                                                     <Popover content="Immigration consule">
-                                                        <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
+                                                        <Input disabled={isDisabledTrue} id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
                                                         {errors.immigrationConsule}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1321,7 +1324,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.consulateCity} style={{ color: 'red' }} label="City">
                                                     <Popover content="Consulate city">
-                                                        <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
+                                                        <Input disabled={isDisabledTrue} id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
                                                         {errors.consulateCity}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1329,7 +1332,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.consulateCountry} style={{ color: 'red' }} label="Country">
                                                     <Popover content="Cosukate country">
-                                                        <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
+                                                        <Input disabled={isDisabledTrue} id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
                                                         {errors.consulateCountry}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1341,7 +1344,7 @@ class H1bForm extends Component {
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.i94Number} style={{ color: 'red' }} label="I-94">
                                                     <Popover content="I-94 number">
-                                                        <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
+                                                        <Input disabled={isDisabledTrue} id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
                                                         {errors.i94Number}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1354,7 +1357,7 @@ class H1bForm extends Component {
                                                 </Form.Item>*/}
                                                 <Form.Item error={!!errors.lastEntryUS} style={{ color: 'red' }} label="Last Entry US">
                                                     <Popover content="Last entry US">
-                                                        <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
                                                         {errors.lastEntryUS}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1362,7 +1365,7 @@ class H1bForm extends Component {
 
                                                 <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry (City, State)">
                                                     <Popover content="Port of entry">
-                                                        <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
+                                                        <Input disabled={isDisabledTrue} id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
                                                         {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
                                                         {errors.portOfEntry}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
@@ -1411,21 +1414,21 @@ class H1bForm extends Component {
                                             <Card title="Overseas Travel History (If Applicable)">
                                                 <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
                                                     <Popover content="Departure date">
-                                                        <DatePicker onChange={this.onTravelHistoryDepartureDateChange} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryDepartureDateChange} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
                                                             {errors.departureDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.arrivalDate} style={{ color: 'red' }} label="Arrival Date">
                                                     <Popover content="Arrival date">
-                                                        <DatePicker onChange={this.onTravelHistoryArrivalDateChange} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryArrivalDateChange} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
                                                             {errors.arrivalDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.daysSpent} style={{ color: 'red' }} label="Days Count">
                                                     <Popover content="Days spent">
-                                                        <Input id="daysSpent" type="number" name="daysSpent"  value= {employeeDetails.travelHistory.daysSpent} onChange={this.onTravelHistoryChange} placeholder="Days Count" />
+                                                        <Input disabled={isDisabledTrue} id="daysSpent" type="number" name="daysSpent"  value= {employeeDetails.travelHistory.daysSpent} onChange={this.onTravelHistoryChange} placeholder="Days Count" />
                                                             {errors.daysSpent}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1612,70 +1615,70 @@ class H1bForm extends Component {
                                             <Card title="Work Information(Client Name and Address must be accurate)">
                                                 <Form.Item error={!!errors.clientName} style={{ color: 'red' }} label="Client Name">
                                                     <Popover content="Client name">
-                                                        <Input id="clientName" type="text" name="clientName"  value= {employeeDetails.workDetails.clientName} onChange={this.onWorkDetailsChange} placeholder="Client Name" />
+                                                        <Input disabled={isDisabledTrue} id="clientName" type="text" name="clientName"  value= {employeeDetails.workDetails.clientName} onChange={this.onWorkDetailsChange} placeholder="Client Name" />
                                                         {errors.clientName}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.clientAddress} style={{ color: 'red' }} label="Address">
                                                     <Popover content="Client Address 1">
-                                                        <Input id="clientAddress" type="text" name="clientAddress"  value= {employeeDetails.workDetails.clientAddress} onChange={this.onWorkDetailsChange} placeholder="Address" />
+                                                        <Input disabled={isDisabledTrue} id="clientAddress" type="text" name="clientAddress"  value= {employeeDetails.workDetails.clientAddress} onChange={this.onWorkDetailsChange} placeholder="Address" />
                                                         {errors.clientAddress}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.clientAddress2} style={{ color: 'red' }} label="Address 2">
                                                     <Popover content="Client Address 2">
-                                                        <Input id="clientAddress2" type="text" name="clientAddress2"  value= {employeeDetails.workDetails.clientAddress2} onChange={this.onWorkDetailsChange} placeholder="Address 2" />
+                                                        <Input disabled={isDisabledTrue} id="clientAddress2" type="text" name="clientAddress2"  value= {employeeDetails.workDetails.clientAddress2} onChange={this.onWorkDetailsChange} placeholder="Address 2" />
                                                         {errors.clientAddress2}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.clientCity} style={{ color: 'red' }} label="City">
                                                     <Popover content="Client city">
-                                                        <Input id="clientCity" type="text" name="clientCity"  value= {employeeDetails.workDetails.clientCity} onChange={this.onWorkDetailsChange} placeholder="City" />
+                                                        <Input disabled={isDisabledTrue} id="clientCity" type="text" name="clientCity"  value= {employeeDetails.workDetails.clientCity} onChange={this.onWorkDetailsChange} placeholder="City" />
                                                         {errors.clientCity}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.clientState} style={{ color: 'red' }} label="State">
                                                     <Popover content="Client state">
-                                                        <Input id="clientState" type="text" name="clientState"  value= {employeeDetails.workDetails.clientState} onChange={this.onWorkDetailsChange} placeholder="State" />
+                                                        <Input disabled={isDisabledTrue} id="clientState" type="text" name="clientState"  value= {employeeDetails.workDetails.clientState} onChange={this.onWorkDetailsChange} placeholder="State" />
                                                         {errors.clientState}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.clientZipCode} style={{ color: 'red' }} label="ZipCode">
                                                     <Popover content="Zipcode">
-                                                        <Input id="clientZipCode" type="number" name="clientZipCode"  value= {employeeDetails.workDetails.clientZipCode} onChange={this.onWorkDetailsChange} placeholder="ZipCode" />
+                                                        <Input disabled={isDisabledTrue} id="clientZipCode" type="number" name="clientZipCode"  value= {employeeDetails.workDetails.clientZipCode} onChange={this.onWorkDetailsChange} placeholder="ZipCode" />
                                                         {errors.clientZipCode}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.vendorName} style={{ color: 'red' }} label="Vendor Name">
                                                     <Popover content="Vendor name">
-                                                        <Input id="vendorName" type="text" name="vendorName"  value= {employeeDetails.workDetails.vendorName} onChange={this.onWorkDetailsChange} placeholder="Vendor Name" />
+                                                        <Input disabled={isDisabledTrue} id="vendorName" type="text" name="vendorName"  value= {employeeDetails.workDetails.vendorName} onChange={this.onWorkDetailsChange} placeholder="Vendor Name" />
                                                         {errors.vendorName}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.vendorEmail} style={{ color: 'red' }} label="Vendor Email">
                                                     <Popover content="Vendor email">
-                                                        <Input id="vendorEmail" type="text" name="vendorEmail"  value= {employeeDetails.workDetails.vendorEmail} onChange={this.onWorkDetailsChange} placeholder="Vendor Email" />
+                                                        <Input disabled={isDisabledTrue} id="vendorEmail" type="text" name="vendorEmail"  value= {employeeDetails.workDetails.vendorEmail} onChange={this.onWorkDetailsChange} placeholder="Vendor Email" />
                                                         {errors.vendorEmail}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.contactNumber} style={{ color: 'red' }} label="Contact Number">
                                                     <Popover content="Contact number">
-                                                        <Input id="contactNumber" type="number" name="contactNumber"  value= {employeeDetails.workDetails.contactNumber} onChange={this.onWorkDetailsChange} placeholder="Contact Number" />
+                                                        <Input disabled={isDisabledTrue} id="contactNumber" type="number" name="contactNumber"  value= {employeeDetails.workDetails.contactNumber} onChange={this.onWorkDetailsChange} placeholder="Contact Number" />
                                                         {errors.contactNumber}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.projectStartDate} style={{ color: 'red' }} label="Project Start Date">
                                                     <Popover content="Project state date">
-                                                        <DatePicker onChange={this.onProjectStartDateChange} format="MM/DD/YYYY" placeholder= "Project Start Date" defaultValue= {moment()} />
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onProjectStartDateChange} format="MM/DD/YYYY" placeholder= "Project Start Date" defaultValue= {moment()} />
                                                         {errors.projectStartDate}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
@@ -1987,7 +1990,7 @@ class H1bForm extends Component {
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer1} style={{ color: 'red' }} label="Layer 1">
                                                         <Popover content="Layer 1">
-                                                            <Input id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
+                                                            <Input disabled={isDisabledTrue} id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
                                                             {errors.layer1}
                                                             <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                         </Popover>
@@ -2015,7 +2018,7 @@ class H1bForm extends Component {
                                                     </Form.Item>
                                                     <Form.Item error={!!errors.layer2} style={{ color: 'red' }} label="Layer 2">
                                                         <Popover content="layer 2">
-                                                            <Input id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
+                                                            <Input disabled={isDisabledTrue} id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
                                                             {errors.layer2}
                                                             <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                         </Popover>
