@@ -251,7 +251,7 @@ class H1bForm extends Component {
         const previousFormData = nextProps.getEmployeesList.filter(function(item) { return item.employeeID === nextProps.loggedInUser.email});
         if(previousFormData.length > 0) {
             state.employeeDetails = previousFormData[0];
-            state.shouldDisable = true;
+            //state.shouldDisable = true; // disable the fields only if we're comign from the Employee list screen and by the Admin etc
         }
     }
 
@@ -604,8 +604,7 @@ class H1bForm extends Component {
         e.preventDefault();
         const errors = this.validate(this.state.employeeDetails);
         this.setState({errors: errors});
-        if(Object.keys(errors).length === 0) {
-            // this.props.dispatch(visaForm(this.state.employeeDetails));
+        if(Object.keys(errors).length === 0) {            
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };
