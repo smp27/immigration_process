@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { visaForm, fileUpload, submitImmiFormAction, getListOfEmployees } from '../../actions';
 import moment from 'moment';
 import { storage } from '../../firebase';
+import { DROPBOX_ACCESS_TOKEN_KEY } from '../../stores/config';
 
 // import html2canvas and jspdf to export webpage to pdf and download
 import html2canvas from 'html2canvas';
@@ -17,23 +18,13 @@ const pdf = new jsPDF();
 const xhr = new XMLHttpRequest();
 // import file saver to download the file's
 const FileSaver = require('file-saver');
+
 //Access token to acces dropbox account
-//Shaik Drop Box
-//const dropboxToken = '1tc-9rsq56AAAAAAAAAALLg7kWony_pO3crJaojpoGymNWm_T4gt_jfchOSQBBiZ';
-// Sandeep Drop Box
-const dropboxToken = 'hB7YmQsXM0AAAAAAAAAACi7s1qHVl3dYAnYremo9KSSak_8x6c30pT_bbitQfeH0';
+const dropboxToken = DROPBOX_ACCESS_TOKEN_KEY;
 
 const { Header, Content } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
-
-const menu = (
-    <Menu>
-        <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
-        <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
-        <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
-    </Menu>
-);
 
 class H1bForm extends Component {
     constructor(props) {
@@ -62,6 +53,7 @@ class H1bForm extends Component {
             attorneyDocument3Progress: 0,
             attorneyDocument4Progress: 0,
             employeeDetails:{
+                employeeID: '',
                 typeOfApplication: 'CAP H1B',
                 premiumProcessInfo: '',
                 firstName: '',
@@ -253,6 +245,11 @@ class H1bForm extends Component {
         }
         if(Object.keys(nextProps.employeeData).length != 0) {
             state.employeeDetails = nextProps.employeeData;
+        }
+        state.employeeDetails.employeeID = nextProps.loggedInUser.email;
+        const previousFormData = nextProps.getEmployeesList.filter(function(item) { return item.employeeID === nextProps.loggedInUser.email});
+        if(previousFormData.length > 0) {
+            state.employeeDetails = previousFormData[0];
         }
     }
 
@@ -509,7 +506,7 @@ class H1bForm extends Component {
                 if (xhr.status === 200) {
                     const fileInfo = JSON.parse(xhr.response);
                     // console.log(fileInfo);
-                    errorDetails.passportPage = '';
+                    errorDetails[filename] = '';
                     th.setState({[filename]:fileInfo.name});
                     th.setState({[filename+"PathLower"]:fileInfo.path_lower});
                     // Upload succeeded. Do something here with the file info.
@@ -543,10 +540,10 @@ class H1bForm extends Component {
                 // this.handleUpload(fileData);
                 //this.props.dispatch(fileUpload(fileData));
             } else {
-                errorDetails.passportPage = 'Please upload Only PDF files';
+                errorDetails[filename] = 'Please upload Only PDF files';
             } 
         } else {
-            errorDetails.passportPage = 'Enter the Name of the Employee';
+            errorDetails[filename] = 'Enter the Name of the Employee';
         }
         this.setState({errors: errorDetails});
     };
@@ -948,13 +945,26 @@ class H1bForm extends Component {
         const { employeeDetails, reliableDocuments, errors } = this.state;
         const isAdmin = this.props.isAdmin;
         const employeeData = this.props.employeeData;
-        let downloadPDF;
+        let downloadButton;
+        let submitButton;
 
         if(isAdmin && Object.keys(employeeData).length != 0) {
-            downloadPDF = <Form.Item>
+            downloadButton = <Form.Item>
                 <Button type="primary" onClick={this.exportToPdf}>Download Form</Button>
             </Form.Item>
+        } else {
+            submitButton = <Form.Item>
+                <Button type="primary" onClick={this.onSubmit}>Submit</Button>
+            </Form.Item>
         }
+
+        const menu = (
+            <Menu>
+                <Menu.Item><Link style={{ float: 'right'}}  to="/employeelist">Employee List</Link></Menu.Item>
+                <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
+                <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
+            </Menu>
+        );
 
         return ( 
             <div id="mainDiv">
@@ -1015,28 +1025,28 @@ class H1bForm extends Component {
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Applicant Information">
                                             <Form.Item error={!!errors.firstName} style={{ color: 'red' }} label="First Name">
-                                                <Input id="firstName" type="text" name="firstName" value= {employeeDetails.firstName} onChange={this.onChange} placeholder="First Name" />
-                                                    {errors.firstName}
+                                                <Popover content="Enter first name">
+                                                    <Input id="firstName" type="text" name="firstName" value= {employeeDetails.firstName} onChange={this.onChange} placeholder="First Name" />
+                                                        {errors.firstName}
+                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                </Popover>
                                             </Form.Item>
-                                            <Popover content="Enter first name">
-                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                            </Popover>
 
                                             <Form.Item error={!!errors.middleName} style={{ color: 'red' }} label="Middle Name">
-                                                <Input id="middleName" type="text" name="middleName" value= {employeeDetails.middleName} onChange={this.onChange} placeholder="Middle Name" />
-                                                {/* {errors.middleName} */}
+                                                <Popover content="Enter middle name">
+                                                    <Input id="middleName" type="text" name="middleName" value= {employeeDetails.middleName} onChange={this.onChange} placeholder="Middle Name" />
+                                                    {/* {errors.middleName} */}
+                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                </Popover>
                                             </Form.Item>
-                                            <Popover content="Enter middle name">
-                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                            </Popover>
 
                                             <Form.Item error={!!errors.lastName} style={{ color: 'red' }} label="Last Name">
-                                                <Input id="lastName" type="text" name="lastName" value= {employeeDetails.lastName} onChange={this.onChange} placeholder="Last Name" />
-                                                {errors.lastName}
+                                                <Popover content="Enter last name">
+                                                    <Input id="lastName" type="text" name="lastName" value= {employeeDetails.lastName} onChange={this.onChange} placeholder="Last Name" />
+                                                    {errors.lastName}
+                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                </Popover>
                                             </Form.Item>
-                                            <Popover content="Enter last name">
-                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                            </Popover>
 
                                             </Card>
                                         </Col>
@@ -1045,36 +1055,36 @@ class H1bForm extends Component {
                                             <Card title="Contact Information">
                                                 
                                                 <Form.Item error={!!errors.homeNumber} style={{ color: 'red' }} label="Home Number(Optional)">
+                                                    <Popover content="Home Number">
                                                         <Input id="homeNumber" type="number" max={10} name="homeNumber" value= {employeeDetails.contactDetails.homeNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
-                                                        {errors.homeNumber}
+                                                            {errors.homeNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Home Number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.workNumber} style={{ color: 'red' }} label="Work Number">
-                                                    <Input id="workNumber" type="number" max={10} name="workNumber" value= {employeeDetails.contactDetails.workNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
-                                                    {/* {errors.workNumber} */}
+                                                    <Popover content="Work number">
+                                                        <Input id="workNumber" type="number" max={10} name="workNumber" value= {employeeDetails.contactDetails.workNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
+                                                        {/* {errors.workNumber} */}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Work number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.mobileNumber} style={{ color: 'red' }} label="Mobile Number">
-                                                    <Input id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
-                                                    {errors.mobileNumber}
+                                                    <Popover content="Mobile number">
+                                                        <Input id="mobileNumber" type="number" max={10} name="mobileNumber" value= {employeeDetails.contactDetails.mobileNumber} onChange={this.onContactChange} placeholder="(000) 000-0000" />
+                                                        {errors.mobileNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Mobile number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.email} style={{ color: 'red' }} label="Email">
+                                                    <Popover content="Email">
                                                         <Input id="email" type="email" name="email"  value= {employeeDetails.contactDetails.email} onChange={this.onContactChange} placeholder="Email" />
-                                                        {errors.email}
+                                                            {errors.email}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Email">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                             </Card>
                                         </Col>
@@ -1084,52 +1094,52 @@ class H1bForm extends Component {
                                             <Card title="Present Address Information(U.S)">
                                                 
                                                 <Form.Item error={!!errors.address1} style={{ color: 'red' }} label="Present Address 1">
+                                                    <Popover content="Address 1">
                                                         <Input id="address1" type="address1" name="address1"value= {employeeDetails.addressDetails.address1} onChange={this.onAddressChange} placeholder="Present Address 1" />
-                                                        {errors.address1}
+                                                            {errors.address1}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Address 1">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.address2} style={{ color: 'red' }} label="Present Address 2">
-                                                    <Input id="address2" type="address2" name="address2"value= {employeeDetails.addressDetails.address2} onChange={this.onAddressChange} placeholder="Present Address 2" />
-                                                    {errors.address2}
+                                                    <Popover content="Address 2">
+                                                        <Input id="address2" type="address2" name="address2"value= {employeeDetails.addressDetails.address2} onChange={this.onAddressChange} placeholder="Present Address 2" />
+                                                        {errors.address2}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Address 2">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.city} style={{ color: 'red' }} label="City">
-                                                    <Input id="city" type="city" name="city"value= {employeeDetails.addressDetails.city} onChange={this.onAddressChange} placeholder="City" />
-                                                    {errors.city}
+                                                    <Popover content="City">
+                                                        <Input id="city" type="city" name="city"value= {employeeDetails.addressDetails.city} onChange={this.onAddressChange} placeholder="City" />
+                                                        {errors.city}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="City">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.state}  label="State">
+                                                    <Popover content="State">
                                                         <Input id="state" type="state" name="state"  value= {employeeDetails.addressDetails.state} onChange={this.onAddressChange} placeholder="State" />
-                                                        {errors.state}
+                                                            {errors.state}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="State">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.zipCode} style={{ color: 'red' }} label="Zip Code">
+                                                    <Popover content="Zipcode">
                                                         <Input  id="zipCode" type="number" name="zipCode" value={employeeDetails.addressDetails.zipCode}onChange={this.onAddressChange} placeholder= "Enter Your Zipcode"/>
-                                                        {errors.zipCode}
+                                                            {errors.zipCode}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Zipcode">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.country} style={{ color: 'red' }} label="Country">
+                                                    <Popover content="Country">
                                                         <Input id="country" type="country" name="country"  value= {employeeDetails.addressDetails.country} onChange={this.onAddressChange} placeholder="Country" />
-                                                        {errors.country}
+                                                            {errors.country}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Country">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                             </Card>
                                         </Col>
@@ -1137,52 +1147,52 @@ class H1bForm extends Component {
                                             <Card title="Overseas Address Information">
                                                 
                                                 <Form.Item error={!!errors.overseasAddress1} style={{ color: 'red' }} label="Overseas Address 1">
+                                                    <Popover content="Address 1">
                                                         <Input id="overseasAddress1" type="overseasAddress1" name="overseasAddress1" value= {employeeDetails.overseasAddressDetails.overseasAddress1} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 1" />
-                                                        {errors.overseasAddress1}
+                                                            {errors.overseasAddress1}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Address 1">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.overseasAddress2} style={{ color: 'red' }} label="Overseas Address 2">
-                                                    <Input id="overseasAddress2" type="overseasAddress2" name="overseasAddress2" value= {employeeDetails.overseasAddressDetails.overseasAddress2} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 2" />
-                                                    {errors.overseasAddress2}
+                                                    <Popover content="Address 2">
+                                                        <Input id="overseasAddress2" type="overseasAddress2" name="overseasAddress2" value= {employeeDetails.overseasAddressDetails.overseasAddress2} onChange={this.onOverseasAddressChange} placeholder="Overseas Address 2" />
+                                                        {errors.overseasAddress2}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Address 2">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.overseasCity} style={{ color: 'red' }} label="City">
-                                                    <Input id="overseasCity" type="city" name="overseasCity" value= {employeeDetails.overseasAddressDetails.overseasCity} onChange={this.onOverseasAddressChange} placeholder="City" />
-                                                    {errors.overseasCity}
+                                                    <Popover content="City">
+                                                        <Input id="overseasCity" type="city" name="overseasCity" value= {employeeDetails.overseasAddressDetails.overseasCity} onChange={this.onOverseasAddressChange} placeholder="City" />
+                                                        {errors.overseasCity}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="City">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.overseasState} style={{ color: 'red' }} label="State">
+                                                    <Popover content="State">
                                                         <Input id="overseasState" type="state" name="overseasState"  value= {employeeDetails.overseasAddressDetails.overseasState} onChange={this.onOverseasAddressChange} placeholder="State" />
-                                                        {errors.overseasState}
+                                                            {errors.overseasState}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="State">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.overseasZipCode} style={{ color: 'red' }} label="Zip Code">
+                                                    <Popover content="Zipcode">
                                                         <Input  id="overseasZipCode" type="number" name="overseasZipCode" value={employeeDetails.overseasAddressDetails.overseasZipCode}onChange={this.onOverseasAddressChange} placeholder= "Enter Your Zipcode"/>
-                                                        {errors.overseasZipCode}
+                                                            {errors.overseasZipCode}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Zipcode">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.overseasCountry} style={{ color: 'red' }} label="Country">
+                                                    <Popover content="Country">
                                                         <Input id="overseasCountry" type="country" name="overseasCountry"  value= {employeeDetails.overseasAddressDetails.overseasCountry} onChange={this.onOverseasAddressChange} placeholder="Country" />
-                                                        {errors.overseasCountry}
+                                                            {errors.overseasCountry}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Country">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                             </Card>
                                         </Col>
@@ -1205,7 +1215,6 @@ class H1bForm extends Component {
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
-                                                
                                                     
                                                 {/* <Form.Item error={!!errors.countryPassport} style={{ color: 'red' }} label="Country">
                                                         <Input id="countryPassport" type="text" name="countryPassport"  value= {employeeDetails.passportDetails.countryPassport} onChange={this.onPassportDetailsChange} placeholder="Country" />
@@ -1218,131 +1227,124 @@ class H1bForm extends Component {
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
                                                     </Popover>
                                                 </Form.Item>
-                                                
-                                                    
 
                                                 <Form.Item error={!!errors.issueDate} style={{ color: 'red' }} label="Issue Date">
-                                                        {/* <Input id="issueDate" type="date" name="issueDate"  value= {employeeDetails.passportDetails.issueDate} onChange={this.onChange} placeholder="Issue Date" /> */}
+                                                    <Popover content="Passport issue date">
                                                         <DatePicker onChange={this.onPassportIssueDateChange} format="MM/DD/YYYY" placeholder= "Issue Date" defaultValue= {moment()} />
-                                                        {errors.issueDate}
+                                                            {errors.issueDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Passport issue date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.expirationDate} style={{ color: 'red' }} label="Expiration Date">
-                                                        {/* <Input id="expirationDate" type="text" name="expirationDate"  value= {employeeDetails.passportDetails.expirationDate} onChange={this.onChange} placeholder="Expiration Date" /> */}
+                                                    <Popover content="Passport expiration date">
                                                         <DatePicker onChange={this.onPassportExpirationDateChange} format="MM/DD/YYYY" placeholder= "Expiration Date" defaultValue= {moment()} />
-                                                        {errors.expirationDate}
+                                                            {errors.expirationDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Passport expiration date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.countryOfCitizenship} style={{ color: 'red' }} label="Country Of Citizenship">
+                                                    <Popover content="Country of citizenship">
                                                         <Input id="countryOfCitizenship" type="text" name="countryOfCitizenship"  value= {employeeDetails.passportDetails.countryOfCitizenship} onChange={this.onPassportDetailsChange} placeholder="Country Of Citizenship" />
-                                                        {errors.countryOfCitizenship}
+                                                            {errors.countryOfCitizenship}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Country of citizenship">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.socialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
+                                                    <Popover content="Social security number">
                                                         <Input id="socialSecurityNumber" type="number" name="socialSecurityNumber"  value= {employeeDetails.passportDetails.socialSecurityNumber} onChange={this.onPassportDetailsChange} placeholder="Social Security Number" />
-                                                        {errors.socialSecurityNumber}
+                                                            {errors.socialSecurityNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Social security number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.alienNumber} style={{ color: 'red' }} label="Alien Number">
+                                                    <Popover content="Alien number">
                                                         <Input id="alienNumber" type="number" name="alienNumber"  value= {employeeDetails.passportDetails.alienNumber} onChange={this.onPassportDetailsChange} placeholder="Alien Number" />
-                                                        {errors.alienNumber}
+                                                            {errors.alienNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Alien number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                             </Card>
                                         </Col>
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Immigration Information">
                                                 <Form.Item error={!!errors.currentStatus} style={{ color: 'red' }} label="Current Status">
-                                                    {/* <Input id="currentStatus" type="text" name="currentStatus"  value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} placeholder="Current Status" /> */}
-                                                    <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
-                                                        <Radio value={'F1'}>F1</Radio>
-                                                        <Radio value={'H1B'}>H1B</Radio>
-                                                        <Radio value={'H4'}>H4</Radio>
-                                                        <Radio value={'B1/B2'}>B1/B2</Radio>
-                                                        <Radio value={'L1/L2'}>L1/L2</Radio>
-                                                        <Radio value={'other'}>Other</Radio>
-                                                    </RadioGroup>
-                                                    {errors.currentStatus}
+                                                    <Popover content="Current status">
+                                                        <RadioGroup name="currentStatus" value= {employeeDetails.immigirationDetails.currentStatus} onChange={this.onImmigirationDetailsChange} >                                                            
+                                                            <Radio value={'F1'}>F1</Radio>
+                                                            <Radio value={'H1B'}>H1B</Radio>
+                                                            <Radio value={'H4'}>H4</Radio>
+                                                            <Radio value={'B1/B2'}>B1/B2</Radio>
+                                                            <Radio value={'L1/L2'}>L1/L2</Radio>
+                                                            <Radio value={'other'}>Other</Radio>
+                                                        </RadioGroup>
+                                                        {errors.currentStatus}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Current status">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 {/* <Form.Item error={!!errors.currentStatusOtherName} style={{ color: 'red' }} label="Current Status Other Name">
                                                         <Input id="currentStatusOtherName" type="text" name="currentStatusOtherName"  value= {employeeDetails.immigirationDetails.currentStatusOtherName} onChange={this.onImmigirationDetailsChange} placeholder="Current Status Other Name" />
                                                         {errors.currentStatusOtherName}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.USVisaIssued} style={{ color: 'red' }} label="Visa Start Date">
-                                                    {/* <Input id="USVisaIssued" type="text" name="USVisaIssued"  value= {employeeDetails.immigirationDetails.USVisaIssued} onChange={this.onChange} placeholder="US Visa Issued" /> */}
-                                                    <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
-                                                    {errors.USVisaIssued}
+                                                    <Popover content="US visa issued date">
+                                                        <DatePicker onChange={this.onImmigrationUSVisaIssuedDateChange} format="MM/DD/YYYY" placeholder= "Visa Start Date" defaultValue= {moment()} />
+                                                        {errors.USVisaIssued}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="US visa issued date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 {/* <Form.Item error={!!errors.when} style={{ color: 'red' }} label="When">
                                                         <Input id="when" type="text" name="when"  value= {employeeDetails.immigirationDetails.when} onChange={this.onChange} placeholder="When" />
                                                         <DatePicker onChange={this.onImmigrationWhenDateChange} format="MM/DD/YYYY" placeholder= "When" defaultValue= {moment()} />
                                                         {errors.when}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.visaExpireDate} style={{ color: 'red' }} label="Visa Expire Date">
-                                                        {/* <Input id="visaExpireDate" type="text" name="visaExpireDate"  value= {employeeDetails.immigirationDetails.visaExpireDate} onChange={this.onChange} placeholder="Valid Until" /> */}
+                                                    <Popover content="Visa expired date">
                                                         <DatePicker onChange={this.onImmigrationvisaExpireDateDateChange} format="MM/DD/YYYY" placeholder= "Visa Expire Date" defaultValue= {moment()} />
-                                                        {errors.visaExpireDate}
+                                                            {errors.visaExpireDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Visa expired date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.immigrationConsule} style={{ color: 'red' }} label="Consulate Name">
-                                                    <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
-                                                    {errors.immigrationConsule}
+                                                    <Popover content="Immigration consule">
+                                                        <Input id="immigrationConsule" type="text" name="immigrationConsule"  value= {employeeDetails.immigirationDetails.immigrationConsule} onChange={this.onImmigirationDetailsChange} placeholder="Consulate" />
+                                                        {errors.immigrationConsule}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Immigration consule">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.consulateCity} style={{ color: 'red' }} label="City">
-                                                    <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
-                                                    {errors.consulateCity}
+                                                    <Popover content="Consulate city">
+                                                        <Input id="consulateCity" type="text" name="consulateCity"  value= {employeeDetails.immigirationDetails.consulateCity} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-City" />
+                                                        {errors.consulateCity}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Consulate city">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.consulateCountry} style={{ color: 'red' }} label="Country">
-                                                    <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
-                                                    {errors.consulateCountry}
+                                                    <Popover content="Cosukate country">
+                                                        <Input id="consulateCountry" type="text" name="consulateCountry"  value= {employeeDetails.immigirationDetails.consulateCountry} onChange={this.onImmigirationDetailsChange} placeholder="Consulate-Country" />
+                                                        {errors.consulateCountry}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Cosukate country">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 {/* <Form.Item error={!!errors.otherName2} style={{ color: 'red' }} label="Other Name 2">
                                                         <Input id="otherName2" type="text" name="otherName2"  value= {employeeDetails.immigirationDetails.otherName2} onChange={this.onImmigirationDetailsChange} placeholder="Other Name 2" />
                                                         {errors.otherName2}
                                                 </Form.Item> */}
                                                 <Form.Item error={!!errors.i94Number} style={{ color: 'red' }} label="I-94">
-                                                    <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
-                                                    {errors.i94Number}
+                                                    <Popover content="I-94 number">
+                                                        <Input id="i94Number" type="number" name="i94Number"  value= {employeeDetails.immigirationDetails.i94Number} onChange={this.onImmigirationDetailsChange} placeholder="I-94" />
+                                                        {errors.i94Number}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="I-94 number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 
                                                 {/* <Form.Item error={!!errors.entryValidTill} style={{ color: 'red' }} label="Expiration Date">
                                                         <Input id="entryValidTill" type="text" name="entryValidTill"  value= {employeeDetails.immigirationDetails.entryValidTill} onChange={this.onChange} placeholder="Entry Valid Till" /> 
@@ -1350,22 +1352,21 @@ class H1bForm extends Component {
                                                         {errors.entryValidTill}
                                                 </Form.Item>*/}
                                                 <Form.Item error={!!errors.lastEntryUS} style={{ color: 'red' }} label="Last Entry US">
-                                                    {/* <Input id="lastEntryUS" type="text" name="lastEntryUS"  value= {employeeDetails.immigirationDetails.lastEntryUS} onChange={this.onChange} placeholder="Last Entry US" /> */}
-                                                    <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
-                                                    {errors.lastEntryUS}
+                                                    <Popover content="Last entry US">
+                                                        <DatePicker onChange={this.onImmigrationLastEntryUSDateChange} format="MM/DD/YYYY" placeholder= "Last Entry US" defaultValue= {moment()} />
+                                                        {errors.lastEntryUS}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Last entry US">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
 
                                                 <Form.Item error={!!errors.portOfEntry} style={{ color: 'red' }} label="Port Of Entry (City, State)">
-                                                    <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
-                                                    {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
-                                                    {errors.portOfEntry}
+                                                    <Popover content="Port of entry">
+                                                        <Input id="portOfEntry" type="text" name="portOfEntry"  value= {employeeDetails.immigirationDetails.portOfEntry} onChange={this.onImmigirationDetailsChange} placeholder="Example: Chicago, IL" />
+                                                        {/* <DatePicker onChange={this.onPortOfEntryDateChange} format="MM/DD/YYYY" placeholder= "Port of ENtry" defaultValue= {moment()} /> */}
+                                                        {errors.portOfEntry}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Port of entry">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 {/* <Form.Item error={!!errors.visaStamping} style={{ color: 'red' }} label="Visa Stamping">
                                                         <Input id="visaStamping" type="text" name="visaStamping"  value= {employeeDetails.immigirationDetails.visaStamping} onChange={this.onImmigirationDetailsChange} placeholder="Visa Stamping" />
                                                         <DatePicker onChange={this.onVisaStampingDateChange} format="MM/DD/YYYY" placeholder= "Visa Stamping" defaultValue= {moment()} />
@@ -1408,28 +1409,26 @@ class H1bForm extends Component {
                                         <Col >
                                             <Card title="Overseas Travel History (If Applicable)">
                                                 <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
-                                                        {/* <Input id="departureDate" type="text" name="departureDate"  value= {employeeDetails.travelHistory.departureDate} onChange={this.onChange} placeholder="Departure Date" /> */}
+                                                    <Popover content="Departure date">
                                                         <DatePicker onChange={this.onTravelHistoryDepartureDateChange} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
-                                                        {errors.departureDate}
+                                                            {errors.departureDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Departure date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.arrivalDate} style={{ color: 'red' }} label="Arrival Date">
-                                                        {/* <Input id="arrivalDate" type="text" name="arrivalDate"  value= {employeeDetails.travelHistory.arrivalDate} onChange={this.onChange} placeholder="Arrival Date" /> */}
+                                                    <Popover content="Arrival date">
                                                         <DatePicker onChange={this.onTravelHistoryArrivalDateChange} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
-                                                        {errors.arrivalDate}
+                                                            {errors.arrivalDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Arrival date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.daysSpent} style={{ color: 'red' }} label="Days Count">
+                                                    <Popover content="Days spent">
                                                         <Input id="daysSpent" type="number" name="daysSpent"  value= {employeeDetails.travelHistory.daysSpent} onChange={this.onTravelHistoryChange} placeholder="Days Count" />
-                                                        {errors.daysSpent}
+                                                            {errors.daysSpent}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Days spent">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                             </Card>
                                         </Col>
                                     </Row>
@@ -1611,76 +1610,75 @@ class H1bForm extends Component {
                                         <Col >
                                             <Card title="Work Information(Client Name and Address must be accurate)">
                                                 <Form.Item error={!!errors.clientName} style={{ color: 'red' }} label="Client Name">
-                                                    <Input id="clientName" type="text" name="clientName"  value= {employeeDetails.workDetails.clientName} onChange={this.onWorkDetailsChange} placeholder="Client Name" />
-                                                    {errors.clientName}
+                                                    <Popover content="Client name">
+                                                        <Input id="clientName" type="text" name="clientName"  value= {employeeDetails.workDetails.clientName} onChange={this.onWorkDetailsChange} placeholder="Client Name" />
+                                                        {errors.clientName}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Client name">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientAddress} style={{ color: 'red' }} label="Address">
-                                                    <Input id="clientAddress" type="text" name="clientAddress"  value= {employeeDetails.workDetails.clientAddress} onChange={this.onWorkDetailsChange} placeholder="Address" />
-                                                    {errors.clientAddress}
+                                                    <Popover content="Client Address 1">
+                                                        <Input id="clientAddress" type="text" name="clientAddress"  value= {employeeDetails.workDetails.clientAddress} onChange={this.onWorkDetailsChange} placeholder="Address" />
+                                                        {errors.clientAddress}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Client Address 1">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientAddress2} style={{ color: 'red' }} label="Address 2">
-                                                    <Input id="clientAddress2" type="text" name="clientAddress2"  value= {employeeDetails.workDetails.clientAddress2} onChange={this.onWorkDetailsChange} placeholder="Address 2" />
-                                                    {errors.clientAddress2}
+                                                    <Popover content="Client Address 2">
+                                                        <Input id="clientAddress2" type="text" name="clientAddress2"  value= {employeeDetails.workDetails.clientAddress2} onChange={this.onWorkDetailsChange} placeholder="Address 2" />
+                                                        {errors.clientAddress2}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Client Address 2">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientCity} style={{ color: 'red' }} label="City">
-                                                    <Input id="clientCity" type="text" name="clientCity"  value= {employeeDetails.workDetails.clientCity} onChange={this.onWorkDetailsChange} placeholder="City" />
-                                                    {errors.clientCity}
+                                                    <Popover content="Client city">
+                                                        <Input id="clientCity" type="text" name="clientCity"  value= {employeeDetails.workDetails.clientCity} onChange={this.onWorkDetailsChange} placeholder="City" />
+                                                        {errors.clientCity}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Client city">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientState} style={{ color: 'red' }} label="State">
-                                                    <Input id="clientState" type="text" name="clientState"  value= {employeeDetails.workDetails.clientState} onChange={this.onWorkDetailsChange} placeholder="State" />
-                                                    {errors.clientState}
+                                                    <Popover content="Client state">
+                                                        <Input id="clientState" type="text" name="clientState"  value= {employeeDetails.workDetails.clientState} onChange={this.onWorkDetailsChange} placeholder="State" />
+                                                        {errors.clientState}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Client state">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientZipCode} style={{ color: 'red' }} label="ZipCode">
-                                                    <Input id="clientZipCode" type="number" name="clientZipCode"  value= {employeeDetails.workDetails.clientZipCode} onChange={this.onWorkDetailsChange} placeholder="ZipCode" />
-                                                    {errors.clientZipCode}
+                                                    <Popover content="Zipcode">
+                                                        <Input id="clientZipCode" type="number" name="clientZipCode"  value= {employeeDetails.workDetails.clientZipCode} onChange={this.onWorkDetailsChange} placeholder="ZipCode" />
+                                                        {errors.clientZipCode}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Zipcode">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.vendorName} style={{ color: 'red' }} label="Vendor Name">
-                                                    <Input id="vendorName" type="text" name="vendorName"  value= {employeeDetails.workDetails.vendorName} onChange={this.onWorkDetailsChange} placeholder="Vendor Name" />
-                                                    {errors.vendorName}
+                                                    <Popover content="Vendor name">
+                                                        <Input id="vendorName" type="text" name="vendorName"  value= {employeeDetails.workDetails.vendorName} onChange={this.onWorkDetailsChange} placeholder="Vendor Name" />
+                                                        {errors.vendorName}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Vendor name">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.vendorEmail} style={{ color: 'red' }} label="Vendor Email">
-                                                    <Input id="vendorEmail" type="text" name="vendorEmail"  value= {employeeDetails.workDetails.vendorEmail} onChange={this.onWorkDetailsChange} placeholder="Vendor Email" />
-                                                    {errors.vendorEmail}
+                                                    <Popover content="Vendor email">
+                                                        <Input id="vendorEmail" type="text" name="vendorEmail"  value= {employeeDetails.workDetails.vendorEmail} onChange={this.onWorkDetailsChange} placeholder="Vendor Email" />
+                                                        {errors.vendorEmail}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Vendor email">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.contactNumber} style={{ color: 'red' }} label="Contact Number">
-                                                    <Input id="contactNumber" type="number" name="contactNumber"  value= {employeeDetails.workDetails.contactNumber} onChange={this.onWorkDetailsChange} placeholder="Contact Number" />
-                                                    {errors.contactNumber}
+                                                    <Popover content="Contact number">
+                                                        <Input id="contactNumber" type="number" name="contactNumber"  value= {employeeDetails.workDetails.contactNumber} onChange={this.onWorkDetailsChange} placeholder="Contact Number" />
+                                                        {errors.contactNumber}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Contact number">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.projectStartDate} style={{ color: 'red' }} label="Project Start Date">
-                                                    {/* <Input id="projectStartDate" type="text" name="projectStartDate"  value= {employeeDetails.workDetails.projectStartDate} onChange={this.onChange} placeholder="Project Start Date" /> */}
-                                                    <DatePicker onChange={this.onProjectStartDateChange} format="MM/DD/YYYY" placeholder= "Project Start Date" defaultValue= {moment()} />
-                                                    {errors.projectStartDate}
+                                                    <Popover content="Project state date">
+                                                        <DatePicker onChange={this.onProjectStartDateChange} format="MM/DD/YYYY" placeholder= "Project Start Date" defaultValue= {moment()} />
+                                                        {errors.projectStartDate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Popover content="Project state date">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                             </Card>
                                         </Col>
                                         </Row>
@@ -1720,8 +1718,11 @@ class H1bForm extends Component {
                                                 </Form.Item>
                                                 </div>
                                                 <Form.Item error={!!errors.passportPage} style={{ color: 'red' }} label="Passport Page">
-                                                    <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
-                                                    {errors.passportPage}
+                                                    <Popover content="1st, last and visa pages">
+                                                        <Input id="passportPage" type="file" name="passportPage" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Passport Page" />
+                                                        {errors.passportPage}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.passportPageProgress} max="100"/>
                                                     <span>
                                                         { this.state.passportPagePathLower && this.state.passportPagePathLower !== '' ?
@@ -1737,12 +1738,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="1st, last and visa pages">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.i94} style={{ color: 'red' }} label="I-94">
-                                                    <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
-                                                    {errors.i94}
+                                                    <Popover content="I-94">
+                                                        <Input id="i94" type="file" name="i94"  onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-94" />
+                                                        {errors.i94}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.i94Progress} max="100"/>
                                                     <span>
                                                         { this.state.i94PathLower && this.state.i94PathLower !== '' ?
@@ -1759,8 +1760,11 @@ class H1bForm extends Component {
                                                     </span>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.bachelorDegree} style={{ color: 'red' }} label="Bachelor Degree">
-                                                    <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
-                                                    {errors.bachelorDegree}                                                    
+                                                    <Popover content="Bachelors degree and transcripts text">
+                                                        <Input id="bachelorDegree" type="file" name="bachelorDegree" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Bachelor Degree" />
+                                                        {errors.bachelorDegree}  
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>                                                  
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
                                                     <span>
                                                         { this.state.bachelorDegreePathLower && this.state.bachelorDegreePathLower !== '' ?
@@ -1776,12 +1780,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Bachelors degree and transcripts text">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.mastersTranscripts} style={{ color: 'red' }} label="Masters Transcripts">
-                                                    <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
-                                                    {errors.mastersTranscripts}                                                    
+                                                    <Popover content="Masters degree and transcripts text">
+                                                        <Input id="mastersTranscripts" type="file" name="mastersTranscripts" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Masters Transcripts" />
+                                                        {errors.mastersTranscripts}     
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>                                               
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
                                                     <span>
                                                         { this.state.mastersTranscriptsPathLower && this.state.mastersTranscriptsPathLower !== '' ?
@@ -1797,12 +1801,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Masters degree and transcripts text">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.universityDocs} style={{ color: 'red' }} label="University Documents">
-                                                    <Input id="universityDocs" type="file" name="universityDocs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="University Documents" />
-                                                    {errors.universityDocs}
+                                                    <Popover content="Upload I-20, EAD documents">
+                                                        <Input id="universityDocs" type="file" name="universityDocs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="University Documents" />
+                                                        {errors.universityDocs}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.universityDocsProgress} max="100"/>
                                                     <span>
                                                         { this.state.universityDocsPathLower && this.state.universityDocsPathLower !== '' ?
@@ -1818,12 +1822,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Upload I-20, EAD documents">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.resume} style={{ color: 'red' }} label="Resume">
-                                                    <Input id="resume" type="file" name="resume" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Resume" />
-                                                    {errors.resume}
+                                                    <Popover content="Resume">
+                                                        <Input id="resume" type="file" name="resume" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Resume" />
+                                                        {errors.resume}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.resumeProgress} max="100"/>
                                                     <span>
                                                         { this.state.resumePathLower && this.state.resumePathLower !== '' ?
@@ -1839,12 +1843,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Resume">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.ssnCopy} style={{ color: 'red' }} label="SSN">
-                                                    <Input id="ssnCopy" type="file" name="ssnCopy" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="SSN" />
-                                                    {errors.ssnCopy}
+                                                    <Popover content="SSN copy">
+                                                        <Input id="ssnCopy" type="file" name="ssnCopy" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="SSN" />
+                                                        {errors.ssnCopy}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.ssnCopyProgress} max="100"/>
                                                     <span>
                                                         { this.state.ssnCopyPathLower && this.state.ssnCopyPathLower !== '' ?
@@ -1860,12 +1864,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="SSN copy">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.payStubs} style={{ color: 'red' }} label="Pay Stubs">
-                                                    <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
-                                                    {errors.payStubs}
+                                                    <Popover content="Most recent 3 pays">
+                                                        <Input id="payStubs" type="file" name="payStubs" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Pay Stubs" />
+                                                        {errors.payStubs}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.payStubsProgress} max="100"/>
                                                     <span>
                                                         { this.state.payStubsPathLower && this.state.payStubsPathLower !== '' ?
@@ -1881,12 +1885,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Most recent 3 pays">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.clientLetter} style={{ color: 'red' }} label="Client Letter">
-                                                    <Input id="clientLetter" type="file" name="clientLetter" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Client Letter" />
-                                                    {errors.clientLetter}
+                                                    <Popover content="Client Letter">
+                                                        <Input id="clientLetter" type="file" name="clientLetter" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Client Letter" />
+                                                        {errors.clientLetter}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.clientLetterProgress} max="100"/>
                                                     <span>
                                                         { this.state.clientLetterPathLower && this.state.clientLetterPathLower !== '' ?
@@ -1902,12 +1906,12 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Client Letter">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 <Form.Item error={!!errors.vendorLetter} style={{ color: 'red' }} label="Vendor Letter">
-                                                    <Input id="vendorLetter" type="file" name="vendorLetter" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Vendor Letter" />
-                                                    {errors.vendorLetter}
+                                                    <Popover content="Vendor Letter">
+                                                        <Input id="vendorLetter" type="file" name="vendorLetter" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Vendor Letter" />
+                                                        {errors.vendorLetter}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                     <progress value={this.state.vendorLetterProgress} max="100"/>
                                                     <span>
                                                         { this.state.vendorLetterPathLower && this.state.vendorLetterPathLower !== '' ?
@@ -1923,9 +1927,6 @@ class H1bForm extends Component {
                                                         }
                                                     </span>
                                                 </Form.Item>
-                                                <Popover content="Vendor Letter">
-                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                </Popover>
                                                 {/* <Form.Item error={!!errors.evidence} style={{ color: 'red' }} label="Evidence">
                                                     <Input id="evidence" type="file" name="evidence" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="Evidence" />
                                                     {errors.evidence}
@@ -1942,8 +1943,11 @@ class H1bForm extends Component {
                                             <Col>
                                                 <Card title="Documents From HR">
                                                     <Form.Item error={!!errors.employmentDocs} style={{ color: 'red' }} label="Employee Agreements">
-                                                        <Input id="employmentDocs" type="file" name="employmentDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee Agreements" />
-                                                        {errors.employmentDocs}
+                                                        <Popover content="Employee documents">
+                                                            <Input id="employmentDocs" type="file" name="employmentDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee Agreements" />
+                                                            {errors.employmentDocs}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.employmentDocsProgress} max="100"/>
                                                         <span>
                                                             { this.state.employmentDocsPathLower && this.state.employmentDocsPathLower !== '' ?
@@ -1959,12 +1963,12 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Employee documents">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.vendorDocs} style={{ color: 'red' }} label="Employee and Employer Relation">
-                                                        <Input id="vendorDocs" type="file" name="vendorDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee and Employer relation" />
-                                                        {errors.vendorDocs}
+                                                        <Popover content="Employer relation document">
+                                                            <Input id="vendorDocs" type="file" name="vendorDocs" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Employee and Employer relation" />
+                                                            {errors.vendorDocs}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.vendorDocsProgress} max="100"/>
                                                         <span>
                                                             { this.state.vendorDocsPathLower && this.state.vendorDocsPathLower !== '' ?
@@ -1980,19 +1984,19 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Employer relation document">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.layer1} style={{ color: 'red' }} label="Layer 1">
-                                                        <Input id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
-                                                        {errors.layer1}
+                                                        <Popover content="Layer 1">
+                                                            <Input id="layer1" type="text" name="layer1"  value= {reliableDocuments.layer1} onChange={this.onWorkDetailsChange} placeholder="Layer 1" />
+                                                            {errors.layer1}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                     </Form.Item>
-                                                    <Popover content="Layer 1">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.layer1Documents} style={{ color: 'red' }} label="Layer 1 Documents">
-                                                        <Input id="layer1Documents" type="file" name="layer1Documents" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Layer 1 Documents" />
-                                                        {errors.layer1Documents}
+                                                        <Popover content="Layer 1 document">
+                                                            <Input id="layer1Documents" type="file" name="layer1Documents" onChange={(e) => this.uploadFile(e, "Reliable")} placeholder="Layer 1 Documents" />
+                                                            {errors.layer1Documents}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.layer1DocumentsProgress} max="100"/>
                                                         <span>
                                                             { this.state.layer1DocumentsPathLower && this.state.layer1DocumentsPathLower !== '' ?
@@ -2008,19 +2012,19 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Layer 1 document">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.layer2} style={{ color: 'red' }} label="Layer 2">
-                                                        <Input id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
-                                                        {errors.layer2}
+                                                        <Popover content="layer 2">
+                                                            <Input id="layer2" type="text" name="layer2"  value= {reliableDocuments.layer2} onChange={this.onWorkDetailsChange} placeholder="Layer 2" />
+                                                            {errors.layer2}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                     </Form.Item>
-                                                    <Popover content="layer 2">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.layer2Documents} style={{ color: 'red' }} label="Layer 2 Documents">
-                                                        <Input id="layer2Documents" type="file" name="layer2Documents" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="Layer 2 Documents" />
-                                                        {errors.layer2Documents}
+                                                        <Popover content="layer 2 document">
+                                                            <Input id="layer2Documents" type="file" name="layer2Documents" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="Layer 2 Documents" />
+                                                            {errors.layer2Documents}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.layer2DocumentsProgress} max="100"/>
                                                         <span>
                                                             { this.state.layer2DocumentsPathLower && this.state.layer2DocumentsPathLower !== '' ?
@@ -2036,12 +2040,12 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="layer 2 document">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.lca} style={{ color: 'red' }} label="LCA">
-                                                        <Input id="lca" type="file" name="lca" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="LCA" />
-                                                        {errors.lca}
+                                                        <Popover content="LCA">
+                                                            <Input id="lca" type="file" name="lca" onChange={() => (e) => this.uploadFile(e, "Reliable")} placeholder="LCA" />
+                                                            {errors.lca}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.lcaProgress} max="100"/>
                                                         <span>
                                                             { this.state.lcaPathLower && this.state.lcaPathLower !== '' ?
@@ -2057,9 +2061,6 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="LCA">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                 </Card>
                                             </Col>
                                             </Row>
@@ -2071,8 +2072,11 @@ class H1bForm extends Component {
                                             <Col >
                                                 <Card title="Documents From Attorney">
                                                     <Form.Item error={!!errors.attorneyDocument1} style={{ color: 'red' }} label="Attorney Document 1">
-                                                        <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 1" />
-                                                        {errors.attorneyDocument1}
+                                                        <Popover content="Attorney document 1">
+                                                            <Input id="attorneyDocument1" type="file" name="attorneyDocument1" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 1" />
+                                                            {errors.attorneyDocument1}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.attorneyDocument1Progress} max="100"/>
                                                         <span>
                                                             { this.state.attorneyDocument1PathLower && this.state.attorneyDocument1PathLower !== '' ?
@@ -2088,12 +2092,12 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Attorney document 1">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.attorneyDocument2} style={{ color: 'red' }} label="Attorney Document 2">
-                                                        <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 2" />
-                                                        {errors.attorneyDocument2}
+                                                        <Popover content="Attorney document 2">
+                                                            <Input id="attorneyDocument2" type="file" name="attorneyDocument2" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 2" />
+                                                            {errors.attorneyDocument2}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.attorneyDocument2Progress} max="100"/>
                                                         <span>
                                                             { this.state.attorneyDocument2PathLower && this.state.attorneyDocument2PathLower !== '' ?
@@ -2109,12 +2113,12 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Attorney document 2">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.attorneyDocument3} style={{ color: 'red' }} label="Attorney Document 3">
-                                                        <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 3" />
-                                                        {errors.attorneyDocument3}
+                                                        <Popover content="Attorney document 3">
+                                                            <Input id="attorneyDocument3" type="file" name="attorneyDocument3" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 3" />
+                                                            {errors.attorneyDocument3}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.attorneyDocument3Progress} max="100"/>
                                                         <span>
                                                             { this.state.attorneyDocument3PathLower && this.state.attorneyDocument3PathLower !== '' ?
@@ -2130,12 +2134,12 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Attorney document 3">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                     <Form.Item error={!!errors.attorneyDocument4} style={{ color: 'red' }} label="Attorney Document 4">
-                                                        <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 4" />
-                                                        {errors.attorneyDocument4}
+                                                        <Popover content="Attorney document 4">
+                                                            <Input id="attorneyDocument4" type="file" name="attorneyDocument4" onChange={(e) => this.uploadFile(e, "Attorney")} placeholder="Attorney Document 4" />
+                                                            {errors.attorneyDocument4}
+                                                            <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                        </Popover>
                                                         <progress value={this.state.attorneyDocument4Progress} max="100"/>
                                                         <span>
                                                             { this.state.attorneyDocument4PathLower && this.state.attorneyDocument4PathLower !== '' ?
@@ -2151,9 +2155,6 @@ class H1bForm extends Component {
                                                             }
                                                         </span>
                                                     </Form.Item>
-                                                    <Popover content="Attorney document 4">
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
                                                 </Card>
                                             </Col>
                                         </Row>
@@ -2161,10 +2162,8 @@ class H1bForm extends Component {
                                     </Panel>
                                     <Form>
                                         <Row>
-                                            <Form.Item>
-                                                <Button type="primary" onClick={this.onSubmit}>Submit</Button>
-                                            </Form.Item>
-                                            { downloadPDF }
+                                            { submitButton }
+                                            { downloadButton }
                                         </Row>
                                     </Form>
                         </Collapse>    
