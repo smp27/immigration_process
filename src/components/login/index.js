@@ -31,22 +31,13 @@ class Login extends Component {
         }
         return null;
     }
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     console.log(nextProps);
-    //     if(nextProps.error !== "") {
-    //         prevState.errors = {email: nextProps.error};
-    //     }
-    //     if(nextProps.loginStatus) {
-    //         this.props.history.push("/h1bform");
-    //     }
-    //     return null;
-    // }
 
     onChange = e => this.setState({
         data: { ...this.state.data, [e.target.name]: e.target.value}
     });
 
-    onSubmit = () => {
+    onSubmit = (e) => {
+        e.preventDefault();
         // console.log(this.state.data);
         const errors = this.validate(this.state.data);
         this.setState({errors});
@@ -58,7 +49,7 @@ class Login extends Component {
     validate = data => {
         const errors = {};
         if(!Validator.isEmail(data.email)) errors.email = "Invalid Email";
-        if(!data.password) errors.password = "Can't be empty";
+        if(!data.password) errors.password = "Please enter valid Password";
         return errors;
     }
 
@@ -101,9 +92,9 @@ Login.protoTypes = {
 
 const mapStateToProps = state => {
     return {
-    loginStatus: state.loginStatus,
-    error: state.error,
-    getEmployeesList:state.getEmployeesList
+        loginStatus: state.loginStatus,
+        error: state.error,
+        getEmployeesList:state.getEmployeesList
     }
 };
 

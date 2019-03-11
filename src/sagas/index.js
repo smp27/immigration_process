@@ -177,7 +177,11 @@ function* signUpAsync(action) {
         console.log('Sign up async saga');
         const response = yield call(signUpServiceCall, action.payload.email, action.payload.password);
         console.log(response);
-        yield put({type: 'SIGN_UP_ASYNC', payload: action.payload});
+        if(response.code) {
+            yield put({type: 'SIGN_UP_ERROR', payload: response});
+        } else {
+            yield put({type: 'SIGN_UP_ASYNC', payload: action.payload});
+        }
     }
     catch(e) {
         console.log(e);

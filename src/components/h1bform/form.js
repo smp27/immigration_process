@@ -60,27 +60,31 @@ class H1bForm extends Component {
                 middleName: '',
                 lastName: '',
                 resume: '',
-                resumeURL: '',
+                resumePathLower: '',
                 bachelorDegree: '',
-                bachelorDegreeURL: '',
+                bachelorDegreePathLower: '',
                 mastersTranscripts: '',
-                mastersTranscriptsURL: '',
+                mastersTranscriptsPathLower: '',
                 payStubs: '',
-                payStubsURL: '',
+                payStubsPathLower: '',
                 clientLetter: '',
-                clientLetterURL: '',
+                clientLetterPathLower: '',
                 vendorLetter: '',
-                vendorLetterURL: '',
+                vendorLetterPathLower: '',
                 passportPage: '',
-                passportPageURL: '',
+                passportPagePathLower: '',
                 i94: '',
-                i94URL: '',
+                i94PathLower: '',
                 evidence: '',
-                evidenceURL: '',
+                evidencePathLower: '',
                 ssnCopy: '',
-                ssnCopyURL: '',
+                ssnCopyPathLower: '',
                 universityDocs: '',
-                universityDocsURL: '',
+                universityDocsPathLower: '',
+                clientLetter: '',
+                clientLetterPathLower: '',
+                vendorLetter: '',
+                vendorLetterPathLower: '',
                 addressDetails:{
                   address1:'',
                   address2:'',
@@ -246,12 +250,12 @@ class H1bForm extends Component {
         }
         if(Object.keys(nextProps.employeeData).length != 0) {
             state.employeeDetails = nextProps.employeeData;
+            state.shouldDisable = true;
         }
         state.employeeDetails.employeeID = nextProps.loggedInUser.email;
         const previousFormData = nextProps.getEmployeesList.filter(function(item) { return item.employeeID === nextProps.loggedInUser.email});
         if(previousFormData.length > 0) {
             state.employeeDetails = previousFormData[0];
-            //state.shouldDisable = true; // disable the fields only if we're comign from the Employee list screen and by the Admin etc
         }
     }
 
@@ -495,6 +499,7 @@ class H1bForm extends Component {
 
         if(this.state.employeeDetails.firstName !== "" && this.state.employeeDetails.lastName !== ""){
             const {firstName, lastName} =  this.state.employeeDetails;
+            const { employeeDetails } = this.state;
         
             if(e.target.files[0].type === "application/pdf") {
                     
@@ -509,8 +514,10 @@ class H1bForm extends Component {
                     const fileInfo = JSON.parse(xhr.response);
                     // console.log(fileInfo);
                     errorDetails[filename] = '';
-                    th.setState({[filename]:fileInfo.name});
-                    th.setState({[filename+"PathLower"]:fileInfo.path_lower});
+                    employeeDetails[filename] = fileInfo.name;
+                    employeeDetails[filename+"PathLower"] = fileInfo.path_lower;
+                    th.setState({employeeDetails: employeeDetails});
+                    // console.log(th.state);
                     // Upload succeeded. Do something here with the file info.
                 }
                 else {
@@ -604,7 +611,7 @@ class H1bForm extends Component {
         e.preventDefault();
         const errors = this.validate(this.state.employeeDetails);
         this.setState({errors: errors});
-        if(Object.keys(errors).length === 0) {            
+        if(Object.keys(errors).length === 0) {
             this.props.dispatch(submitImmiFormAction(this.state.employeeDetails));
         }
     };
@@ -1728,11 +1735,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.passportPageProgress} max="100"/>
                                                     <span>
-                                                        { this.state.passportPagePathLower && this.state.passportPagePathLower !== '' ?
+                                                        { this.state.employeeDetails.passportPagePathLower && this.state.employeeDetails.passportPagePathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.passportPage, this.state.passportPagePathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.passportPage, this.state.employeeDetails.passportPagePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1749,11 +1756,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.i94Progress} max="100"/>
                                                     <span>
-                                                        { this.state.i94PathLower && this.state.i94PathLower !== '' ?
+                                                        { this.state.employeeDetails.i94PathLower && this.state.employeeDetails.i94PathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.i94, this.state.i94PathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.i94, this.state.employeeDetails.i94PathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1770,11 +1777,11 @@ class H1bForm extends Component {
                                                     </Popover>                                                  
                                                     <progress value={this.state.bachelorDegreeProgress} max="100"/>
                                                     <span>
-                                                        { this.state.bachelorDegreePathLower && this.state.bachelorDegreePathLower !== '' ?
+                                                        { this.state.employeeDetails.bachelorDegreePathLower && this.state.employeeDetails.bachelorDegreePathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.bachelorDegree, this.state.bachelorDegreePathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.bachelorDegree, this.state.employeeDetails.bachelorDegreePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1791,11 +1798,11 @@ class H1bForm extends Component {
                                                     </Popover>                                               
                                                     <progress value={this.state.mastersTranscriptsProgress} max="100"/>
                                                     <span>
-                                                        { this.state.mastersTranscriptsPathLower && this.state.mastersTranscriptsPathLower !== '' ?
+                                                        { this.state.employeeDetails.mastersTranscriptsPathLower && this.state.employeeDetails.mastersTranscriptsPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.mastersTranscripts, this.state.mastersTranscriptsPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.mastersTranscripts, this.state.employeeDetails.mastersTranscriptsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1812,11 +1819,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.universityDocsProgress} max="100"/>
                                                     <span>
-                                                        { this.state.universityDocsPathLower && this.state.universityDocsPathLower !== '' ?
+                                                        { this.state.employeeDetails.universityDocsPathLower && this.state.employeeDetails.universityDocsPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.universityDocs, this.state.universityDocsPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.universityDocs, this.state.employeeDetails.universityDocsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1833,11 +1840,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.resumeProgress} max="100"/>
                                                     <span>
-                                                        { this.state.resumePathLower && this.state.resumePathLower !== '' ?
+                                                        { this.state.employeeDetails.resumePathLower && this.state.employeeDetails.resumePathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.resume, this.state.resumePathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.resume, this.state.employeeDetails.resumePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1854,11 +1861,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.ssnCopyProgress} max="100"/>
                                                     <span>
-                                                        { this.state.ssnCopyPathLower && this.state.ssnCopyPathLower !== '' ?
+                                                        { this.state.employeeDetails.ssnCopyPathLower && this.state.employeeDetails.ssnCopyPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.ssnCopy, this.state.ssnCopyPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.ssnCopy, this.state.employeeDetails.ssnCopyPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1875,11 +1882,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.payStubsProgress} max="100"/>
                                                     <span>
-                                                        { this.state.payStubsPathLower && this.state.payStubsPathLower !== '' ?
+                                                        { this.state.employeeDetails.payStubsPathLower && this.state.employeeDetails.payStubsPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.payStubs, this.state.payStubsPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.payStubs, this.state.employeeDetails.payStubsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1896,11 +1903,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.clientLetterProgress} max="100"/>
                                                     <span>
-                                                        { this.state.clientLetterPathLower && this.state.clientLetterPathLower !== '' ?
+                                                        { this.state.employeeDetails.clientLetterPathLower && this.state.employeeDetails.clientLetterPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.clientLetter, this.state.clientLetterPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.clientLetter, this.state.employeeDetails.clientLetterPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>
@@ -1917,11 +1924,11 @@ class H1bForm extends Component {
                                                     </Popover>
                                                     <progress value={this.state.vendorLetterProgress} max="100"/>
                                                     <span>
-                                                        { this.state.vendorLetterPathLower && this.state.vendorLetterPathLower !== '' ?
+                                                        { this.state.employeeDetails.vendorLetterPathLower && this.state.employeeDetails.vendorLetterPathLower !== '' ?
                                                             (
                                                             <span>
                                                                 <span>Upload new Document</span>
-                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.vendorLetter, this.state.vendorLetterPathLower) } }>
+                                                                <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.vendorLetter, this.state.employeeDetails.vendorLetterPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
                                                             </span>

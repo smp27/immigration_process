@@ -4,6 +4,7 @@ const initialState = {
     loggedInUser: {},
     visaFormData: {},
     loginStatus : false,
+    signUpStatus: false,
     image: [],
     getEmployeesList:[],
     error: '',
@@ -59,8 +60,7 @@ export default function(state = initialState, action) {
         case 'SIGN_UP_ASYNC':
             return {
                 ...state,
-                loggedInUser: action.payload,
-                loginStatus: true,
+                signUpStatus: true,
                 error: ''
             };
 
@@ -84,7 +84,8 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 loggedInUser: action.payload,
-                loginStatus: true
+                loginStatus: true,
+                signUpStatus: false
             }
 
         case 'LOGIN_ERROR_ASYNC' : 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import  Validator from 'validator';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signUp, getEmployeeList } from '../../actions';
+import { signUp } from '../../actions';
 import { Form, Input, Button, Card, Row, Col } from 'antd';
 import "antd/dist/antd.css";
 
@@ -22,16 +22,15 @@ class Signup extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-        const errors = this.validate(this.state.data);
-        if(nextProps.error) {
-            errors.email = nextProps.error;
-        } else {
-          errors.email = '';
-          this.props.history.push("/h1bform");
+    static getDerivedStateFromProps(nextProps, state){
+        if(nextProps.signUpStatus) {
+            alert('Account created successfully');
+            nextProps.history.push("/");
         }
-        this.setState({errors});
+        if(nextProps.error !== "") {
+            state.errors = {email: nextProps.error};
+        }
+        return null;
     }
 
     onChange = e => this.setState({
@@ -50,7 +49,8 @@ class Signup extends Component {
     validate = data => {
         const errors = {};
         if(!Validator.isEmail(data.email)) errors.email = "Invalid Email";
-        if(!data.password) errors.password = "Can't be empty";
+        if(!data.password) errors.password = "Please enter valid Password";
+        if(data.password.length < 6) errors.password = "Password must be minimum 6 characters";
         return errors;
     }
 
@@ -90,8 +90,11 @@ Signup.protoTypes = {
 
 };
 
-const mapStateToProps = state => ({
-    error: state.error
-});
+const mapStateToProps = state => {
+    return {
+        error: state.error,
+        signUpStatus: state.signUpStatus
+    }
+};
 
 export default connect(mapStateToProps)(Signup);
