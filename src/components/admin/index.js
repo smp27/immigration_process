@@ -14,15 +14,7 @@ const FileSaver = require('file-saver');
 //Access token to acces dropbox account
 const dropboxToken = DROPBOX_ACCESS_TOKEN_KEY;
 
-const { Header, Content } = Layout;
-
-const menu = (
-  <Menu>
-      <Menu.Item><Link style={{ float: 'right'}} to="/employeelist">Employee List</Link></Menu.Item>
-      <Menu.Item><Link style={{ float: 'right'}} to="/admin">Admin Panel</Link></Menu.Item>
-      <Menu.Item><Link style={{ float: 'right'}} to="/logout">Logout</Link></Menu.Item>
-  </Menu>
-);
+const { Header, Content, Footer } = Layout;
 
 class Admin extends Component {
   constructor(props) {
@@ -141,6 +133,9 @@ class Admin extends Component {
                       </Row>
                     </Form>
                   </Content>
+                  <Footer style={{ textAlign: 'center' }}>
+                      Reliable Immigration Form @ version: 1.0.0
+                  </Footer>
               </Layout>
           </div>
       );

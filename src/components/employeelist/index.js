@@ -6,7 +6,7 @@ import { Table, Menu, Icon, Layout, Row, Col } from 'antd'
 import "antd/dist/antd.css";
 import { setEmployeeData } from '../../actions';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const columns = [{
     title: 'First Name',
@@ -82,6 +82,9 @@ class EmployeeList extends Component {
                             dataSource={data} 
                         />
                     </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Reliable Immigration Form @ version: 1.0.0
+                    </Footer>
                 </Layout>
             </div>
         );

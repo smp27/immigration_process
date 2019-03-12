@@ -22,7 +22,7 @@ const FileSaver = require('file-saver');
 //Access token to acces dropbox account
 const dropboxToken = DROPBOX_ACCESS_TOKEN_KEY;
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
 
@@ -146,13 +146,13 @@ class H1bForm extends Component {
                     arrivalDate: '',
                     daysSpent: ''
                 },
-                // H4CheckListDetails: {
-                //     H4Passport: '',
-                //     H4i94: '',
-                //     H4Approval: '',
-                //     H4Marraige: '',
-                //     H4ChildrenCertificate: ''
-                // },
+                H4CheckListDetails: {
+                    H4Passport: '',
+                    H4i94: '',
+                    H4Approval: '',
+                    H4Marraige: '',
+                    H4ChildrenCertificate: ''
+                },
                 workDetails:{
                     clientName: '',
                     clientAddress: '',
@@ -165,44 +165,44 @@ class H1bForm extends Component {
                     contactNumber: '',
                     projectStartDate: ''
                 },
-                // I140Detials: {
-                //     I140Approval: '',
-                //     I140Receipt: '',
-                //     I140Documents: '',
-                //     I140DocumentsURL: ''
-                // },
-                // spouseDetails: {
-                //     maritalStatus: '',
-                //     spouseH4: '',
-                //     dependenceRelationship: ''
-                // },
-                // H4Details: {
-                //     spouseFullName: '',
-                //     spouseBirthDate: '',
-                //     spouseCountry: '',
-                //     spouseCountryOfCitizen: '',
-                //     marraigeDate: '',
-                //     countryOfMarraige: '',
-                //     spouseImmigrationStatus: '',
-                //     spouseSoicalSecurityNumber: '',
-                //     dependenceRelationship: '',
-                //     spouseCurrentAddress: '',
-                //     spouseCity: '',
-                //     spouseState: '',
-                //     spouseZipcode: ''
-                // },
-                // kidsDetails: {
-                //     dependenceRelationship2: '',
-                //     kidFullName: '',
-                //     kidGender: '',
-                //     kidMaritalStatus: '',
-                //     kidBirthDate: '',
-                //     kidCountry: '',
-                //     kidCountryOfCitizen: '',
-                //     kidImmigrationStatus: '',
-                //     kidSocialSecurityNumber: '',
-                //     kidCurrentAddress: ''
-                // }
+                I140Detials: {
+                    I140Approval: '',
+                    I140Receipt: '',
+                    I140Documents: '',
+                    I140DocumentsURL: ''
+                },
+                spouseDetails: {
+                    maritalStatus: '',
+                    spouseH4: '',
+                    dependenceRelationship: ''
+                },
+                H4Details: {
+                    spouseFullName: '',
+                    spouseBirthDate: '',
+                    spouseCountry: '',
+                    spouseCountryOfCitizen: '',
+                    marraigeDate: '',
+                    countryOfMarraige: '',
+                    spouseImmigrationStatus: '',
+                    spouseSoicalSecurityNumber: '',
+                    dependenceRelationship: '',
+                    spouseCurrentAddress: '',
+                    spouseCity: '',
+                    spouseState: '',
+                    spouseZipcode: ''
+                },
+                kidsDetails: {
+                    dependenceRelationship2: '',
+                    kidFullName: '',
+                    kidGender: '',
+                    kidMaritalStatus: '',
+                    kidBirthDate: '',
+                    kidCountry: '',
+                    kidCountryOfCitizen: '',
+                    kidImmigrationStatus: '',
+                    kidSocialSecurityNumber: '',
+                    kidCurrentAddress: ''
+                }
             },
             reliableDocuments: {
                 layer1: '',
@@ -348,13 +348,13 @@ class H1bForm extends Component {
 
     onI140ReceiptDateChange = (e, date) => {
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.I140Detials["I140ReceiptDate"] = moment(date).valueOf();
+        employeeDetails.I140Detials["I140Receipt"] = moment(date).valueOf();
         return this.setState({employeeDetails});
     };
 
     onI140DateChange = (e, date) => {
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.I140Detials["I140Date"] = moment(date).valueOf();
+        employeeDetails.I140Detials["I140Approval"] = moment(date).valueOf();
         return this.setState({employeeDetails});
     };
 
@@ -510,21 +510,21 @@ class H1bForm extends Component {
                 };
                 
                 xhr.onload = function() {
-                if (xhr.status === 200) {
-                    const fileInfo = JSON.parse(xhr.response);
-                    // console.log(fileInfo);
-                    errorDetails[filename] = '';
-                    employeeDetails[filename] = fileInfo.name;
-                    employeeDetails[filename+"PathLower"] = fileInfo.path_lower;
-                    th.setState({employeeDetails: employeeDetails});
-                    // console.log(th.state);
-                    // Upload succeeded. Do something here with the file info.
-                }
-                else {
-                    const errorMessage = xhr.response || 'Unable to upload file';
-                    console.log(errorMessage);
-                    // Upload failed. Do something here with the error.
-                }
+                    if (xhr.status === 200) {
+                        const fileInfo = JSON.parse(xhr.response);
+                        // console.log(fileInfo);
+                        errorDetails[filename] = '';
+                        employeeDetails[filename] = fileInfo.name;
+                        employeeDetails[filename+"PathLower"] = fileInfo.path_lower;
+                        th.setState({employeeDetails: employeeDetails});
+                        // console.log(th.state);
+                        // Upload succeeded. Do something here with the file info.
+                    }
+                    else {
+                        const errorMessage = xhr.response || 'Unable to upload file';
+                        console.log(errorMessage);
+                        // Upload failed. Do something here with the error.
+                    }
                 };
                 
                 xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
@@ -634,7 +634,7 @@ class H1bForm extends Component {
     //Validation Function
 
     validate = employeeDetails => {
-        // console.log(employeeDetails);
+        console.log(employeeDetails);
         const errors = {};
 
         if(!employeeDetails.typeOfApplication)
@@ -850,11 +850,11 @@ class H1bForm extends Component {
             delete errors.daysSpent ;
 
         //Checklist H4
-        // if(!employeeDetails.H4Details.H4Passport) errors.H4Passport = "Can't be empty";
-        // if(!employeeDetails.H4Details.H4i94) errors.H4i94 = "Can't be empty";
-        // if(!employeeDetails.H4Details.H4Approval) errors.H4Approval = "Can't be empty";
-        // if(!employeeDetails.H4Details.H4Marraige) errors.H4Marraige = "Can't be empty";
-        // if(!employeeDetails.H4Details.H4ChildrenCertificate) errors.H4ChildrenCertificate = "Enter Zipcode";
+        if(!employeeDetails.H4CheckListDetails.H4Passport) errors.H4Passport = "Can't be empty";
+        if(!employeeDetails.H4CheckListDetails.H4i94) errors.H4i94 = "Can't be empty";
+        if(!employeeDetails.H4CheckListDetails.H4Approval) errors.H4Approval = "Can't be empty";
+        if(!employeeDetails.H4CheckListDetails.H4Marraige) errors.H4Marraige = "Can't be empty";
+        if(!employeeDetails.H4CheckListDetails.H4ChildrenCertificate) errors.H4ChildrenCertificate = "Enter Zipcode";
         
         //Work Details
         // if(!employeeDetails.workDetails.className) 
@@ -910,40 +910,40 @@ class H1bForm extends Component {
         // if(!employeeDetails.workDetails.vendorInfo) errors.vendorInfo = "Can't be empty";
 
         //I-140 Details
-        // if(!employeeDetails.I140Detials.I140Approval) errors.I140Approval = "Can't be empty";
-        // if(!employeeDetails.I140Detials.I140Date) errors.I140Date = "Can't be empty";
-        // if(!employeeDetails.I140Detials.I140ReceiptDate) errors.I140ReceiptDate = "Can't be empty";
+        if(!employeeDetails.I140Detials.I140Approval) errors.I140Approval = "Can't be empty";
+        if(!employeeDetails.I140Detials.I140Date) errors.I140Date = "Can't be empty";
+        if(!employeeDetails.I140Detials.I140ReceiptDate) errors.I140ReceiptDate = "Can't be empty";
 
         //Spouse Details
-        // if(!employeeDetails.spouseDetails.maritalStatus) errors.maritalStatus = "Can't be empty";
-        // if(!employeeDetails.spouseDetails.spouseH4) errors.spouseH4 = "Can't be empty";
-        // if(!employeeDetails.spouseDetails.dependenceRelationship) errors.dependenceRelationship = "Can't be empty";
+        if(!employeeDetails.spouseDetails.maritalStatus) errors.maritalStatus = "Can't be empty";
+        if(!employeeDetails.spouseDetails.spouseH4) errors.spouseH4 = "Can't be empty";
+        if(!employeeDetails.spouseDetails.dependenceRelationship) errors.dependenceRelationship = "Can't be empty";
 
         //H4 Details
-        // if(!employeeDetails.H4Details.spouseFullName) errors.spouseFullName = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseBirthDate) errors.spouseBirthDate = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseCountry) errors.spouseCountry = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseCountryOfCitizen) errors.spouseCountryOfCitizen = "Can't be empty";
-        // if(!employeeDetails.H4Details.marraigeDate) errors.marraigeDate = "Can't be empty";
-        // if(!employeeDetails.H4Details.countryOfMarraige) errors.countryOfMarraige = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseImmigrationStatus) errors.spouseImmigrationStatus = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseSoicalSecurityNumber) errors.spouseSoicalSecurityNumber = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseCurrentAddress) errors.spouseCurrentAddress = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseCity) errors.spouseCity = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseState) errors.spouseState = "Can't be empty";
-        // if(!employeeDetails.H4Details.spouseZipcode) errors.spouseZipcode = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseFullName) errors.spouseFullName = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseBirthDate) errors.spouseBirthDate = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseCountry) errors.spouseCountry = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseCountryOfCitizen) errors.spouseCountryOfCitizen = "Can't be empty";
+        if(!employeeDetails.H4Details.marraigeDate) errors.marraigeDate = "Can't be empty";
+        if(!employeeDetails.H4Details.countryOfMarraige) errors.countryOfMarraige = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseImmigrationStatus) errors.spouseImmigrationStatus = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseSoicalSecurityNumber) errors.spouseSoicalSecurityNumber = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseCurrentAddress) errors.spouseCurrentAddress = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseCity) errors.spouseCity = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseState) errors.spouseState = "Can't be empty";
+        if(!employeeDetails.H4Details.spouseZipcode) errors.spouseZipcode = "Can't be empty";
 
         //Kids Details
         // if(!employeeDetails.kidsDetails.dependenceRelationship2) errors.dependenceRelationship2 = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidFullName) errors.kidFullName = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidGender) errors.kidGender = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidMaritalStatus) errors.kidMaritalStatus = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidBirthDate) errors.kidBirthDate = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidCountry) errors.kidCountry = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidCountryOfCitizen) errors.kidCountryOfCitizen = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidImmigrationStatus) errors.kidImmigrationStatus = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidSocialSecurityNumber) errors.kidSocialSecurityNumber = "Can't be empty";
-        // if(!employeeDetails.kidsDetails.kidCurrentAddress) errors.kidCurrentAddress = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidFullName) errors.kidFullName = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidGender) errors.kidGender = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidMaritalStatus) errors.kidMaritalStatus = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidBirthDate) errors.kidBirthDate = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidCountry) errors.kidCountry = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidCountryOfCitizen) errors.kidCountryOfCitizen = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidImmigrationStatus) errors.kidImmigrationStatus = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidSocialSecurityNumber) errors.kidSocialSecurityNumber = "Can't be empty";
+        if(!employeeDetails.kidsDetails.kidCurrentAddress) errors.kidCurrentAddress = "Can't be empty";
 
         //Errors
         return errors;
@@ -1444,177 +1444,278 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                        {/* <Row> 
+                                    <Panel className="boldClass" header="H4 Dependent Information" key="4">
+                                        <Form layout="inline">
+                                        <Row> 
                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Check List Information for H4B">
                                                 <Form.Item error={!!errors.H4Passport} style={{ color: 'red' }} label="H4 Passport">
-                                                        <Input id="H4Passport" type="text" name="H4Passport"  value= {employeeDetails.H4CheckListDetails.H4Passport} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Passport" />
+                                                    <Popover content="H4 Passport">
+                                                        <Input id="H4Passport" type="number" name="H4Passport"  value= {employeeDetails.H4CheckListDetails.H4Passport} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Passport" />
                                                         {errors.H4Passport}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.H4i94} style={{ color: 'red' }} label="H4 i94">
-                                                        <Input id="H4i94" type="text" name="H4i94"  value= {employeeDetails.H4CheckListDetails.H4i94} onChange={this.onH4CheckListDetailsChange} placeholder="H4 i94" />
+                                                    <Popover content="H4 I-94">
+                                                        <Input id="H4i94" type="number" name="H4i94"  value= {employeeDetails.H4CheckListDetails.H4i94} onChange={this.onH4CheckListDetailsChange} placeholder="H4 i94" />
                                                         {errors.H4i94}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.H4Approval} style={{ color: 'red' }} label="H4 Approval">
+                                                    <Popover content="H4 Approval">
                                                         <Input id="H4Approval" type="text" name="H4Approval"  value= {employeeDetails.H4CheckListDetails.H4Approval} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Approval" />
                                                         {errors.H4Approval}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.H4Marraige} style={{ color: 'red' }} label="H4 Marraige">
+                                                    <Popover content="H4 Marraige">
                                                         <Input id="H4Marraige" type="text" name="H4Marraige"  value= {employeeDetails.H4CheckListDetails.H4Marraige} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Marraige" />
                                                         {errors.H4Marraige}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.H4ChildrenCertificate} style={{ color: 'red' }} label="H4 Children Certificate">
+                                                    <Popover content="H4 Children certificate">
                                                         <Input id="H4ChildrenCertificate" type="text" name="H4ChildrenCertificate"  value= {employeeDetails.H4CheckListDetails.H4ChildrenCertificate} onChange={this.onH4CheckListDetailsChange} placeholder="H4 Children Certificate" />
                                                         {errors.H4ChildrenCertificate}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                             </Card>
                                         </Col> 
-                                        <Col>
-                                            <Row> 
-                                                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                                    <Card title="I-140 Approval">
-                                                        <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval Start Date">
-                                                                <Input id="I140Approval" type="text" name="I140Approval"  value= {employeeDetails.I140Detials.I140Approval} onChange={this.onI140DetailsChange} placeholder="I-140 Approval start date" />
-                                                                {errors.I140Approval}
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval">
-                                                                <Input id="I140Date" type="text" name="I140Date"  value= {employeeDetails.I140Detials.I140Date} onChange={this.onChange} placeholder="I-140 Date" />
-                                                                <DatePicker onChange={this.onI140DateChange} format="MM/DD/YYYY" placeholder= "I-140 Approval" defaultValue= {moment()} />
-                                                                {errors.I140Approval}
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.I140Receipt} style={{ color: 'red' }} label="I-140 Receipt">
-                                                                <Input id="I140ReceiptDate" type="text" name="I140ReceiptDate"  value= {employeeDetails.I140Detials.I140ReceiptDate} onChange={this.onChange} placeholder="I-140 Receipt Date" />
-                                                                <DatePicker onChange={this.onI140ReceiptDateChange} format="MM/DD/YYYY" placeholder= "I-140 Receipt" defaultValue= {moment()} />
-                                                                {errors.I140Receipt}
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.I140Documents} style={{ color: 'red' }} label="I-140 Documents">
-                                                            <Input id="I140Documents" type="file" name="I140Documents" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-140 Documents" />
-                                                            {errors.I140Documents}
-                                                            <progress value={this.state.I140DocumentsProgress} max="100"/>
-                                                        </Form.Item>
-                                                    </Card>
-                                                </Col> 
-                                                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                                    <Card title="Spouse Information">
-                                                        <Form.Item error={!!errors.maritalStatus} style={{ color: 'red' }} label="Marital Status">
-                                                                <Input id="maritalStatus" type="text" name="maritalStatus"  value= {employeeDetails.spouseDetails.maritalStatus} onChange={this.onSpouseDetailsChange} placeholder="Marital Status" />
-                                                                {errors.maritalStatus}
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.spouseH4} style={{ color: 'red' }} label="Spouse H4">
-                                                                <Input id="spouseH4" type="text" name="spouseH4"  value= {employeeDetails.spouseDetails.spouseH4} onChange={this.onSpouseDetailsChange} placeholder="Spouse H4" />
-                                                                {errors.spouseH4}
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.dependenceRelationship} style={{ color: 'red' }} label="Dependence Relationship">
-                                                                <Input id="dependenceRelationship" type="text" name="dependenceRelationship"  value= {employeeDetails.spouseDetails.dependenceRelationship} onChange={this.onSpouseDetailsChange} placeholder="Dependence Relationship" />
-                                                                {errors.dependenceRelationship}
-                                                        </Form.Item>
-                                                    </Card>
-                                                </Col> 
-                                             </Row>
-                                        </Col>
-                                    </Row>
-                                    <Row> 
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                            <Card title="Kids Information">
-                                                <Form.Item error={!!errors.kidFullName} style={{ color: 'red' }} label="Full Name">
-                                                    <Input id="kidFullName" type="text" name="kidFullName"  value= {employeeDetails.kidsDetails.kidFullName} onChange={this.onKidsDetailsChange} placeholder="kid Full Name" />
-                                                    {errors.kidFullName}
+                                            <Card title="I-140 Approval">
+                                                <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval Start Date">
+                                                    <Popover content="I-140 Approval Start date">
+                                                        <Input id="I140Approval" type="text" name="I140Approval"  value= {employeeDetails.I140Detials.I140Approval} onChange={this.onI140DetailsChange} placeholder="I-140 Approval start date" />
+                                                        {errors.I140Approval}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.kidGender} style={{ color: 'red' }} label="Gender">
-                                                    <Input id="kidGender" type="text" name="kidGender"  value= {employeeDetails.kidsDetails.kidGender} onChange={this.onKidsDetailsChange} placeholder="Gender" />
-                                                    {errors.kidGender}
+                                                <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval">
+                                                    <Popover content="I-140 Approval">
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onI140DateChange} format="MM/DD/YYYY" placeholder= "I-140 Approval" defaultValue= {moment()} />
+                                                        {errors.I140Approval}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.kidMaritalStatus} style={{ color: 'red' }} label="Marital Status">
-                                                    <Input id="kidMaritalStatus" type="text" name="kidMaritalStatus"  value= {employeeDetails.kidsDetails.kidMaritalStatus} onChange={this.onKidsDetailsChange} placeholder="Marital Status" />
-                                                    {errors.kidMaritalStatus}
+                                                <Form.Item error={!!errors.I140Receipt} style={{ color: 'red' }} label="I-140 Receipt">
+                                                    <Popover content="I-140 Receipt">
+                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onI140ReceiptDateChange} format="MM/DD/YYYY" placeholder= "I-140 Receipt" defaultValue= {moment()} />
+                                                        {errors.I140Receipt}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.kidBirthDate} style={{ color: 'red' }} label="Birth Date">
-                                                    <Input id="kidBirthDate" type="text" name="kidBirthDate"  value= {employeeDetails.kidsDetails.kidBirthDate} onChange={this.onChange} placeholder="Birth Date" />
-                                                    <DatePicker onChange={this.onKidBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
-                                                    {errors.kidBirthDate}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.kidCountry} style={{ color: 'red' }} label="Country">
-                                                    <Input id="kidCountry" type="text" name="kidCountry"  value= {employeeDetails.kidsDetails.kidCountry} onChange={this.onKidsDetailsChange} placeholder="Country" />
-                                                    {errors.kidCountry}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.kidCountryOfCitizen} style={{ color: 'red' }} label="Country Of Citizen">
-                                                    <Input id="kidCountryOfCitizen" type="text" name="kidCountryOfCitizen"  value= {employeeDetails.kidsDetails.kidCountryOfCitizen} onChange={this.onKidsDetailsChange} placeholder="Country Of Citizen" />
-                                                    {errors.kidCountryOfCitizen}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.kidImmigrationStatus} style={{ color: 'red' }} label="Immigration Status">
-                                                    <Input id="kidImmigrationStatus" type="text" name="kidImmigrationStatus"  value= {employeeDetails.kidsDetails.kidImmigrationStatus} onChange={this.onKidsDetailsChange} placeholder="Immigration Status" />
-                                                    {errors.kidImmigrationStatus}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.kidSocialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
-                                                    <Input id="kidSocialSecurityNumber" type="number" name="kidSocialSecurityNumber"  value= {employeeDetails.kidsDetails.kidSocialSecurityNumber} onChange={this.onKidsDetailsChange} placeholder="Social Security Number" />
-                                                    {errors.kidSocialSecurityNumber}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.kidCurrentAddress} style={{ color: 'red' }} label="Current Address">
-                                                    <Input id="kidCurrentAddress" type="text" name="kidCurrentAddress"  value= {employeeDetails.kidsDetails.kidCurrentAddress} onChange={this.onKidsDetailsChange} placeholder="Current Address" />
-                                                    {errors.kidCurrentAddress}
+                                                <Form.Item error={!!errors.I140Documents} style={{ color: 'red' }} label="I-140 Documents">
+                                                    <Popover content="I-140 Documents">
+                                                        <Input id="I140Documents" type="file" name="I140Documents" onChange={(e) => this.uploadFile(e, "Employee")} placeholder="I-140 Documents" />
+                                                        {errors.I140Documents}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
+                                                    <progress value={this.state.I140DocumentsProgress} max="100"/>
                                                 </Form.Item>
                                             </Card>
-                                        </Col>
-                                     <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                                            <Card title="H4 Information">
-                                                <Form.Item error={!!errors.spouseFullName} style={{ color: 'red' }} label="Spouse Full Name">
-                                                    <Input id="spouseFullName" type="text" name="spouseFullName"  value= {employeeDetails.H4Details.spouseFullName} onChange={this.onH4DetailsChange} placeholder="Spouse Full Name" />
-                                                    {errors.spouseFullName}
+                                        </Col> 
+                                            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                            <Card title="Spouse Information">
+                                                <Form.Item error={!!errors.maritalStatus} style={{ color: 'red' }} label="Marital Status">
+                                                    <Popover content="Marital Status">
+                                                        <Input id="maritalStatus" type="text" name="maritalStatus"  value= {employeeDetails.spouseDetails.maritalStatus} onChange={this.onSpouseDetailsChange} placeholder="Marital Status" />
+                                                        {errors.maritalStatus}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
-                                                <Form.Item error={!!errors.spouseBirthDate} style={{ color: 'red' }} label="Spouse Birth Date">
-                                                    <Input id="spouseBirthDate" type="text" name="spouseBirthDate"  value= {employeeDetails.H4Details.spouseBirthDate} onChange={this.onChange} placeholder="Spouse Birth Date" />
-                                                    <DatePicker onChange={this.onSpouseBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
-                                                    {errors.spouseBirthDate}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseCountry} style={{ color: 'red' }} label="Spouse Country">
-                                                    <Input id="spouseCountry" type="text" name="spouseCountry"  value= {employeeDetails.H4Details.spouseCountry} onChange={this.onH4DetailsChange} placeholder="Spouse Country" />
-                                                    {errors.spouseCountry}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseCountryOfCitizen} style={{ color: 'red' }} label="Spouse Country Of Citizen">
-                                                    <Input id="spouseCountryOfCitizen" type="text" name="spouseCountryOfCitizen"  value= {employeeDetails.H4Details.spouseCountryOfCitizen} onChange={this.onH4DetailsChange} placeholder="Spouse Country Of Citizen" />
-                                                    {errors.spouseCountryOfCitizen}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.marraigeDate} style={{ color: 'red' }} label="Marraige Date">
-                                                    <Input id="marraigeDate" type="text" name="marraigeDate"  value= {employeeDetails.H4Details.marraigeDate} onChange={this.onChange} placeholder="Marraige Date" />
-                                                    <DatePicker onChange={this.onMarraigeDateChange} format="MM/DD/YYYY" placeholder= "Marraige Date" defaultValue= {moment()} />
-                                                    {errors.marraigeDate}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.countryOfMarraige} style={{ color: 'red' }} label="Country Of Marraige">
-                                                    <Input id="countryOfMarraige" type="text" name="countryOfMarraige"  value= {employeeDetails.H4Details.countryOfMarraige} onChange={this.onH4DetailsChange} placeholder="Country Of Marraige" />
-                                                    {errors.countryOfMarraige}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseImmigrationStatus} style={{ color: 'red' }} label="Spouse Immigration Status">
-                                                    <Input id="spouseImmigrationStatus" type="text" name="spouseImmigrationStatus"  value= {employeeDetails.H4Details.spouseImmigrationStatus} onChange={this.onH4DetailsChange} placeholder="Spouse Immigration Status" />
-                                                    {errors.spouseImmigrationStatus}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseSoicalSecurityNumber} style={{ color: 'red' }} label="Spouse Soical Security Number">
-                                                    <Input id="spouseSoicalSecurityNumber" type="number" name="spouseSoicalSecurityNumber"  value= {employeeDetails.H4Details.spouseSoicalSecurityNumber} onChange={this.onH4DetailsChange} placeholder="Spouse Soical Security Number" />
-                                                    {errors.spouseSoicalSecurityNumber}
+                                                <Form.Item error={!!errors.spouseH4} style={{ color: 'red' }} label="Spouse H4">
+                                                    <Popover content="Spouse H4">
+                                                        <Input id="spouseH4" type="number" name="spouseH4"  value= {employeeDetails.spouseDetails.spouseH4} onChange={this.onSpouseDetailsChange} placeholder="Spouse H4" />
+                                                        {errors.spouseH4}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                                 <Form.Item error={!!errors.dependenceRelationship} style={{ color: 'red' }} label="Dependence Relationship">
-                                                        <Input id="dependenceRelationship" type="text" name="dependenceRelationship"  value= {employeeDetails.H4Details.dependenceRelationship} onChange={this.onH4DetailsChange} placeholder="Dependence Relationship" />
+                                                    <Popover content="Dependecy Relationship">
+                                                        <Input id="dependenceRelationship" type="text" name="dependenceRelationship"  value= {employeeDetails.spouseDetails.dependenceRelationship} onChange={this.onSpouseDetailsChange} placeholder="Dependence Relationship" />
                                                         {errors.dependenceRelationship}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseCurrentAddress} style={{ color: 'red' }} label="Spouse Current Address">
-                                                    <Input id="spouseCurrentAddress" type="text" name="spouseCurrentAddress"  value= {employeeDetails.H4Details.spouseCurrentAddress} onChange={this.onH4DetailsChange} placeholder="Spouse Current Address" />
-                                                    {errors.spouseCurrentAddress}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseCity} style={{ color: 'red' }} label="Spouse City">
-                                                    <Input id="spouseCity" type="text" name="spouseCity"  value= {employeeDetails.H4Details.spouseCity} onChange={this.onH4DetailsChange} placeholder="Spouse City" />
-                                                    {errors.spouseCity}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseState} style={{ color: 'red' }} label="Spouse State">
-                                                    <Input id="spouseState" type="text" name="spouseState"  value= {employeeDetails.H4Details.spouseState} onChange={this.onH4DetailsChange} placeholder="Spouse State" />
-                                                    {errors.spouseState}
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.spouseZipcode} style={{ color: 'red' }} label="Spouse Zipcode">
-                                                    <Input id="spouseZipcode" type="number" name="spouseZipcode"  value= {employeeDetails.H4Details.spouseZipcode} onChange={this.onH4DetailsChange} placeholder="Spouse Zipcode" />
-                                                    {errors.spouseZipcode}
+                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                    </Popover>
                                                 </Form.Item>
                                             </Card>
-                                        </Col> 
-                                    </Row> */}
-                                    <Panel className="boldClass" header="Project Information" key="4">
+                                        </Col>
+                                    </Row>
+                                    </Form>
+                                    </Panel>
+                                    <Panel className="boldClass" header="H4 Dependent Documents" key="5">
+                                        <Form layout="inline">
+                                            <Row> 
+                                                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                                    <Card title="Kids Information">
+                                                        <Form.Item error={!!errors.kidFullName} style={{ color: 'red' }} label="Full Name">
+                                                            <Popover content="Kid Full Name">
+                                                                <Input id="kidFullName" type="text" name="kidFullName"  value= {employeeDetails.kidsDetails.kidFullName} onChange={this.onKidsDetailsChange} placeholder="kid Full Name" />
+                                                                {errors.kidFullName}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidGender} style={{ color: 'red' }} label="Gender">
+                                                            <Popover content="Kid Gender">
+                                                                <Input id="kidGender" type="text" name="kidGender"  value= {employeeDetails.kidsDetails.kidGender} onChange={this.onKidsDetailsChange} placeholder="Gender" />
+                                                                {errors.kidGender}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidMaritalStatus} style={{ color: 'red' }} label="Marital Status">
+                                                            <Popover content="Kid Marital Status">
+                                                                <Input id="kidMaritalStatus" type="text" name="kidMaritalStatus"  value= {employeeDetails.kidsDetails.kidMaritalStatus} onChange={this.onKidsDetailsChange} placeholder="Marital Status" />
+                                                                {errors.kidMaritalStatus}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidBirthDate} style={{ color: 'red' }} label="Birth Date">
+                                                            <Popover content="Kid Birth Date">
+                                                                <DatePicker disabled={isDisabledTrue} onChange={this.onKidBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                                {errors.kidBirthDate}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidCountry} style={{ color: 'red' }} label="Country">
+                                                            <Popover content="Kid Country">
+                                                                <Input id="kidCountry" type="text" name="kidCountry"  value= {employeeDetails.kidsDetails.kidCountry} onChange={this.onKidsDetailsChange} placeholder="Country" />
+                                                                {errors.kidCountry}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidCountryOfCitizen} style={{ color: 'red' }} label="Country Of Citizen">
+                                                            <Popover content="Kid Country of Citizen">
+                                                                <Input id="kidCountryOfCitizen" type="text" name="kidCountryOfCitizen"  value= {employeeDetails.kidsDetails.kidCountryOfCitizen} onChange={this.onKidsDetailsChange} placeholder="Country Of Citizen" />
+                                                                {errors.kidCountryOfCitizen}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidImmigrationStatus} style={{ color: 'red' }} label="Immigration Status">
+                                                            <Popover content="Kid Immigration Status">
+                                                                <Input id="kidImmigrationStatus" type="text" name="kidImmigrationStatus"  value= {employeeDetails.kidsDetails.kidImmigrationStatus} onChange={this.onKidsDetailsChange} placeholder="Immigration Status" />
+                                                                {errors.kidImmigrationStatus}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidSocialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
+                                                            <Popover content="Kid Social Security Number">
+                                                                <Input id="kidSocialSecurityNumber" type="number" name="kidSocialSecurityNumber"  value= {employeeDetails.kidsDetails.kidSocialSecurityNumber} onChange={this.onKidsDetailsChange} placeholder="Social Security Number" />
+                                                                {errors.kidSocialSecurityNumber}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.kidCurrentAddress} style={{ color: 'red' }} label="Current Address">
+                                                            <Popover content="Kid Current Address">
+                                                                <Input id="kidCurrentAddress" type="text" name="kidCurrentAddress"  value= {employeeDetails.kidsDetails.kidCurrentAddress} onChange={this.onKidsDetailsChange} placeholder="Current Address" />
+                                                                {errors.kidCurrentAddress}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                    </Card>
+                                                </Col>
+                                                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                                    <Card title="H4 Information">
+                                                        <Form.Item error={!!errors.spouseFullName} style={{ color: 'red' }} label="Spouse Full Name">
+                                                            <Popover content="Spouse Full Name">
+                                                                <Input id="spouseFullName" type="text" name="spouseFullName"  value= {employeeDetails.H4Details.spouseFullName} onChange={this.onH4DetailsChange} placeholder="Spouse Full Name" />
+                                                                {errors.spouseFullName}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseBirthDate} style={{ color: 'red' }} label="Spouse Birth Date">
+                                                            <Popover content="Spouse Birth Date">
+                                                                <DatePicker disabled={isDisabledTrue} onChange={this.onSpouseBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                                {errors.spouseBirthDate}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseCountry} style={{ color: 'red' }} label="Spouse Country">
+                                                            <Popover content="Spouse Country">
+                                                                <Input id="spouseCountry" type="text" name="spouseCountry"  value= {employeeDetails.H4Details.spouseCountry} onChange={this.onH4DetailsChange} placeholder="Spouse Country" />
+                                                                {errors.spouseCountry}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseCountryOfCitizen} style={{ color: 'red' }} label="Spouse Country Of Citizen">
+                                                            <Popover content="Spouse country of citizenship">
+                                                                <Input id="spouseCountryOfCitizen" type="text" name="spouseCountryOfCitizen"  value= {employeeDetails.H4Details.spouseCountryOfCitizen} onChange={this.onH4DetailsChange} placeholder="Spouse Country Of Citizen" />
+                                                                {errors.spouseCountryOfCitizen}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.marraigeDate} style={{ color: 'red' }} label="Marraige Date">
+                                                            <Popover content="Marraige date">
+                                                                <DatePicker disabled={isDisabledTrue} onChange={this.onMarraigeDateChange} format="MM/DD/YYYY" placeholder= "Marraige Date" defaultValue= {moment()} />
+                                                                {errors.marraigeDate}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.countryOfMarraige} style={{ color: 'red' }} label="Country Of Marraige">
+                                                            <Popover content="Country of marraige">
+                                                                <Input id="countryOfMarraige" type="text" name="countryOfMarraige"  value= {employeeDetails.H4Details.countryOfMarraige} onChange={this.onH4DetailsChange} placeholder="Country Of Marraige" />
+                                                                {errors.countryOfMarraige}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseImmigrationStatus} style={{ color: 'red' }} label="Spouse Immigration Status">
+                                                            <Popover content="Spouse immigration status">
+                                                                <Input id="spouseImmigrationStatus" type="text" name="spouseImmigrationStatus"  value= {employeeDetails.H4Details.spouseImmigrationStatus} onChange={this.onH4DetailsChange} placeholder="Spouse Immigration Status" />
+                                                                {errors.spouseImmigrationStatus}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseSoicalSecurityNumber} style={{ color: 'red' }} label="Spouse Soical Security Number">
+                                                            <Popover content="Spouse social security number">
+                                                                <Input id="spouseSoicalSecurityNumber" type="number" name="spouseSoicalSecurityNumber"  value= {employeeDetails.H4Details.spouseSoicalSecurityNumber} onChange={this.onH4DetailsChange} placeholder="Spouse Soical Security Number" />
+                                                                {errors.spouseSoicalSecurityNumber}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.dependenceRelationship} style={{ color: 'red' }} label="Dependence Relationship">
+                                                            <Popover content="Dependency relationship">
+                                                                <Input id="dependenceRelationship" type="text" name="dependenceRelationship"  value= {employeeDetails.H4Details.dependenceRelationship} onChange={this.onH4DetailsChange} placeholder="Dependence Relationship" />
+                                                                {errors.dependenceRelationship}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseCurrentAddress} style={{ color: 'red' }} label="Spouse Current Address">
+                                                            <Popover content="Spouse current address">
+                                                                <Input id="spouseCurrentAddress" type="text" name="spouseCurrentAddress"  value= {employeeDetails.H4Details.spouseCurrentAddress} onChange={this.onH4DetailsChange} placeholder="Spouse Current Address" />
+                                                                {errors.spouseCurrentAddress}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseCity} style={{ color: 'red' }} label="Spouse City">
+                                                            <Popover content="Spouse city">
+                                                                <Input id="spouseCity" type="text" name="spouseCity"  value= {employeeDetails.H4Details.spouseCity} onChange={this.onH4DetailsChange} placeholder="Spouse City" />
+                                                                {errors.spouseCity}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseState} style={{ color: 'red' }} label="Spouse State">
+                                                            <Popover content="Spouse state">
+                                                                <Input id="spouseState" type="text" name="spouseState"  value= {employeeDetails.H4Details.spouseState} onChange={this.onH4DetailsChange} placeholder="Spouse State" />
+                                                                {errors.spouseState}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                        <Form.Item error={!!errors.spouseZipcode} style={{ color: 'red' }} label="Spouse Zipcode">
+                                                            <Popover content="Spouse zipcode">
+                                                                <Input id="spouseZipcode" type="number" name="spouseZipcode"  value= {employeeDetails.H4Details.spouseZipcode} onChange={this.onH4DetailsChange} placeholder="Spouse Zipcode" />
+                                                                {errors.spouseZipcode}
+                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                            </Popover>
+                                                        </Form.Item>
+                                                    </Card>
+                                                </Col> 
+                                            </Row>
+                                        </Form>
+                                    </Panel>
+                                    <Panel className="boldClass" header="Project Information" key="6">
                                     <Form layout="inline">
                                     <Row>
                                         <Col >
@@ -1694,7 +1795,7 @@ class H1bForm extends Component {
                                         </Row>
                                         </Form>
                                         </Panel>
-                                        <Panel className="boldClass" header="Documents From Employee" key="5">
+                                        <Panel className="boldClass" header="Documents From Employee" key="7">
                                         <Form layout="inline">
                                         <Row>
                                         <Col >
@@ -1738,7 +1839,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.passportPagePathLower && this.state.employeeDetails.passportPagePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.passportPage, this.state.employeeDetails.passportPagePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1759,7 +1862,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.i94PathLower && this.state.employeeDetails.i94PathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.i94, this.state.employeeDetails.i94PathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1780,7 +1885,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.bachelorDegreePathLower && this.state.employeeDetails.bachelorDegreePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.bachelorDegree, this.state.employeeDetails.bachelorDegreePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1801,7 +1908,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.mastersTranscriptsPathLower && this.state.employeeDetails.mastersTranscriptsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.mastersTranscripts, this.state.employeeDetails.mastersTranscriptsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1822,7 +1931,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.universityDocsPathLower && this.state.employeeDetails.universityDocsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.universityDocs, this.state.employeeDetails.universityDocsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1843,7 +1954,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.resumePathLower && this.state.employeeDetails.resumePathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.resume, this.state.employeeDetails.resumePathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1864,7 +1977,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.ssnCopyPathLower && this.state.employeeDetails.ssnCopyPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.ssnCopy, this.state.employeeDetails.ssnCopyPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1885,7 +2000,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.payStubsPathLower && this.state.employeeDetails.payStubsPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.payStubs, this.state.employeeDetails.payStubsPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1906,7 +2023,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.clientLetterPathLower && this.state.employeeDetails.clientLetterPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.clientLetter, this.state.employeeDetails.clientLetterPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1927,7 +2046,9 @@ class H1bForm extends Component {
                                                         { this.state.employeeDetails.vendorLetterPathLower && this.state.employeeDetails.vendorLetterPathLower !== '' ?
                                                             (
                                                             <span>
-                                                                <span>Upload new Document</span>
+                                                                <Popover content="Uploading new document will discard existing document">
+                                                                    <span>Upload new Document</span>
+                                                                </Popover>
                                                                 <a href="#" onClick={ (e) => {this.downloadFile(e, this.state.employeeDetails.vendorLetter, this.state.employeeDetails.vendorLetterPathLower) } }>
                                                                     Download Recent document
                                                                 </a>
@@ -1947,7 +2068,7 @@ class H1bForm extends Component {
                                     </Row>
                                     </Form>
                                     </Panel>
-                                    <Panel className="boldClass" header="Documents From Reliable HR" key="6">
+                                    <Panel className="boldClass" header="Documents From Reliable HR" key="8">
                                     <Form  layout="inline">
                                         <Row>
                                             <Col>
@@ -2076,7 +2197,7 @@ class H1bForm extends Component {
                                             </Row>
                                             </Form>
                                             </Panel>
-                                            <Panel className="boldClass" header="Documents From Attorney" key="7">
+                                            <Panel className="boldClass" header="Documents From Attorney" key="9">
                                             <Form layout="inline">
                                             <Row>
                                             <Col >
@@ -2178,6 +2299,9 @@ class H1bForm extends Component {
                                     </Form>
                         </Collapse>    
                     </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Reliable Immigration Form @ version: 1.0.0
+                    </Footer>
                 </Layout> 
             </div>
          );
