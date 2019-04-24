@@ -3,7 +3,7 @@ import  Validator from 'validator';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login } from '../../actions';
-import { Form, Input, Button, Card, Row, Col } from 'antd';
+import { Form, Input, Button, Card, Row, Col, Icon } from 'antd';
 import "antd/dist/antd.css";
 
 class Login extends Component {
@@ -16,6 +16,7 @@ class Login extends Component {
                 email: '',
                 password: ''
             },
+            users: [{ id: '', name:''}],
             errors: {}
         }
         this.onChange = this.onChange.bind(this);
@@ -53,8 +54,27 @@ class Login extends Component {
         return errors;
     }
 
+    addCat = (e) => {
+        this.setState((prevState) => ({
+          users: [...prevState.users, {name:"", id:""}],
+        }));
+    }
+
+    handleChange = (e) => {
+        if (["name", "id"].includes(e.target.className) ) {
+          let users = [...this.state.users]
+          users[e.target.id.split("-")[1]][e.target.className] = e.target.value.toUpperCase()
+          this.setState({ users }, () => console.log(this.state.users))
+        } else {
+          this.setState({ [e.target.name]: e.target.value.toUpperCase() })
+        }
+    }
+
+    handleSubmit = (e) => { e.preventDefault(); console.log(this.state); }
+
     render() {
-        const { data, errors } = this.state;
+        const { data, errors, users } = this.state;
+        
         return (
             <div style={{ background: '#ECECEC', padding: '30px', height:'100%' }}>
                 <Row gutter={16}>
@@ -78,6 +98,41 @@ class Login extends Component {
                                     <Link style={{float: 'right'}} to="/forgotpassword">Forgot Password</Link>
                                 </Form.Item>
                             </Form>
+
+                            {/* <Form onSubmit={this.handleSubmit} onChange={this.handleChange}>
+                                <button onClick={this.addCat}>Add new cat</button>
+                                {
+                                    users.map((val, idx)=> {
+                                        let catId = `cat-${idx}`, idId = `id-${idx}`
+                                        return (
+                                            <div key={idx}>
+                                                <Form.Item label="ID">
+                                                    <Input id={idId} type="text" name={idId} className="id"/>
+                                                </Form.Item>
+                                                <Form.Item label="Name">
+                                                    <Input id={catId} type="text" name={catId} className="name"/>
+                                                </Form.Item>
+                                                <label htmlFor={catId}>{`Cat #${idx + 1}`}</label>
+                                                <input
+                                                type="text"
+                                                name={catId}
+                                                id={catId}
+                                                className="name"
+                                                />
+                                                <label htmlFor={idId}>id</label>
+                                                <input
+                                                type="text"
+                                                name={idId}
+                                                id={idId}
+                                                className="id"
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                                <input type="submit" value="Submit" />
+                            </Form> */}
+
                         </Card>
                     </Col>
                 </Row>

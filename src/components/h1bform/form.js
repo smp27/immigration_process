@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import  Validator from 'validator';
-import { Menu, Collapse, Popover, Icon, Form, Radio, DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
+import { Menu, Collapse, Popover, Icon, Form, Radio, Checkbox , DatePicker, Layout, Input, Row, Col, Button, Card} from 'antd';
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -141,11 +141,7 @@ class H1bForm extends Component {
                 //     endDate: '',
                 //     daysCount: ''
                 // },
-                travelHistory: {
-                    departureDate: '',
-                    arrivalDate: '',
-                    daysSpent: ''
-                },
+                travelHistory: [],
                 H4CheckListDetails: {
                     H4Passport: '',
                     H4i94: '',
@@ -191,18 +187,7 @@ class H1bForm extends Component {
                     spouseState: '',
                     spouseZipcode: ''
                 },
-                kidsDetails: {
-                    dependenceRelationship2: '',
-                    kidFullName: '',
-                    kidGender: '',
-                    kidMaritalStatus: '',
-                    kidBirthDate: '',
-                    kidCountry: '',
-                    kidCountryOfCitizen: '',
-                    kidImmigrationStatus: '',
-                    kidSocialSecurityNumber: '',
-                    kidCurrentAddress: ''
-                }
+                kidsDetails: []
             },
             reliableDocuments: {
                 layer1: '',
@@ -232,7 +217,8 @@ class H1bForm extends Component {
             previewVisible: false,
             previewImage: '',
             fileList: [],
-            shouldDisable: false
+            shouldDisable: false,
+            isH4DependentAvailable: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -257,6 +243,46 @@ class H1bForm extends Component {
         if(previousFormData.length > 0) {
             state.employeeDetails = previousFormData[0];
         }
+    }
+
+    //-------------------------------------------------------------------------------------------------------
+    // Dynamically adding form fields
+
+    addTravelHistory = () => {
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        let travelHistory = {};
+        travelHistory.departureDate = moment().valueOf();
+        travelHistory.arrivalDate = '';
+        travelHistory.daysSpent = '';
+        employeeDetails.travelHistory.push(travelHistory);
+        return this.setState({employeeDetails});
+    }
+
+    // handleTravelHistoryChange = (e) => {
+    //     if (["name", "id"].includes(e.target.className) ) {
+    //       let travelHistory = [...this.state.employeeDetails.travelHistory]
+    //       travelHistory[e.target.id.split("-")[1]][e.target.className] = e.target.value.toUpperCase()
+    //       this.setState({ travelHistory }, () => console.log(this.state.employeeDetails.travelHistory))
+    //     } else {
+    //       this.setState({ [e.target.name]: e.target.value.toUpperCase() })
+    //     }
+    // }
+
+    addKidsDetails = () => {
+        let employeeDetails = Object.assign({}, this.state.employeeDetails);
+        let kidsDetails = {};
+        kidsDetails.dependenceRelationship2 = '';
+        kidsDetails.kidFullName = '';
+        kidsDetails.kidGender = '';
+        kidsDetails.kidMaritalStatus = '';
+        kidsDetails.kidBirthDate = '';
+        kidsDetails.kidCountry = '';
+        kidsDetails.kidCountryOfCitizen = '';
+        kidsDetails.kidImmigrationStatus = '';
+        kidsDetails.kidSocialSecurityNumber = '';
+        kidsDetails.kidCurrentAddress = '';
+        employeeDetails.kidsDetails.push(kidsDetails);
+        return this.setState({employeeDetails});
     }
 
     //--------------------------------------------------------------------------------------------------------
@@ -334,15 +360,25 @@ class H1bForm extends Component {
         return this.setState({employeeDetails});
     };
 
-    onTravelHistoryDepartureDateChange = (e, date) => {
+    onTravelHistoryDepartureDateChange = idx => (e, date) => {
+        // console.log(idx);
+        const travelHistory = this.state.employeeDetails.travelHistory.map((travel, sidx) => {
+            if (idx !== sidx) return travel;
+            return { ...travel, departureDate: moment(date).valueOf() };
+        });
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.travelHistory["departureDate"] = moment(date).valueOf();
+        employeeDetails.travelHistory = travelHistory;
         return this.setState({employeeDetails});
     };
 
-    onTravelHistoryArrivalDateChange = (e, date) => {
+    onTravelHistoryArrivalDateChange = idx => (e, date) => {
+        // console.log(idx);
+        const travelHistory = this.state.employeeDetails.travelHistory.map((travel, sidx) => {
+            if (idx !== sidx) return travel;
+            return { ...travel, arrivalDate: moment(date).valueOf() };
+        });
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.travelHistory["arrivalDate"] = moment(date).valueOf();
+        employeeDetails.travelHistory = travelHistory;
         return this.setState({employeeDetails});
     };
 
@@ -417,6 +453,7 @@ class H1bForm extends Component {
     onImmigirationDetailsChange = e => {
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
         employeeDetails.immigirationDetails[e.target.name] = e.target.value;
+        console.log(employeeDetails);
         return this.setState({employeeDetails});
     };
 
@@ -426,9 +463,14 @@ class H1bForm extends Component {
         return this.setState({employeeDetails});
     };
 
-    onTravelHistoryChange = e => {
+    onTravelHistoryChange = idx => e => {
+        // console.log(idx);
+        const travelHistory = this.state.employeeDetails.travelHistory.map((travel, sidx) => {
+            if (idx !== sidx) return travel;
+            return { ...travel, daysSpent: e.target.value };
+        });
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.travelHistory[e.target.name] = e.target.value;
+        employeeDetails.travelHistory = travelHistory;
         return this.setState({employeeDetails});
     };
 
@@ -450,9 +492,14 @@ class H1bForm extends Component {
         return this.setState({employeeDetails});
     };
 
-    onKidsDetailsChange = e => {
+    onKidsDetailsChange = idx => e => {
+        // console.log(idx);
+        const kidsDetails = this.state.employeeDetails.kidsDetails.map((kid, sidx) => {
+            if (idx !== sidx) return kid;
+            return { ...kid, [e.target.name]: e.target.value };
+        });
         let employeeDetails = Object.assign({}, this.state.employeeDetails);
-        employeeDetails.kidsDetails[e.target.name] = e.target.value;
+        employeeDetails.kidsDetails = kidsDetails;
         return this.setState({employeeDetails});
     };
 
@@ -949,8 +996,16 @@ class H1bForm extends Component {
         return errors;
     };
 
+    onH4Select = (e) => {
+        console.log('Checked', e.target.checked);
+        this.setState({
+            isH4DependentAvailable: e.target.checked
+        });
+    }
+
     render() { 
         const { employeeDetails, reliableDocuments, errors } = this.state;
+        const { travelHistory, kidsDetails } = this.state.employeeDetails;
         const isAdmin = this.props.isAdmin;
         const employeeData = this.props.employeeData;
         const isDisabledTrue = this.state.shouldDisable;
@@ -1290,7 +1345,9 @@ class H1bForm extends Component {
                                                             <Radio value={'H4'}>H4</Radio>
                                                             <Radio value={'B1/B2'}>B1/B2</Radio>
                                                             <Radio value={'L1/L2'}>L1/L2</Radio>
-                                                            <Radio value={'other'}>Other</Radio>
+                                                            <Radio>
+                                                                Others<Input style={{ width: 100, marginLeft: 10 }} name="currentStatus" onChange={this.onImmigirationDetailsChange} />
+                                                            </Radio>
                                                         </RadioGroup>
                                                         {errors.currentStatus}
                                                         <Icon type="info-circle" style={{ color: '#08c' }}/>
@@ -1418,27 +1475,39 @@ class H1bForm extends Component {
                                         </Col> */}
                                         <Col >
                                             <Card title="Overseas Travel History (If Applicable)">
-                                                <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
-                                                    <Popover content="Departure date">
-                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryDepartureDateChange} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
-                                                            {errors.departureDate}
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.arrivalDate} style={{ color: 'red' }} label="Arrival Date">
-                                                    <Popover content="Arrival date">
-                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryArrivalDateChange} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
-                                                            {errors.arrivalDate}
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
-                                                </Form.Item>
-                                                <Form.Item error={!!errors.daysSpent} style={{ color: 'red' }} label="Days Count">
-                                                    <Popover content="Days spent">
-                                                        <Input disabled={isDisabledTrue} id="daysSpent" type="number" name="daysSpent"  value= {employeeDetails.travelHistory.daysSpent} onChange={this.onTravelHistoryChange} placeholder="Days Count" />
-                                                            {errors.daysSpent}
-                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                    </Popover>
-                                                </Form.Item>
+                                                <button onClick={this.addTravelHistory}>Add Travel history</button>
+                                                {
+                                                    travelHistory.map((val, idx)=> {
+                                                        let departureId = `departureDate-${idx}`, depId = `id-${idx}`
+                                                        let arrivalId = `arrivalDate-${idx}`, arrId = `id-${idx}`
+                                                        let travelId = `daysSpent-${idx}`, idId = `id-${idx}`
+                                                        return(
+                                                            <div key={idx}>
+                                                                <Form.Item error={!!errors.departureDate} style={{ color: 'red' }} label="Departure Date">
+                                                                    <Popover content="Departure date">
+                                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryDepartureDateChange(idx)} format="MM/DD/YYYY" placeholder= "Departure Date" defaultValue= {moment()} />
+                                                                            {errors.departureDate}
+                                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                    </Popover>
+                                                                </Form.Item>
+                                                                <Form.Item error={!!errors.arrivalDate} style={{ color: 'red' }} label="Arrival Date">
+                                                                    <Popover content="Arrival date">
+                                                                        <DatePicker disabled={isDisabledTrue} onChange={this.onTravelHistoryArrivalDateChange(idx)} format="MM/DD/YYYY" placeholder= "Arrival Date" defaultValue= {moment()} />
+                                                                            {errors.arrivalDate}
+                                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                    </Popover>
+                                                                </Form.Item>
+                                                                <Form.Item error={!!errors.daysSpent} style={{ color: 'red' }} label="Days Count">
+                                                                    <Popover content="Days spent">
+                                                                        <Input disabled={isDisabledTrue} type="number" onChange={this.onTravelHistoryChange(idx)} placeholder="Days Count" />
+                                                                            {errors.daysSpent}
+                                                                        <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                    </Popover>
+                                                                </Form.Item>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
                                             </Card>
                                         </Col>
                                     </Row>
@@ -1446,7 +1515,7 @@ class H1bForm extends Component {
                                     </Panel>
                                     <Panel className="boldClass" header="H4 Dependent Information" key="4">
                                         <Form layout="inline">
-                                        <Row> 
+                                        <Row>
                                        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="Check List Information for H4B">
                                                 <Form.Item error={!!errors.H4Passport} style={{ color: 'red' }} label="H4 Passport">
@@ -1485,7 +1554,7 @@ class H1bForm extends Component {
                                                     </Popover>
                                                 </Form.Item>
                                             </Card>
-                                        </Col> 
+                                        </Col>
                                         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                             <Card title="I-140 Approval">
                                                 <Form.Item error={!!errors.I140Approval} style={{ color: 'red' }} label="I-140 Approval Start Date">
@@ -1549,72 +1618,86 @@ class H1bForm extends Component {
                                     </Panel>
                                     <Panel className="boldClass" header="H4 Dependent Documents" key="5">
                                         <Form layout="inline">
+                                            <Row>
+                                                <Checkbox onChange={this.onH4Select} value={this.state.isH4DependentAvailable}>Is H4 dependents are available ?</Checkbox>
+                                            </Row>
                                             <Row> 
                                                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                                                     <Card title="Kids Information">
-                                                        <Form.Item error={!!errors.kidFullName} style={{ color: 'red' }} label="Full Name">
-                                                            <Popover content="Kid Full Name">
-                                                                <Input id="kidFullName" type="text" name="kidFullName"  value= {employeeDetails.kidsDetails.kidFullName} onChange={this.onKidsDetailsChange} placeholder="kid Full Name" />
-                                                                {errors.kidFullName}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidGender} style={{ color: 'red' }} label="Gender">
-                                                            <Popover content="Kid Gender">
-                                                                <Input id="kidGender" type="text" name="kidGender"  value= {employeeDetails.kidsDetails.kidGender} onChange={this.onKidsDetailsChange} placeholder="Gender" />
-                                                                {errors.kidGender}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidMaritalStatus} style={{ color: 'red' }} label="Marital Status">
-                                                            <Popover content="Kid Marital Status">
-                                                                <Input id="kidMaritalStatus" type="text" name="kidMaritalStatus"  value= {employeeDetails.kidsDetails.kidMaritalStatus} onChange={this.onKidsDetailsChange} placeholder="Marital Status" />
-                                                                {errors.kidMaritalStatus}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidBirthDate} style={{ color: 'red' }} label="Birth Date">
-                                                            <Popover content="Kid Birth Date">
-                                                                <DatePicker disabled={isDisabledTrue} onChange={this.onKidBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
-                                                                {errors.kidBirthDate}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidCountry} style={{ color: 'red' }} label="Country">
-                                                            <Popover content="Kid Country">
-                                                                <Input id="kidCountry" type="text" name="kidCountry"  value= {employeeDetails.kidsDetails.kidCountry} onChange={this.onKidsDetailsChange} placeholder="Country" />
-                                                                {errors.kidCountry}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidCountryOfCitizen} style={{ color: 'red' }} label="Country Of Citizen">
-                                                            <Popover content="Kid Country of Citizen">
-                                                                <Input id="kidCountryOfCitizen" type="text" name="kidCountryOfCitizen"  value= {employeeDetails.kidsDetails.kidCountryOfCitizen} onChange={this.onKidsDetailsChange} placeholder="Country Of Citizen" />
-                                                                {errors.kidCountryOfCitizen}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidImmigrationStatus} style={{ color: 'red' }} label="Immigration Status">
-                                                            <Popover content="Kid Immigration Status">
-                                                                <Input id="kidImmigrationStatus" type="text" name="kidImmigrationStatus"  value= {employeeDetails.kidsDetails.kidImmigrationStatus} onChange={this.onKidsDetailsChange} placeholder="Immigration Status" />
-                                                                {errors.kidImmigrationStatus}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidSocialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
-                                                            <Popover content="Kid Social Security Number">
-                                                                <Input id="kidSocialSecurityNumber" type="number" name="kidSocialSecurityNumber"  value= {employeeDetails.kidsDetails.kidSocialSecurityNumber} onChange={this.onKidsDetailsChange} placeholder="Social Security Number" />
-                                                                {errors.kidSocialSecurityNumber}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
-                                                        <Form.Item error={!!errors.kidCurrentAddress} style={{ color: 'red' }} label="Current Address">
-                                                            <Popover content="Kid Current Address">
-                                                                <Input id="kidCurrentAddress" type="text" name="kidCurrentAddress"  value= {employeeDetails.kidsDetails.kidCurrentAddress} onChange={this.onKidsDetailsChange} placeholder="Current Address" />
-                                                                {errors.kidCurrentAddress}
-                                                                <Icon type="info-circle" style={{ color: '#08c' }}/>
-                                                            </Popover>
-                                                        </Form.Item>
+                                                        <button onClick={this.addKidsDetails}>Add Kids</button>
+                                                        {
+                                                            kidsDetails.map((val, idx)=> {
+                                                                return(
+                                                                    <Card title={`Kid ${idx+1}`}>
+                                                                        <div key={idx}>
+                                                                            <Form.Item error={!!errors.kidFullName} style={{ color: 'red' }} label="Full Name">
+                                                                                <Popover content="Kid Full Name">
+                                                                                    <Input id="kidFullName" type="text" name="kidFullName" onChange={this.onKidsDetailsChange(idx)} placeholder="kid Full Name" />
+                                                                                    {errors.kidFullName}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidGender} style={{ color: 'red' }} label="Gender">
+                                                                                <Popover content="Kid Gender">
+                                                                                    <Input id="kidGender" type="text" name="kidGender" onChange={this.onKidsDetailsChange(idx)} placeholder="Gender" />
+                                                                                    {errors.kidGender}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidMaritalStatus} style={{ color: 'red' }} label="Marital Status">
+                                                                                <Popover content="Kid Marital Status">
+                                                                                    <Input id="kidMaritalStatus" type="text" name="kidMaritalStatus" onChange={this.onKidsDetailsChange(idx)} placeholder="Marital Status" />
+                                                                                    {errors.kidMaritalStatus}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidBirthDate} style={{ color: 'red' }} label="Birth Date">
+                                                                                <Popover content="Kid Birth Date">
+                                                                                    <DatePicker disabled={isDisabledTrue} onChange={this.onKidBirthDateChange} format="MM/DD/YYYY" placeholder= "Birth Date" defaultValue= {moment()} />
+                                                                                    {errors.kidBirthDate}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidCountry} style={{ color: 'red' }} label="Country">
+                                                                                <Popover content="Kid Country">
+                                                                                    <Input id="kidCountry" type="text" name="kidCountry" onChange={this.onKidsDetailsChange(idx)} placeholder="Country" />
+                                                                                    {errors.kidCountry}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidCountryOfCitizen} style={{ color: 'red' }} label="Country Of Citizen">
+                                                                                <Popover content="Kid Country of Citizen">
+                                                                                    <Input id="kidCountryOfCitizen" type="text" name="kidCountryOfCitizen" onChange={this.onKidsDetailsChange(idx)} placeholder="Country Of Citizen" />
+                                                                                    {errors.kidCountryOfCitizen}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidImmigrationStatus} style={{ color: 'red' }} label="Immigration Status">
+                                                                                <Popover content="Kid Immigration Status">
+                                                                                    <Input id="kidImmigrationStatus" type="text" name="kidImmigrationStatus" onChange={this.onKidsDetailsChange(idx)} placeholder="Immigration Status" />
+                                                                                    {errors.kidImmigrationStatus}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidSocialSecurityNumber} style={{ color: 'red' }} label="Social Security Number">
+                                                                                <Popover content="Kid Social Security Number">
+                                                                                    <Input id="kidSocialSecurityNumber" type="number" name="kidSocialSecurityNumber" onChange={this.onKidsDetailsChange(idx)} placeholder="Social Security Number" />
+                                                                                    {errors.kidSocialSecurityNumber}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                            <Form.Item error={!!errors.kidCurrentAddress} style={{ color: 'red' }} label="Current Address">
+                                                                                <Popover content="Kid Current Address">
+                                                                                    <Input id="kidCurrentAddress" type="text" name="kidCurrentAddress" onChange={this.onKidsDetailsChange(idx)} placeholder="Current Address" />
+                                                                                    {errors.kidCurrentAddress}
+                                                                                    <Icon type="info-circle" style={{ color: '#08c' }}/>
+                                                                                </Popover>
+                                                                            </Form.Item>
+                                                                        </div>
+                                                                    </Card>
+                                                                )
+                                                            })
+                                                        }
                                                     </Card>
                                                 </Col>
                                                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
